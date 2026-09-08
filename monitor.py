@@ -1,8 +1,10 @@
 import json
 import os
+import re
 import sys
 import time
-from datetime import datetime, timezone
+import xml.etree.ElementTree as ET
+from datetime import datetime
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -90,7 +92,7 @@ def send_telegram(title, company, workplace, job_type, salary, url):
     reply_markup = {
         "inline_keyboard": [
             [
-                {"text": "🚀 Abrir Candidatura na Gupy", "url": url}
+                {"text": "🚀 Abrir Candidatura / Informações", "url": url}
             ]
         ]
     }
@@ -112,7 +114,7 @@ def send_telegram(title, company, workplace, job_type, salary, url):
         return False
 
 
-def send_telegram_heartbeat(companies_count):
+def send_telegram_heartbeat(monitors_count):
     """Envia 'prova de vida' silenciosa no Telegram."""
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         return False
@@ -120,7 +122,7 @@ def send_telegram_heartbeat(companies_count):
     msg = (
         f"💚 <b>Radar Operacional — Prova de Vida</b>\n\n"
         f"Seu monitor de vagas está rodando ativamente na nuvem.\n"
-        f"🏢 <b>Monitores ativos:</b> {companies_count}\n"
+        f"🏢 <b>Monitores ativos:</b> {monitors_count}\n"
         f"⏱️ <b>Frequência:</b> a cada 15 min\n"
         f"Status: 100% Saudável."
     )
@@ -130,7 +132,7 @@ def send_telegram_heartbeat(companies_count):
         "chat_id": TELEGRAM_CHAT_ID,
         "text": msg,
         "parse_mode": "HTML",
-        "disable_notification": True,  # Notificação silenciosa para não incomodar
+        "disable_notification": True,
     }
 
     try:
@@ -176,6 +178,7 @@ def notify(title, company, workplace, job_type, salary, url):
 
 
 def query_gupy_mcp(args):
+    """Consulta vagas na API oficial da Gupy."""
     body = {
         "jsonrpc": "2.0",
         "id": 1,
@@ -202,6 +205,61 @@ def query_gupy_mcp(args):
     return []
 
 
+def query_rss(feed_url, default_company=""):
+    """Consulta vagas em feeds RSS/Atom (Google Alerts, Google News, etc)."""
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+    try:
+        resp = HTTP.get(feed_url, headers=headers, timeout=15)
+        if resp.status_code != 200:
+            return []
+
+        root = ET.fromstring(resp.content)
+        items = []
+
+        # 1. Suporte a formato Atom (usado por Google Alerts)
+        ns = {"atom": "http://www.w3.org/2005/Atom"}
+        entries = root.findall("atom:entry", ns)
+        if entries:
+            for entry in entries:
+                item_id = entry.findtext("atom:id", default="", namespaces=ns)
+                title = entry.findtext("atom:title", default="", namespaces=ns)
+                link_elem = entry.find("atom:link", ns)
+                link = link_elem.attrib.get("href", "") if link_elem is not None else ""
+                title_clean = re.sub(r"<[^>]+>", "", title).strip()
+                items.append({
+                    "id": item_id or link,
+                    "name": title_clean,
+                    "careerPageName": default_company,
+                    "workplaceType": "A consultar",
+                    "type": "Vaga Externa",
+                    "salary": {"label": "Não informado"},
+                    "jobUrl": link,
+                })
+            return items
+
+        # 2. Suporte a formato RSS 2.0 (Google News e feeds padrão)
+        channel = root.find("channel")
+        if channel is not None:
+            for item in channel.findall("item"):
+                guid = item.findtext("guid") or item.findtext("link") or ""
+                title = item.findtext("title", default="")
+                link = item.findtext("link", default="")
+                title_clean = re.sub(r"<[^>]+>", "", title).strip()
+                items.append({
+                    "id": guid or link,
+                    "name": title_clean,
+                    "careerPageName": default_company,
+                    "workplaceType": "A consultar",
+                    "type": "Vaga Externa",
+                    "salary": {"label": "Não informado"},
+                    "jobUrl": link,
+                })
+            return items
+    except Exception as e:
+        print(f"[ERRO RSS Parser] {e}")
+    return []
+
+
 def check_heartbeat(config, state):
     """Verifica se deve enviar o heartbeat semanal."""
     hb_cfg = config.get("heartbeat", {})
@@ -212,7 +270,6 @@ def check_heartbeat(config, state):
     today_str = now.strftime("%Y-%m-%d")
     target_day = hb_cfg.get("day_of_week", 0)  # 0 = Segunda-feira
 
-    # Se for o dia da semana configurado e ainda não enviou hoje
     if now.weekday() == target_day and state.get("last_heartbeat") != today_str:
         monitors_count = len(config.get("monitors", []))
         if send_telegram_heartbeat(monitors_count):
@@ -221,7 +278,7 @@ def check_heartbeat(config, state):
 
 
 def matches_filters(job, monitor_cfg):
-    """Aplica filtros inteligentes (apenas remoto, palavras-chave, exclusões)."""
+    """Aplica filtros opcionais (apenas remoto, palavras-chave, exclusões)."""
     title = job.get("name", "").lower()
     description = job.get("description", "").lower()
     workplace = job.get("workplaceType", "").lower()
@@ -239,7 +296,6 @@ def matches_filters(job, monitor_cfg):
     # 3. Filtro 'keywords' (whitelist)
     keywords = [k.lower() for k in monitor_cfg.get("keywords", [])]
     if keywords:
-        # Precisa ter pelo menos uma das palavras no título ou descrição
         has_match = any(kw in title or kw in description for kw in keywords)
         if not has_match:
             return False
@@ -259,17 +315,22 @@ def run_check():
 
     for monitor in monitors:
         desc = monitor.get("description", "Monitor")
-        # Copia os argumentos da query excluindo campos de controle interno
-        query_args = {
-            k: v
-            for k, v in monitor.items()
-            if k not in ["description", "only_remote", "keywords", "exclude_keywords"]
-        }
-        if "limit" not in query_args:
-            query_args["limit"] = 20
+        m_type = monitor.get("type", "gupy")
 
         try:
-            jobs = query_gupy_mcp(query_args)
+            if m_type == "rss":
+                feed_url = monitor.get("url")
+                company_name = monitor.get("company", desc)
+                jobs = query_rss(feed_url, company_name)
+            else:
+                query_args = {
+                    k: v
+                    for k, v in monitor.items()
+                    if k not in ["type", "description", "only_remote", "keywords", "exclude_keywords"]
+                }
+                if "limit" not in query_args:
+                    query_args["limit"] = 20
+                jobs = query_gupy_mcp(query_args)
         except Exception as e:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] [{desc}] Erro na consulta: {e}")
             continue
@@ -277,7 +338,6 @@ def run_check():
         for job in jobs:
             job_id = job.get("id")
             if job_id not in seen_ids:
-                # Aplica filtros opcionais antes de considerar
                 if not matches_filters(job, monitor):
                     continue
 
@@ -321,7 +381,7 @@ def main():
         return
 
     print("========================================")
-    print("   JOB FINDER - MONITOR SENIOR          ")
+    print("   JOB FINDER - MONITOR MULTI-EMPRESA   ")
     print("========================================")
     print(f"Intervalo: {interval // 60} minuto(s)")
     print("Pressione Ctrl+C para parar.\n")

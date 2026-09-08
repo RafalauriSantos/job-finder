@@ -7,11 +7,20 @@
   },
   "monitors": [
     {
+      "type": "gupy",
       "description": "Goomer (Todas as vagas)",
       "companyId": 2245,
       "careerPageName": "goomer",
       "only_remote": false,
       "keywords": [],
+      "exclude_keywords": []
+    },
+    {
+      "type": "rss",
+      "description": "Flavia Nasser (Fotografia / Vagas)",
+      "company": "Flavia Nasser",
+      "url": "https://news.google.com/rss/search?q=%22Flavia+Nasser%22+(vaga+OR+vagas+OR+contrata+OR+oportunidade)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "keywords": ["vaga", "vagas", "contrata", "oportunidade", "atendimento", "fotografia"],
       "exclude_keywords": []
     }
   ]

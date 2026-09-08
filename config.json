@@ -1,0 +1,10 @@
+{
+  "check_interval_minutes": 10,
+  "monitors": [
+    {
+      "description": "Goomer (Todas as vagas)",
+      "companyId": 2245,
+      "careerPageName": "goomer"
+    }
+  ]
+}

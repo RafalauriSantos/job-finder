@@ -2,8 +2,10 @@ import json
 import os
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,52 +23,121 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 
+def get_http_session():
+    """Retorna sessão requests com retentativas automáticas e backoff exponencial."""
+    session = requests.Session()
+    retries = Retry(
+        total=3,
+        backoff_factor=1.5,
+        status_forcelist=[429, 500, 502, 503, 504],
+        raise_on_status=False,
+    )
+    adapter = HTTPAdapter(max_retries=retries)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+HTTP = get_http_session()
+
+
 def load_config():
     if not os.path.exists(CONFIG_FILE):
-        return {"check_interval_minutes": 10, "monitors": []}
+        return {"check_interval_minutes": 15, "monitors": []}
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def load_state():
+    """Carrega o estado com suporte retrocompatível a listas ou dicionários."""
+    default_state = {"seen_ids": [], "last_heartbeat": ""}
     if not os.path.exists(STATE_FILE):
-        return []
+        return default_state
     try:
         with open(STATE_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            if isinstance(data, list):
+                return {"seen_ids": data, "last_heartbeat": ""}
+            if isinstance(data, dict):
+                return {
+                    "seen_ids": data.get("seen_ids", []),
+                    "last_heartbeat": data.get("last_heartbeat", ""),
+                }
+            return default_state
     except Exception:
-        return []
+        return default_state
 
 
 def save_state(state):
     with open(STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(list(state), f, indent=2, ensure_ascii=False)
+        json.dump(state, f, indent=2, ensure_ascii=False)
 
 
 def send_telegram(title, company, workplace, job_type, salary, url):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         return False
+
     msg = (
         f"🚨 <b>NOVA VAGA ENCONTRADA!</b>\n\n"
         f"🏢 <b>Empresa:</b> {company}\n"
         f"💼 <b>Cargo:</b> {title}\n"
         f"📍 <b>Modelo:</b> {workplace}\n"
         f"📋 <b>Tipo:</b> {job_type}\n"
-        f"💰 <b>Salário:</b> {salary}\n\n"
-        f"👉 <a href='{url}'>Clique aqui para se candidatar</a>"
+        f"💰 <b>Salário:</b> {salary}\n"
     )
+
+    # Botão nativo e limpo no Telegram (Inline Keyboard)
+    reply_markup = {
+        "inline_keyboard": [
+            [
+                {"text": "🚀 Abrir Candidatura na Gupy", "url": url}
+            ]
+        ]
+    }
+
     api_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
         "text": msg,
         "parse_mode": "HTML",
-        "disable_web_page_preview": False,
+        "disable_web_page_preview": True,
+        "reply_markup": reply_markup,
     }
+
     try:
-        r = requests.post(api_url, json=payload, timeout=10)
+        r = HTTP.post(api_url, json=payload, timeout=10)
         return r.status_code == 200
     except Exception as e:
         print(f"[ERRO Telegram] {e}")
+        return False
+
+
+def send_telegram_heartbeat(companies_count):
+    """Envia 'prova de vida' silenciosa no Telegram."""
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        return False
+
+    msg = (
+        f"💚 <b>Radar Operacional — Prova de Vida</b>\n\n"
+        f"Seu monitor de vagas está rodando ativamente na nuvem.\n"
+        f"🏢 <b>Monitores ativos:</b> {companies_count}\n"
+        f"⏱️ <b>Frequência:</b> a cada 15 min\n"
+        f"Status: 100% Saudável."
+    )
+
+    api_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": msg,
+        "parse_mode": "HTML",
+        "disable_notification": True,  # Notificação silenciosa para não incomodar
+    }
+
+    try:
+        r = HTTP.post(api_url, json=payload, timeout=10)
+        return r.status_code == 200
+    except Exception as e:
+        print(f"[ERRO Telegram Heartbeat] {e}")
         return False
 
 
@@ -90,7 +161,7 @@ def send_discord(title, company, workplace, job_type, salary, url):
         ]
     }
     try:
-        r = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=10)
+        r = HTTP.post(DISCORD_WEBHOOK_URL, json=payload, timeout=10)
         return r.status_code in [200, 204]
     except Exception as e:
         print(f"[ERRO Discord] {e}")
@@ -118,7 +189,7 @@ def query_gupy_mcp(args):
         "Content-Type": "application/json",
         "Accept": "application/json, text/event-stream",
     }
-    resp = requests.post(GUPY_MCP_URL, json=body, headers=headers, timeout=15)
+    resp = HTTP.post(GUPY_MCP_URL, json=body, headers=headers, timeout=15)
     if resp.status_code != 200:
         return []
 
@@ -131,9 +202,55 @@ def query_gupy_mcp(args):
     return []
 
 
+def check_heartbeat(config, state):
+    """Verifica se deve enviar o heartbeat semanal."""
+    hb_cfg = config.get("heartbeat", {})
+    if not hb_cfg.get("enabled", False):
+        return
+
+    now = datetime.now()
+    today_str = now.strftime("%Y-%m-%d")
+    target_day = hb_cfg.get("day_of_week", 0)  # 0 = Segunda-feira
+
+    # Se for o dia da semana configurado e ainda não enviou hoje
+    if now.weekday() == target_day and state.get("last_heartbeat") != today_str:
+        monitors_count = len(config.get("monitors", []))
+        if send_telegram_heartbeat(monitors_count):
+            print(f"[{now.strftime('%H:%M:%S')}] 💚 Heartbeat semanal enviado ao Telegram.")
+            state["last_heartbeat"] = today_str
+
+
+def matches_filters(job, monitor_cfg):
+    """Aplica filtros inteligentes (apenas remoto, palavras-chave, exclusões)."""
+    title = job.get("name", "").lower()
+    description = job.get("description", "").lower()
+    workplace = job.get("workplaceType", "").lower()
+
+    # 1. Filtro 'only_remote'
+    if monitor_cfg.get("only_remote", False):
+        if workplace != "remote":
+            return False
+
+    # 2. Filtro 'exclude_keywords' (blacklist)
+    exclude = [k.lower() for k in monitor_cfg.get("exclude_keywords", [])]
+    if any(ex in title for ex in exclude):
+        return False
+
+    # 3. Filtro 'keywords' (whitelist)
+    keywords = [k.lower() for k in monitor_cfg.get("keywords", [])]
+    if keywords:
+        # Precisa ter pelo menos uma das palavras no título ou descrição
+        has_match = any(kw in title or kw in description for kw in keywords)
+        if not has_match:
+            return False
+
+    return True
+
+
 def run_check():
     config = load_config()
-    seen_ids = set(load_state())
+    state = load_state()
+    seen_ids = set(state.get("seen_ids", []))
     monitors = config.get("monitors", [])
     now = datetime.now().strftime("%H:%M:%S")
 
@@ -142,7 +259,12 @@ def run_check():
 
     for monitor in monitors:
         desc = monitor.get("description", "Monitor")
-        query_args = {k: v for k, v in monitor.items() if k != "description"}
+        # Copia os argumentos da query excluindo campos de controle interno
+        query_args = {
+            k: v
+            for k, v in monitor.items()
+            if k not in ["description", "only_remote", "keywords", "exclude_keywords"]
+        }
         if "limit" not in query_args:
             query_args["limit"] = 20
 
@@ -155,11 +277,15 @@ def run_check():
         for job in jobs:
             job_id = job.get("id")
             if job_id not in seen_ids:
+                # Aplica filtros opcionais antes de considerar
+                if not matches_filters(job, monitor):
+                    continue
+
                 total_new += 1
                 seen_ids.add(job_id)
                 name = job.get("name")
                 company = job.get("careerPageName") or desc
-                workplace = job.get("workplaceType", "Não especificado")
+                workplace = job.get("workplaceType", "Não especificado").capitalize()
                 job_type = job.get("type", "Não especificado")
                 salary_info = job.get("salary", {}).get("label", "Não informado")
                 url = job.get("jobUrl") or f"https://{job.get('careerPageName')}.gupy.io/job/{job_id}"
@@ -167,7 +293,10 @@ def run_check():
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] 🎯 NOVA VAGA: {name} ({company})")
                 notify(name, company, workplace, job_type, salary_info, url)
 
-    save_state(seen_ids)
+    state["seen_ids"] = list(seen_ids)
+    check_heartbeat(config, state)
+    save_state(state)
+
     if total_new == 0:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Nenhuma vaga nova detectada.")
     else:
@@ -176,14 +305,23 @@ def run_check():
 
 def main():
     config = load_config()
-    interval = config.get("check_interval_minutes", 10) * 60
+    interval = config.get("check_interval_minutes", 15) * 60
 
     if "--once" in sys.argv:
         run_check()
         return
 
+    if "--heartbeat" in sys.argv:
+        monitors_count = len(config.get("monitors", []))
+        ok = send_telegram_heartbeat(monitors_count)
+        if ok:
+            print("💚 Heartbeat de teste enviado com sucesso ao Telegram!")
+        else:
+            print("❌ Falha ao enviar Heartbeat.")
+        return
+
     print("========================================")
-    print("   JOB FINDER - MONITOR MINIMALISTA     ")
+    print("   JOB FINDER - MONITOR SENIOR          ")
     print("========================================")
     print(f"Intervalo: {interval // 60} minuto(s)")
     print("Pressione Ctrl+C para parar.\n")

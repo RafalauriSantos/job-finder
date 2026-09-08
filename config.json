@@ -1,10 +1,18 @@
 {
-  "check_interval_minutes": 10,
+  "check_interval_minutes": 15,
+  "heartbeat": {
+    "enabled": true,
+    "day_of_week": 0,
+    "hour_start": 9
+  },
   "monitors": [
     {
       "description": "Goomer (Todas as vagas)",
       "companyId": 2245,
-      "careerPageName": "goomer"
+      "careerPageName": "goomer",
+      "only_remote": false,
+      "keywords": [],
+      "exclude_keywords": []
     }
   ]
 }

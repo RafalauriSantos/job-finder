@@ -420,10 +420,10 @@ def matches_filters(job, monitor_cfg):
         if workplace != "remote":
             return False
 
-    # 2. Regra de Localidade Estrita (Híbrido/Presencial apenas Tatuí / Sorocaba / Votorantim)
+    # 2. Regra de Localidade Estrita (Híbrido/Presencial apenas Tatuí, Sorocaba, Votorantim, Boituva, Itapetininga)
     if monitor_cfg.get("strict_location", True):
         if workplace in ["hybrid", "on-site"]:
-            allowed_cities = ["tatuí", "tatui", "sorocaba", "votorantim"]
+            allowed_cities = ["tatuí", "tatui", "sorocaba", "votorantim", "boituva", "itapetininga"]
             is_near = any(city in location or city in title or city in description for city in allowed_cities)
             if not is_near:
                 return False
@@ -507,7 +507,14 @@ def run_check():
                 raw_type = job.get("type", "")
                 job_type = JOB_TYPE_TRANSLATIONS.get(raw_type, raw_type or "Não especificado")
                 salary_info = job.get("salary", {}).get("label", "Não informado")
-                url = job.get("jobUrl") or f"https://{job.get('careerPageName')}.gupy.io/job/{job_id}"
+                # Garante URL válida: se vier da Gupy, usa rota canônica /jobs/{id}
+                url = job.get("jobUrl")
+                if not url:
+                    career_page = job.get("careerPageName", "").strip().lower()
+                    if career_page:
+                        url = f"https://{career_page}.gupy.io/jobs/{job_id}"
+                    else:
+                        url = "https://gupy.io"
 
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] 🎯 NOVA VAGA: {name} ({company})")
                 notify(name, company, workplace_label, job_type, salary_info, url)

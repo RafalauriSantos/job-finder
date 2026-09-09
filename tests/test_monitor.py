@@ -41,8 +41,14 @@ class TestFilters:
 
     def test_strict_location_accepts_sorocaba_tatui_hybrid(self):
         job = {"name": "Desenvolvedor Node Jr", "workplaceType": "hybrid", "location": "Sorocaba, SP"}
-        monitor_cfg = {"keywords": ["node"], "exclude_keywords": [], "strict_location": True}
+        monitor_cfg = {"keywords": ["node", "react", "python"], "exclude_keywords": [], "strict_location": True}
         assert matches_filters(job, monitor_cfg) is True
+
+        job_boituva = {"name": "Desenvolvedor React Jr", "workplaceType": "hybrid", "location": "Boituva, SP"}
+        assert matches_filters(job_boituva, monitor_cfg) is True
+
+        job_itapetinga = {"name": "Dev Python Jr", "workplaceType": "on-site", "location": "Itapetininga, SP"}
+        assert matches_filters(job_itapetinga, monitor_cfg) is True
 
     def test_strict_location_rejects_hybrid_outside_region(self):
         job = {"name": "Dev Fullstack Jr", "workplaceType": "hybrid", "location": "São Paulo, SP"}

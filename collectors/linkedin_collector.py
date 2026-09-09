@@ -35,6 +35,7 @@ class LinkedInCollector(BaseCollector):
         try:
             resp = self.http.get(target_url, headers=headers, timeout=15)
             if resp.status_code != 200:
+                print(f"[ALERTA LinkedInCollector] Requisição falhou para '{keywords}' com status {resp.status_code}.")
                 return []
 
             resp.encoding = "utf-8"

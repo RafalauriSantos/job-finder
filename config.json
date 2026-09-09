@@ -36,45 +36,45 @@
     },
     {
       "type": "linkedin",
-      "description": "LinkedIn — Full Stack Júnior (Última Hora)",
+      "description": "LinkedIn — Full Stack Júnior (Janela Sobreposta 2h)",
       "keywords_search": "Desenvolvedor Full Stack Junior",
-      "time_range": "r3600",
+      "time_range": "r7200",
       "strict_location": true,
       "keywords": ["full stack", "fullstack", "desenvolvedor", "developer", "software"],
       "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto", "gerente"]
     },
     {
       "type": "linkedin",
-      "description": "LinkedIn — React / Frontend Júnior (Última Hora)",
+      "description": "LinkedIn — React / Frontend Júnior (Janela Sobreposta 2h)",
       "keywords_search": "Desenvolvedor React Junior",
-      "time_range": "r3600",
+      "time_range": "r7200",
       "strict_location": true,
       "keywords": ["react", "frontend", "front-end", "typescript", "javascript", "web"],
       "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
     },
     {
       "type": "linkedin",
-      "description": "LinkedIn — Node.js / Backend Júnior (Última Hora)",
+      "description": "LinkedIn — Node.js / Backend Júnior (Janela Sobreposta 2h)",
       "keywords_search": "Desenvolvedor Node Junior",
-      "time_range": "r3600",
+      "time_range": "r7200",
       "strict_location": true,
       "keywords": ["node", "backend", "back-end", "typescript", "javascript", "api"],
       "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
     },
     {
       "type": "linkedin",
-      "description": "LinkedIn — Java Júnior (Última Hora)",
+      "description": "LinkedIn — Java Júnior (Janela Sobreposta 2h)",
       "keywords_search": "Desenvolvedor Java Junior",
-      "time_range": "r3600",
+      "time_range": "r7200",
       "strict_location": true,
       "keywords": ["java", "spring"],
       "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
     },
     {
       "type": "linkedin",
-      "description": "LinkedIn — Python Júnior (Última Hora)",
+      "description": "LinkedIn — Python Júnior (Janela Sobreposta 2h)",
       "keywords_search": "Desenvolvedor Python Junior",
-      "time_range": "r3600",
+      "time_range": "r7200",
       "strict_location": true,
       "keywords": ["python", "django", "fastapi", "flask"],
       "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
@@ -105,15 +105,6 @@
       "strict_location": true,
       "keywords": ["python"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
-    },
-    {
-      "type": "rss",
-      "description": "LinkedIn Posts — Comunidade & Recrutadores (Vagas no Time / Indicação)",
-      "company": "LinkedIn Post (Comunidade Dev)",
-      "url": "https://news.google.com/rss/search?q=site:linkedin.com/posts+(%22estamos+contratando%22+OR+%22temos+vagas%22+OR+%22vaga+no+meu+time%22+OR+%22meu+time+está+contratando%22+OR+%22abriu+vaga%22+OR+%22indicação%22+OR+%22indico%22)+(%22desenvolvedor%22+OR+%22programador%22+OR+%22react%22+OR+%22node%22+OR+%22fullstack%22+OR+%22java%22+OR+%22python%22)+(junior+OR+jr+OR+estagio+OR+estágio)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
-      "strict_location": true,
-      "keywords": ["desenvolvedor", "programador", "react", "node", "fullstack", "full stack", "java", "python", "frontend", "backend", "web"],
-      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto", "diretor", "gerente"]
     }
   ]
 }

@@ -111,22 +111,27 @@ def run_check():
             })
 
     # 2. Executa a Coleta (Fase de Descoberta / Recall Alto)
-    discovered_jobs = []
+    discovered_gupy = []
+    discovered_linkedin = []
     if gupy_queries:
         gupy_col = GupyCollector(HTTP, gupy_queries)
-        discovered_jobs.extend(gupy_col.collect())
+        discovered_gupy = gupy_col.collect()
 
     if linkedin_searches:
         li_col = LinkedInCollector(HTTP, linkedin_searches)
-        discovered_jobs.extend(li_col.collect())
+        discovered_linkedin = li_col.collect()
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Total descoberto bruto: {len(discovered_jobs)} vaga(s).")
+    discovered_jobs = discovered_gupy + discovered_linkedin
 
     # 3. Deduplicação e Fusão de Múltiplas Fontes
     unique_jobs = deduplicator.process(discovered_jobs)
 
     # 4. Decisão e Classificação (Scoring + Localidade Estrita)
     notified_count = 0
+    discarded_seen = 0
+    discarded_location = 0
+    discarded_senior = 0
+    discarded_score = 0
 
     for job in unique_jobs:
         fp = job.fingerprint
@@ -134,11 +139,14 @@ def run_check():
 
         # Se já foi notificada anteriormente, ignora
         if store.is_seen(fp, source_ids[0] if source_ids else ""):
+            discarded_seen += 1
             continue
 
         # Validação de Localidade Estrita (Tatuí / Sorocaba / Remoto)
         loc_allowed, loc_reason = is_location_allowed(job.workplace_type, job.location, job.title)
         if not loc_allowed:
+            discarded_location += 1
+            store.mark_seen(fp, source_ids)
             continue
 
         # Cálculo do Match Score com o CV
@@ -146,23 +154,42 @@ def run_check():
         job.match_score = score
         job.match_reasons = reasons
 
-        if score >= min_score:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] 🎯 MATCH {score}/100: {job.title} ({job.company})")
-            sent = notifier.send_job_alert(job)
-            if sent:
-                notified_count += 1
+        if score <= 0:
+            discarded_senior += 1
+            store.mark_seen(fp, source_ids)
+            continue
+
+        if score < min_score:
+            discarded_score += 1
+            store.mark_seen(fp, source_ids)
+            continue
+
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] 🎯 MATCH {score}/100: {job.title} ({job.company})")
+        sent = notifier.send_job_alert(job)
+        if sent:
+            notified_count += 1
 
         # Marca como vista para nunca repetir a mesma vaga
         store.mark_seen(fp, source_ids)
 
+    # Relatório Estruturado do Funil
+    print("\n" + "=" * 45)
+    print(" 📊 FUNIL DE EXECUÇÃO E COBERTURA")
+    print("=" * 45)
+    print(f"├─ Descoberta Bruta: {len(discovered_jobs)}")
+    print(f"│  ├─ Gupy: {len(discovered_gupy)}")
+    print(f"│  └─ LinkedIn (2h sobreposta): {len(discovered_linkedin)}")
+    print(f"├─ Vagas Únicas (pós-dedup): {len(unique_jobs)}")
+    print(f"├─ Descarte Já Vistas: {discarded_seen}")
+    print(f"├─ Descarte Localização: {discarded_location}")
+    print(f"├─ Descarte Sênior/Pleno: {discarded_senior}")
+    print(f"├─ Descarte Score < {min_score}: {discarded_score}")
+    print(f"└─ 🎯 Notificadas no Telegram: {notified_count}")
+    print("=" * 45 + "\n")
+
     # 5. Heartbeat e Persistência
     check_heartbeat(config, store, notifier)
     store.save()
-
-    if notified_count == 0:
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Nenhuma nova vaga acima do threshold de pontuação.")
-    else:
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Concluído: {notified_count} vaga(s) qualificada(s) notificada(s)!")
 
 
 def main():

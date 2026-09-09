@@ -266,14 +266,30 @@ def query_rss(feed_url, default_company=""):
                 guid = item.findtext("guid") or item.findtext("link") or ""
                 title = item.findtext("title", default="")
                 link = item.findtext("link", default="")
+                desc_text = item.findtext("description", default="")
                 title_clean = re.sub(r"<[^>]+>", "", title).strip()
+                desc_clean = re.sub(r"<[^>]+>", "", desc_text).strip()
+                full_text = f"{title_clean} {desc_clean}".lower()
+
+                # Inferência de modelo de trabalho em posts
+                if "remoto" in full_text or "home office" in full_text or "remote" in full_text:
+                    workplace = "remote"
+                elif "híbrido" in full_text or "hibrido" in full_text or "hybrid" in full_text:
+                    workplace = "hybrid"
+                elif "presencial" in full_text or "on-site" in full_text:
+                    workplace = "on-site"
+                else:
+                    workplace = "A consultar"
+
                 items.append({
                     "id": guid or link,
                     "name": title_clean,
+                    "description": desc_clean,
                     "careerPageName": default_company,
-                    "workplaceType": "A consultar",
-                    "type": "Vaga Externa",
-                    "salary": {"label": "Não informado"},
+                    "location": title_clean,
+                    "workplaceType": workplace,
+                    "type": "Post no LinkedIn / Rede",
+                    "salary": {"label": "Consultar post"},
                     "jobUrl": link,
                 })
             return items
@@ -408,7 +424,7 @@ def matches_filters(job, monitor_cfg):
     if monitor_cfg.get("strict_location", True):
         if workplace in ["hybrid", "on-site"]:
             allowed_cities = ["tatuí", "tatui", "sorocaba", "votorantim"]
-            is_near = any(city in location or city in title for city in allowed_cities)
+            is_near = any(city in location or city in title or city in description for city in allowed_cities)
             if not is_near:
                 return False
 

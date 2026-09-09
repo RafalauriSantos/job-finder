@@ -8,22 +8,22 @@
   "monitors": [
     {
       "type": "gupy",
-      "description": "Goomer (Todas as vagas)",
+      "description": "Goomer (Vagas de Tecnologia / Dev)",
       "companyId": 2245,
       "careerPageName": "goomer",
       "only_remote": false,
-      "strict_location": false,
-      "keywords": [],
-      "exclude_keywords": []
+      "strict_location": true,
+      "keywords": ["desenvolvedor", "developer", "software", "frontend", "front-end", "backend", "back-end", "fullstack", "full stack", "react", "node", "typescript", "python", "java", "estagio", "estágio", "junior", "júnior"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador", "gerente"]
     },
     {
       "type": "rss",
-      "description": "Flavia Nasser (Fotografia / Vagas)",
+      "description": "Flavia Nasser (Oportunidades de Dev / TI)",
       "company": "Flavia Nasser",
-      "url": "https://news.google.com/rss/search?q=%22Flavia+Nasser%22+(vaga+OR+vagas+OR+contrata+OR+oportunidade)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
-      "strict_location": false,
-      "keywords": ["vaga", "vagas", "contrata", "oportunidade", "atendimento", "fotografia"],
-      "exclude_keywords": []
+      "url": "https://news.google.com/rss/search?q=%22Flavia+Nasser%22+(desenvolvedor+OR+programador+OR+software+OR+site+OR+sistema+OR+tecnologia+OR+dev)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["desenvolvedor", "programador", "software", "site", "sistema", "tecnologia", "dev", "web"],
+      "exclude_keywords": ["fotografia", "ensaio", "modelo", "atendimento", "recepcionista"]
     },
     {
       "type": "rss",
@@ -105,6 +105,15 @@
       "strict_location": true,
       "keywords": ["python"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
+    },
+    {
+      "type": "rss",
+      "description": "LinkedIn Posts — Recrutadores Contratando Dev Jr",
+      "company": "LinkedIn Post (Recrutador)",
+      "url": "https://news.google.com/rss/search?q=site:linkedin.com/posts+(%22estamos+contratando%22+OR+%22temos+vagas%22)+(%22desenvolvedor%22+OR+%22programador%22+OR+%22react%22+OR+%22node%22+OR+%22fullstack%22+OR+%22java%22+OR+%22python%22)+(junior+OR+jr+OR+estagio+OR+estágio)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["desenvolvedor", "programador", "react", "node", "fullstack", "full stack", "java", "python", "frontend", "backend", "web"],
+      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto", "diretor", "gerente"]
     }
   ]
 }

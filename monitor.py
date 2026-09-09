@@ -133,7 +133,7 @@ def run_check():
     discarded_senior = 0
     discarded_score = 0
 
-    for job in unique_jobs:
+    for idx, job in enumerate(unique_jobs, 1):
         fp = job.fingerprint
         source_ids = [s.source_job_id for s in job.sources.values()]
 
@@ -144,27 +144,48 @@ def run_check():
 
         # Validação de Localidade Estrita (Tatuí / Sorocaba / Remoto)
         loc_allowed, loc_reason = is_location_allowed(job.workplace_type, job.location, job.title)
-        if not loc_allowed:
-            discarded_location += 1
-            store.mark_seen(fp, source_ids)
-            continue
-
+        
         # Cálculo do Match Score com o CV
         score, reasons = calculate_match_score(job)
         job.match_score = score
         job.match_reasons = reasons
 
+        # Auditoria individual da decisão
+        print(f"\n--- [Auditoria Vaga #{idx}] ---")
+        print(f"Empresa: {job.company} | Título: {job.title}")
+        print(f"Modalidade: {job.workplace_type} | Local: {job.location or 'Não especificado'}")
+        
+        if not loc_allowed:
+            print(f"✗ Localização: REJEITADA ({loc_reason})")
+            print(f"DECISÃO: DESCARTADA (Filtro Regional)")
+            discarded_location += 1
+            store.mark_seen(fp, source_ids)
+            continue
+        else:
+            print(f"✓ Localização: APROVADA ({loc_reason})")
+
         if score <= 0:
+            print(f"✗ Senioridade: BLOQUEADA (Penalidade Sênior/Pleno)")
+            print(f"DECISÃO: DESCARTADA (Senioridade)")
             discarded_senior += 1
             store.mark_seen(fp, source_ids)
             continue
 
         if score < min_score:
+            print(f"✗ Match Score: {score}/100 (Abaixo do mínimo {min_score})")
+            for r in reasons:
+                print(f"   • {r}")
+            print(f"DECISÃO: DESCARTADA (Score insuficiente)")
             discarded_score += 1
             store.mark_seen(fp, source_ids)
             continue
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] 🎯 MATCH {score}/100: {job.title} ({job.company})")
+        # Aprovada em todos os critérios
+        print(f"✓ Match Score: {score}/100 (Aprovado >= {min_score})")
+        for r in reasons:
+            print(f"   • {r}")
+        print(f"🎯 DECISÃO: NOTIFICAR TELEGRAM")
+
         sent = notifier.send_job_alert(job)
         if sent:
             notified_count += 1

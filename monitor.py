@@ -86,6 +86,7 @@ def run_check():
     min_score = config.get("min_match_score", 50)  # Padrão: 50 pts mínimos para alertar
 
     monitors = config.get("monitors", [])
+    start_time = time.time()
     now_str = datetime.now().strftime("%H:%M:%S")
     print(f"[{now_str}] Iniciando patrulha com {len(monitors)} monitor(es)...")
 
@@ -113,13 +114,22 @@ def run_check():
     # 2. Executa a Coleta (Fase de Descoberta / Recall Alto)
     discovered_gupy = []
     discovered_linkedin = []
+    gupy_status = "OK"
+    linkedin_status = "OK"
+
     if gupy_queries:
-        gupy_col = GupyCollector(HTTP, gupy_queries)
-        discovered_gupy = gupy_col.collect()
+        try:
+            gupy_col = GupyCollector(HTTP, gupy_queries)
+            discovered_gupy = gupy_col.collect()
+        except Exception as e:
+            gupy_status = f"FALHA ({e})"
 
     if linkedin_searches:
-        li_col = LinkedInCollector(HTTP, linkedin_searches)
-        discovered_linkedin = li_col.collect()
+        try:
+            li_col = LinkedInCollector(HTTP, linkedin_searches)
+            discovered_linkedin = li_col.collect()
+        except Exception as e:
+            linkedin_status = f"FALHA ({e})"
 
     discovered_jobs = discovered_gupy + discovered_linkedin
 
@@ -193,20 +203,25 @@ def run_check():
         # Marca como vista para nunca repetir a mesma vaga
         store.mark_seen(fp, source_ids)
 
-    # Relatório Estruturado do Funil
-    print("\n" + "=" * 45)
-    print(" 📊 FUNIL DE EXECUÇÃO E COBERTURA")
-    print("=" * 45)
-    print(f"├─ Descoberta Bruta: {len(discovered_jobs)}")
-    print(f"│  ├─ Gupy: {len(discovered_gupy)}")
-    print(f"│  └─ LinkedIn (2h sobreposta): {len(discovered_linkedin)}")
-    print(f"├─ Vagas Únicas (pós-dedup): {len(unique_jobs)}")
-    print(f"├─ Descarte Já Vistas: {discarded_seen}")
-    print(f"├─ Descarte Localização: {discarded_location}")
-    print(f"├─ Descarte Sênior/Pleno: {discarded_senior}")
-    print(f"├─ Descarte Score < {min_score}: {discarded_score}")
-    print(f"└─ 🎯 Notificadas no Telegram: {notified_count}")
-    print("=" * 45 + "\n")
+    elapsed = time.time() - start_time
+    # Relatório Estruturado do Funil e Saúde do Sistema
+    print("\n" + "=" * 48)
+    print(" 📊 FUNIL DE EXECUÇÃO E SAÚDE DO SISTEMA")
+    print("=" * 48)
+    print(f"├─ Gupy:     {gupy_status:<8} | {len(discovered_gupy)} vaga(s)")
+    print(f"├─ LinkedIn: {linkedin_status:<8} | {len(discovered_linkedin)} vaga(s)")
+    print("├" + "─" * 46)
+    print(f"├─ Descoberta Bruta:    {len(discovered_jobs)}")
+    print(f"├─ Vagas Únicas:        {len(unique_jobs)}")
+    print(f"├─ Já Vistas:           {discarded_seen}")
+    print(f"├─ Rejeitadas Região:   {discarded_location}")
+    print(f"├─ Rejeitadas Nível:    {discarded_senior}")
+    print(f"├─ Rejeitadas Score:    {discarded_score}")
+    print(f"├─ 🎯 Notificadas:       {notified_count}")
+    print("├" + "─" * 46)
+    print(f"├─ Duração:             {elapsed:.1f}s")
+    print(f"└─ Status do Ciclo:     SUCCESS")
+    print("=" * 48 + "\n")
 
     # 5. Heartbeat e Persistência
     check_heartbeat(config, store, notifier)

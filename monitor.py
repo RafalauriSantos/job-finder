@@ -177,6 +177,26 @@ def notify(title, company, workplace, job_type, salary, url):
         print(f"  -> [ALERTA] {company} | {title} | {url}")
 
 
+JOB_TYPE_TRANSLATIONS = {
+    "vacancy_type_effective": "Efetivo (CLT)",
+    "vacancy_type_internship": "Estágio",
+    "vacancy_type_trainee": "Trainee",
+    "vacancy_type_apprentice": "Jovem Aprendiz",
+    "vacancy_legal_entity": "Pessoa Jurídica (PJ)",
+    "vacancy_type_temporary": "Temporário",
+    "vacancy_type_freelancer": "Freelancer",
+    "vacancy_type_outsource": "Terceirizado",
+    "vacancy_type_talent_pool": "Banco de Talentos",
+    "vacancy_type_associate": "Associado",
+}
+
+WORKPLACE_TRANSLATIONS = {
+    "remote": "Remoto 🌐",
+    "hybrid": "Híbrido 🏢/🏠",
+    "on-site": "Presencial 🏢",
+}
+
+
 def query_gupy_mcp(args):
     """Consulta vagas na API oficial da Gupy."""
     body = {
@@ -195,6 +215,8 @@ def query_gupy_mcp(args):
     resp = HTTP.post(GUPY_MCP_URL, json=body, headers=headers, timeout=15)
     if resp.status_code != 200:
         return []
+
+    resp.encoding = "utf-8"
 
     for line in resp.text.splitlines():
         if line.startswith("data:"):
@@ -359,8 +381,10 @@ def run_check():
                 seen_ids.add(job_id)
                 name = job.get("name")
                 company = job.get("careerPageName") or desc
-                workplace = job.get("workplaceType", "Não especificado").capitalize()
-                job_type = job.get("type", "Não especificado")
+                raw_workplace = (job.get("workplaceType") or "").lower()
+                workplace = WORKPLACE_TRANSLATIONS.get(raw_workplace, raw_workplace.capitalize() or "Não especificado")
+                raw_type = job.get("type", "")
+                job_type = JOB_TYPE_TRANSLATIONS.get(raw_type, raw_type or "Não especificado")
                 salary_info = job.get("salary", {}).get("label", "Não informado")
                 url = job.get("jobUrl") or f"https://{job.get('careerPageName')}.gupy.io/job/{job_id}"
 

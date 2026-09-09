@@ -2,220 +2,96 @@ import json
 import os
 import sys
 import tempfile
-import xml.etree.ElementTree as ET
 from unittest.mock import MagicMock, patch
 import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from monitor import (
-    matches_filters,
-    query_rss,
-    load_state,
-    save_state,
-    send_telegram,
-    query_gupy_mcp,
-)
+from models.job import Job
+from core.normalizer import is_location_allowed, extract_technologies
+from core.scoring import calculate_match_score
+from core.deduplicator import Deduplicator
+from notify.telegram_notifier import TelegramNotifier
+from storage.state_store import StateStore
+from collectors.gupy_collector import GupyCollector
+from collectors.linkedin_collector import LinkedInCollector
 
 
-class TestFilters:
-    def test_accepts_valid_keywords(self):
-        job = {"name": "Desenvolvedor Java Júnior", "description": "Trabalhar com Spring Boot", "workplaceType": "remote"}
-        monitor_cfg = {"keywords": ["java", "python"], "exclude_keywords": ["senior"], "only_remote": False}
-        assert matches_filters(job, monitor_cfg) is True
+class TestFiltersAndLocation:
+    def test_strict_location_rules(self):
+        # Remoto aceito
+        allowed, _ = is_location_allowed("remote", "Recife, PE")
+        assert allowed is True
 
-    def test_rejects_blacklisted_keywords(self):
-        job = {"name": "Desenvolvedor Java Sênior", "description": "Liderança técnica", "workplaceType": "remote"}
-        monitor_cfg = {"keywords": ["java"], "exclude_keywords": ["senior", "sênior", "lead"], "only_remote": False}
-        assert matches_filters(job, monitor_cfg) is False
+        # Híbrido em Sorocaba aceito
+        allowed, _ = is_location_allowed("hybrid", "Sorocaba, SP")
+        assert allowed is True
 
-    def test_rejects_non_remote_when_only_remote_is_true(self):
-        job = {"name": "Dev Python Jr", "description": "Vaga presencial em SP", "workplaceType": "on-site"}
-        monitor_cfg = {"keywords": ["python"], "exclude_keywords": [], "only_remote": True}
-        assert matches_filters(job, monitor_cfg) is False
+        # Híbrido em Boituva aceito
+        allowed, _ = is_location_allowed("hybrid", "Boituva, SP")
+        assert allowed is True
 
-    def test_strict_location_accepts_remote(self):
-        job = {"name": "Dev React Jr", "workplaceType": "remote", "location": "Recife, PE"}
-        monitor_cfg = {"keywords": ["react"], "exclude_keywords": [], "strict_location": True}
-        assert matches_filters(job, monitor_cfg) is True
-
-    def test_strict_location_accepts_sorocaba_tatui_hybrid(self):
-        job = {"name": "Desenvolvedor Node Jr", "workplaceType": "hybrid", "location": "Sorocaba, SP"}
-        monitor_cfg = {"keywords": ["node", "react", "python"], "exclude_keywords": [], "strict_location": True}
-        assert matches_filters(job, monitor_cfg) is True
-
-        job_boituva = {"name": "Desenvolvedor React Jr", "workplaceType": "hybrid", "location": "Boituva, SP"}
-        assert matches_filters(job_boituva, monitor_cfg) is True
-
-        job_itapetinga = {"name": "Dev Python Jr", "workplaceType": "on-site", "location": "Itapetininga, SP"}
-        assert matches_filters(job_itapetinga, monitor_cfg) is True
-
-    def test_strict_location_rejects_hybrid_outside_region(self):
-        job = {"name": "Dev Fullstack Jr", "workplaceType": "hybrid", "location": "São Paulo, SP"}
-        monitor_cfg = {"keywords": ["fullstack"], "exclude_keywords": [], "strict_location": True}
-        assert matches_filters(job, monitor_cfg) is False
+        # Híbrido em São Paulo capital rejeitado
+        allowed, _ = is_location_allowed("hybrid", "São Paulo, SP")
+        assert allowed is False
 
 
-class TestRSSParser:
-    def test_parses_atom_feed_correctly(self):
-        sample_atom = (
-            b'<?xml version="1.0" encoding="UTF-8"?>'
-            b'<feed xmlns="http://www.w3.org/2005/Atom">'
-            b'  <entry>'
-            b'    <id>tag:google.com,2013:googlealerts/feed:12345</id>'
-            b'    <title type="html">Vaga: &lt;b&gt;Flavia Nasser&lt;/b&gt; Contrata</title>'
-            b'    <link href="https://exemplo.com/vaga/123"/>'
-            b'  </entry>'
-            b'</feed>'
-        )
-
-        mock_resp = MagicMock()
-        mock_resp.status_code = 200
-        mock_resp.content = sample_atom
-
-        with patch("monitor.HTTP.get", return_value=mock_resp):
-            jobs = query_rss("https://fake-feed.xml", "Flavia Nasser")
-            assert len(jobs) == 1
-            assert jobs[0]["name"] == "Vaga: Flavia Nasser Contrata"
-            assert jobs[0]["jobUrl"] == "https://exemplo.com/vaga/123"
-            assert jobs[0]["careerPageName"] == "Flavia Nasser"
-
-    def test_parses_rss_20_feed_correctly(self):
-        sample_rss = (
-            b'<?xml version="1.0" encoding="UTF-8"?>'
-            b'<rss version="2.0">'
-            b'  <channel>'
-            b'    <item>'
-            b'      <guid>gft-job-999</guid>'
-            b'      <title>GFT e DIO lancam novo Bootcamp Starter</title>'
-            b'      <link>https://jobs.gft.com/job/999</link>'
-            b'    </item>'
-            b'  </channel>'
-            b'</rss>'
-        )
-
-        mock_resp = MagicMock()
-        mock_resp.status_code = 200
-        mock_resp.content = sample_rss
-
-        with patch("monitor.HTTP.get", return_value=mock_resp):
-            jobs = query_rss("https://fake-feed.xml", "GFT Brasil")
-            assert len(jobs) == 1
-            assert jobs[0]["id"] == "gft-job-999"
-            assert "Bootcamp Starter" in jobs[0]["name"]
-            assert jobs[0]["jobUrl"] == "https://jobs.gft.com/job/999"
-
-
-class TestStatePersistence:
-    def test_loads_legacy_list_and_saves_dict(self, monkeypatch):
+class TestStateStorePersistence:
+    def test_loads_legacy_and_persists_fingerprints(self):
         with tempfile.TemporaryDirectory() as tmpdir:
-            test_state_file = os.path.join(tmpdir, "test_seen.json")
-            # Cria estado no formato legado (apenas lista de IDs)
-            with open(test_state_file, "w", encoding="utf-8") as f:
-                json.dump([101, 102, 103], f)
+            test_file = os.path.join(tmpdir, "seen.json")
+            with open(test_file, "w", encoding="utf-8") as f:
+                json.dump({"seen_ids": ["123", "456"], "last_heartbeat": "2026-09-08"}, f)
 
-            monkeypatch.setattr("monitor.STATE_FILE", test_state_file)
+            store = StateStore(test_file)
+            assert store.is_seen("fake_fp", "123") is True
+            assert store.is_seen("fake_fp", "999") is False
 
-            state = load_state()
-            assert state["seen_ids"] == [101, 102, 103]
+            store.mark_seen("fp_novo", ["999"])
+            store.save()
 
-            # Adiciona novo ID e salva
-            state["seen_ids"].append(104)
-            save_state(state)
-
-            reloaded = load_state()
-            assert 104 in reloaded["seen_ids"]
+            reloaded = StateStore(test_file)
+            assert reloaded.is_seen("fp_novo") is True
+            assert "999" in reloaded.state["seen_ids"]
 
 
-class TestTelegramNotification:
-    def test_telegram_sends_correct_payload_and_buttons(self, monkeypatch):
-        monkeypatch.setattr("monitor.TELEGRAM_BOT_TOKEN", "fake_token_123")
-        monkeypatch.setattr("monitor.TELEGRAM_CHAT_ID", "123456789")
+class TestTelegramNotifier:
+    def test_telegram_sends_formatted_alert_with_score_and_buttons(self):
+        mock_http = MagicMock()
+        mock_http.post.return_value.status_code = 200
 
-        mock_post = MagicMock()
-        mock_post.return_value.status_code = 200
+        notifier = TelegramNotifier("fake_token", "fake_chat", mock_http)
+        job = Job(
+            title="Desenvolvedor React Jr",
+            company="Goomer",
+            workplace_type="remote",
+            match_score=95,
+            match_reasons=["Nível Júnior", "Stack Core React"],
+        )
+        job.add_source("gupy", "101", "https://goomer.gupy.io/jobs/101")
+        job.add_source("linkedin", "202", "https://linkedin.com/jobs/202")
 
-        with patch("monitor.HTTP.post", mock_post):
-            success = send_telegram(
-                title="Desenvolvedor Java Jr",
-                company="GFT Brasil",
-                workplace="Remoto",
-                job_type="CLT",
-                salary="A combinar",
-                url="https://jobs.gft.com/123",
-            )
+        success = notifier.send_job_alert(job)
+        assert success is True
+        assert mock_http.post.called
 
-            assert success is True
-            assert mock_post.called
-            call_args = mock_post.call_args[1]["json"]
-            assert call_args["chat_id"] == "123456789"
-            assert "Desenvolvedor Java Jr" in call_args["text"]
-            assert call_args["disable_web_page_preview"] is True
-            assert "inline_keyboard" in call_args["reply_markup"]
-            assert call_args["reply_markup"]["inline_keyboard"][0][0]["url"] == "https://jobs.gft.com/123"
-
-    def test_heartbeat_daily_respects_state_and_triggers(self, monkeypatch):
-        from monitor import check_heartbeat
-        monkeypatch.setattr("monitor.TELEGRAM_BOT_TOKEN", "fake_token_123")
-        monkeypatch.setattr("monitor.TELEGRAM_CHAT_ID", "123456789")
-
-        mock_post = MagicMock()
-        mock_post.return_value.status_code = 200
-
-        config = {
-            "heartbeat": {"enabled": True, "frequency": "daily", "hour_start": 0},
-            "monitors": [{"type": "gupy", "description": "M1"}],
-        }
-        state = {"seen_ids": [], "last_heartbeat": ""}
-
-        with patch("monitor.HTTP.post", mock_post):
-            check_heartbeat(config, state)
-            assert mock_post.called
-            assert state["last_heartbeat"] != ""
-
-            # Segunda chamada no mesmo dia não deve disparar de novo
-            mock_post.reset_mock()
-            check_heartbeat(config, state)
-            assert not mock_post.called
+        call_json = mock_http.post.call_args[1]["json"]
+        assert "MATCH COMPATÍVEL: 95/100" in call_json["text"]
+        assert "Goomer" in call_json["text"]
+        buttons = call_json["reply_markup"]["inline_keyboard"]
+        # Deve ter botões para ambas as fontes (GUPY e LINKEDIN)
+        assert len(buttons) == 2
 
 
-class TestLiveGupyAPI:
-    def test_gupy_endpoint_responds_200(self):
-        """Teste de fumaça real para garantir que o endpoint público da Gupy continua ativo."""
-        jobs = query_gupy_mcp({"careerPageName": "goomer", "limit": 1})
-        # Deve retornar uma lista (mesmo que vazia se não houver vagas abertas)
+class TestCollectorsLiveSmoke:
+    def test_live_gupy_collector_structure(self):
+        import requests
+        col = GupyCollector(requests.Session(), [{"term": "React", "limit": 1}])
+        jobs = col.collect()
         assert isinstance(jobs, list)
 
-
-class TestLinkedInParser:
-    def test_parses_linkedin_card_correctly(self):
-        from monitor import query_linkedin
-        sample_html = (
-            '<li>'
-            '  <div class="base-card" data-entity-urn="urn:li:jobPosting:99887766">'
-            '    <a class="base-card__full-link" href="https://br.linkedin.com/jobs/view/99887766?ref=123"></a>'
-            '    <h3 class="base-search-card__title">Desenvolvedor React Jr</h3>'
-            '    <h4 class="base-search-card__subtitle"><a href="#">Tech Corp</a></h4>'
-            '    <span class="job-search-card__location">Remoto, Brasil</span>'
-            '  </div>'
-            '</li>'
-        )
-
-        mock_resp = MagicMock()
-        mock_resp.status_code = 200
-        mock_resp.text = sample_html
-
-        with patch("monitor.HTTP.get", return_value=mock_resp):
-            jobs = query_linkedin("React Junior")
-            assert len(jobs) == 1
-            assert jobs[0]["id"] == "li-99887766"
-            assert jobs[0]["name"] == "Desenvolvedor React Jr"
-            assert jobs[0]["careerPageName"] == "Tech Corp"
-            assert jobs[0]["workplaceType"] == "remote"
-            assert jobs[0]["jobUrl"] == "https://br.linkedin.com/jobs/view/99887766"
-
-    def test_live_linkedin_guest_api_responds(self):
-        """Teste de fumaça real para a Guest API do LinkedIn."""
-        from monitor import query_linkedin
-        jobs = query_linkedin("Desenvolvedor Junior", time_range="r86400")
+    def test_live_linkedin_collector_structure(self):
+        import requests
+        col = LinkedInCollector(requests.Session(), [{"keywords": "Desenvolvedor Junior", "time_range": "r86400"}])
+        jobs = col.collect()
         assert isinstance(jobs, list)

@@ -22,6 +22,14 @@
       "url": "https://news.google.com/rss/search?q=%22Flavia+Nasser%22+(vaga+OR+vagas+OR+contrata+OR+oportunidade)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "keywords": ["vaga", "vagas", "contrata", "oportunidade", "atendimento", "fotografia"],
       "exclude_keywords": []
+    },
+    {
+      "type": "rss",
+      "description": "GFT Brasil (Remoto & Sorocaba | Java & Python)",
+      "company": "GFT Brasil",
+      "url": "https://news.google.com/rss/search?q=%22GFT%22+(Remoto+OR+Sorocaba)+(Java+OR+Python+OR+Starter+OR+Junior)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "keywords": ["java", "python", "starter", "junior", "jr"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "cobol", "sap", "gerente", "diretor"]
     }
   ]
 }

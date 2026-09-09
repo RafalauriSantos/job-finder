@@ -123,7 +123,7 @@ def send_telegram_heartbeat(monitors_count):
         f"💚 <b>Radar Operacional — Prova de Vida</b>\n\n"
         f"Seu monitor de vagas está rodando ativamente na nuvem.\n"
         f"🏢 <b>Monitores ativos:</b> {monitors_count}\n"
-        f"⏱️ <b>Frequência:</b> a cada 15 min\n"
+        f"⏱️ <b>Frequência:</b> a cada 1 hora\n"
         f"Status: 100% Saudável."
     )
 

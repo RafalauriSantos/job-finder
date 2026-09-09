@@ -2,7 +2,7 @@ name: Job Monitor
 
 on:
   schedule:
-    - cron: '*/15 * * * *' # Executa a cada 15 minutos
+    - cron: '0 * * * *' # Executa a cada 1 hora
   workflow_dispatch:        # Permite disparar manualmente pelo GitHub
 
 jobs:

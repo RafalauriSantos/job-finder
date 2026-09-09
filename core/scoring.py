@@ -17,6 +17,8 @@ JUNIOR_KEYWORDS = [
 ]
 
 
+import re
+
 def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
     """
     Calcula o Match Score (0 a 100) da vaga contra o perfil técnico do Rafael Lauri:
@@ -27,12 +29,20 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
     score = 0
     reasons = []
 
+    title_lower = job.title.lower()
     text_to_analyze = f"{job.title} {job.description}".lower()
 
-    # 1. Checagem de Senioridade (Penalidade / Bônus)
-    has_senior = any(k in job.title.lower() for k in SENIOR_KEYWORDS)
-    has_mid = any(k in job.title.lower() for k in MID_KEYWORDS)
-    has_junior = any(k in job.title.lower() for k in JUNIOR_KEYWORDS)
+    # 1. Checagem de Senioridade usando Word Boundaries para evitar falsos positivos (ex: "pl" em "Implementation")
+    def matches_any(keywords: List[str], text: str) -> bool:
+        for kw in keywords:
+            pattern = rf"(?:\b|\W){re.escape(kw)}(?:\b|\W)"
+            if re.search(pattern, text):
+                return True
+        return False
+
+    has_senior = matches_any(SENIOR_KEYWORDS, title_lower)
+    has_mid = matches_any(MID_KEYWORDS, title_lower)
+    has_junior = matches_any(JUNIOR_KEYWORDS, title_lower)
 
     if has_senior:
         score -= 60

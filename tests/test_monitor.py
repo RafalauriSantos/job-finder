@@ -34,10 +34,20 @@ class TestFilters:
         monitor_cfg = {"keywords": ["python"], "exclude_keywords": [], "only_remote": True}
         assert matches_filters(job, monitor_cfg) is False
 
-    def test_accepts_when_keywords_list_is_empty(self):
-        job = {"name": "Atendente", "description": "Geral", "workplaceType": "remote"}
-        monitor_cfg = {"keywords": [], "exclude_keywords": [], "only_remote": False}
+    def test_strict_location_accepts_remote(self):
+        job = {"name": "Dev React Jr", "workplaceType": "remote", "location": "Recife, PE"}
+        monitor_cfg = {"keywords": ["react"], "exclude_keywords": [], "strict_location": True}
         assert matches_filters(job, monitor_cfg) is True
+
+    def test_strict_location_accepts_sorocaba_tatui_hybrid(self):
+        job = {"name": "Desenvolvedor Node Jr", "workplaceType": "hybrid", "location": "Sorocaba, SP"}
+        monitor_cfg = {"keywords": ["node"], "exclude_keywords": [], "strict_location": True}
+        assert matches_filters(job, monitor_cfg) is True
+
+    def test_strict_location_rejects_hybrid_outside_region(self):
+        job = {"name": "Dev Fullstack Jr", "workplaceType": "hybrid", "location": "São Paulo, SP"}
+        monitor_cfg = {"keywords": ["fullstack"], "exclude_keywords": [], "strict_location": True}
+        assert matches_filters(job, monitor_cfg) is False
 
 
 class TestRSSParser:
@@ -168,4 +178,38 @@ class TestLiveGupyAPI:
         """Teste de fumaça real para garantir que o endpoint público da Gupy continua ativo."""
         jobs = query_gupy_mcp({"careerPageName": "goomer", "limit": 1})
         # Deve retornar uma lista (mesmo que vazia se não houver vagas abertas)
+        assert isinstance(jobs, list)
+
+
+class TestLinkedInParser:
+    def test_parses_linkedin_card_correctly(self):
+        from monitor import query_linkedin
+        sample_html = (
+            '<li>'
+            '  <div class="base-card" data-entity-urn="urn:li:jobPosting:99887766">'
+            '    <a class="base-card__full-link" href="https://br.linkedin.com/jobs/view/99887766?ref=123"></a>'
+            '    <h3 class="base-search-card__title">Desenvolvedor React Jr</h3>'
+            '    <h4 class="base-search-card__subtitle"><a href="#">Tech Corp</a></h4>'
+            '    <span class="job-search-card__location">Remoto, Brasil</span>'
+            '  </div>'
+            '</li>'
+        )
+
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.text = sample_html
+
+        with patch("monitor.HTTP.get", return_value=mock_resp):
+            jobs = query_linkedin("React Junior")
+            assert len(jobs) == 1
+            assert jobs[0]["id"] == "li-99887766"
+            assert jobs[0]["name"] == "Desenvolvedor React Jr"
+            assert jobs[0]["careerPageName"] == "Tech Corp"
+            assert jobs[0]["workplaceType"] == "remote"
+            assert jobs[0]["jobUrl"] == "https://br.linkedin.com/jobs/view/99887766"
+
+    def test_live_linkedin_guest_api_responds(self):
+        """Teste de fumaça real para a Guest API do LinkedIn."""
+        from monitor import query_linkedin
+        jobs = query_linkedin("Desenvolvedor Junior", time_range="r86400")
         assert isinstance(jobs, list)

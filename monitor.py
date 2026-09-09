@@ -282,6 +282,85 @@ def query_rss(feed_url, default_company=""):
     return []
 
 
+def query_linkedin(keywords, time_range="r3600", geo_id="106057199", workplace_types=None, experience_levels=None):
+    """Consulta vagas recentes via LinkedIn Guest API pública sem necessidade de login."""
+    import urllib.parse
+    base_url = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
+    params = {
+        "keywords": keywords,
+        "f_TPR": time_range,
+        "geoId": geo_id,
+        "start": 0,
+    }
+    if workplace_types:
+        params["f_WT"] = ",".join(str(w) for w in workplace_types)
+    if experience_levels:
+        params["f_E"] = ",".join(str(e) for e in experience_levels)
+
+    query_str = urllib.parse.urlencode(params)
+    target_url = f"{base_url}?{query_str}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+    }
+
+    try:
+        resp = HTTP.get(target_url, headers=headers, timeout=15)
+        if resp.status_code != 200:
+            return []
+
+        resp.encoding = "utf-8"
+        html = resp.text
+
+        # Encontra cada card de vaga <li>
+        cards = re.findall(r'<li[^>]*>(.*?)</li>', html, re.DOTALL)
+        jobs = []
+
+        for card in cards:
+            # URN / ID da vaga
+            urn_match = re.search(r'data-entity-urn=\"urn:li:jobPosting:(\d+)\"', card)
+            title_match = re.search(r'<h3[^>]*class=\"[^\"]*base-search-card__title[^\"]*\"[^>]*>\s*([^<]+)\s*</h3>', card)
+            company_match = re.search(r'<h4[^>]*class=\"[^\"]*base-search-card__subtitle[^\"]*\"[^>]*>.*?<a[^>]*>\s*([^<]+)\s*</a>', card, re.DOTALL)
+            link_match = re.search(r'<a[^>]*class=\"[^\"]*base-card__full-link[^\"]*\"[^>]*href=\"([^\"]+)\"', card)
+            loc_match = re.search(r'<span[^>]*class=\"[^\"]*job-search-card__location[^\"]*\"[^>]*>\s*([^<]+)\s*</span>', card)
+
+            if not title_match or not link_match:
+                continue
+
+            job_id = urn_match.group(1) if urn_match else link_match.group(1).split("?")[0]
+            title = title_match.group(1).strip()
+            company = company_match.group(1).strip() if company_match else "LinkedIn"
+            raw_link = link_match.group(1).split("?")[0]
+            location = loc_match.group(1).strip() if loc_match else "Brasil"
+
+            # Identifica modelo de trabalho pela localização ou título
+            loc_lower = location.lower()
+            title_lower = title.lower()
+            if "remoto" in loc_lower or "remote" in loc_lower or "remoto" in title_lower or "remote" in title_lower:
+                workplace = "remote"
+            elif "híbrido" in loc_lower or "hibrido" in loc_lower or "hybrid" in loc_lower or "híbrido" in title_lower or "hibrido" in title_lower:
+                workplace = "hybrid"
+            else:
+                workplace = "on-site"
+
+            jobs.append({
+                "id": f"li-{job_id}",
+                "name": title,
+                "careerPageName": company,
+                "location": location,
+                "workplaceType": workplace,
+                "type": "Efetivo (CLT) / Estágio",
+                "salary": {"label": "Não informado"},
+                "jobUrl": raw_link,
+            })
+
+        return jobs
+    except Exception as e:
+        print(f"[ERRO LinkedIn Parser] {e}")
+        return []
+
+
+
 def check_heartbeat(config, state):
     """Verifica se deve enviar o heartbeat (diário ou semanal)."""
     hb_cfg = config.get("heartbeat", {})
@@ -314,22 +393,31 @@ def check_heartbeat(config, state):
 
 
 def matches_filters(job, monitor_cfg):
-    """Aplica filtros opcionais (apenas remoto, palavras-chave, exclusões)."""
+    """Aplica filtros opcionais (apenas remoto, palavras-chave, exclusões e localidade)."""
     title = job.get("name", "").lower()
     description = job.get("description", "").lower()
-    workplace = job.get("workplaceType", "").lower()
+    workplace = (job.get("workplaceType") or "").lower()
+    location = (job.get("location") or job.get("city") or "").lower()
 
     # 1. Filtro 'only_remote'
     if monitor_cfg.get("only_remote", False):
         if workplace != "remote":
             return False
 
-    # 2. Filtro 'exclude_keywords' (blacklist)
+    # 2. Regra de Localidade Estrita (Híbrido/Presencial apenas Tatuí / Sorocaba / Votorantim)
+    if monitor_cfg.get("strict_location", True):
+        if workplace in ["hybrid", "on-site"]:
+            allowed_cities = ["tatuí", "tatui", "sorocaba", "votorantim"]
+            is_near = any(city in location or city in title for city in allowed_cities)
+            if not is_near:
+                return False
+
+    # 3. Filtro 'exclude_keywords' (blacklist)
     exclude = [k.lower() for k in monitor_cfg.get("exclude_keywords", [])]
     if any(ex in title for ex in exclude):
         return False
 
-    # 3. Filtro 'keywords' (whitelist)
+    # 4. Filtro 'keywords' (whitelist)
     keywords = [k.lower() for k in monitor_cfg.get("keywords", [])]
     if keywords:
         has_match = any(kw in title or kw in description for kw in keywords)
@@ -358,11 +446,24 @@ def run_check():
                 feed_url = monitor.get("url")
                 company_name = monitor.get("company", desc)
                 jobs = query_rss(feed_url, company_name)
+            elif m_type == "linkedin":
+                keywords = monitor.get("keywords_search") or monitor.get("description")
+                time_range = monitor.get("time_range", "r3600")
+                geo_id = monitor.get("geo_id", "106057199")
+                workplace_types = monitor.get("workplace_types", [2, 3])
+                experience_levels = monitor.get("experience_levels", [1, 2])
+                jobs = query_linkedin(
+                    keywords=keywords,
+                    time_range=time_range,
+                    geo_id=geo_id,
+                    workplace_types=workplace_types,
+                    experience_levels=experience_levels,
+                )
             else:
                 query_args = {
                     k: v
                     for k, v in monitor.items()
-                    if k not in ["type", "description", "only_remote", "keywords", "exclude_keywords"]
+                    if k not in ["type", "description", "only_remote", "strict_location", "keywords", "exclude_keywords"]
                 }
                 if "limit" not in query_args:
                     query_args["limit"] = 20
@@ -382,14 +483,18 @@ def run_check():
                 name = job.get("name")
                 company = job.get("careerPageName") or desc
                 raw_workplace = (job.get("workplaceType") or "").lower()
-                workplace = WORKPLACE_TRANSLATIONS.get(raw_workplace, raw_workplace.capitalize() or "Não especificado")
+                workplace_label = WORKPLACE_TRANSLATIONS.get(raw_workplace, raw_workplace.capitalize() or "Não especificado")
+                loc = job.get("location") or job.get("city")
+                if loc:
+                    workplace_label = f"{workplace_label} ({loc})"
+
                 raw_type = job.get("type", "")
                 job_type = JOB_TYPE_TRANSLATIONS.get(raw_type, raw_type or "Não especificado")
                 salary_info = job.get("salary", {}).get("label", "Não informado")
                 url = job.get("jobUrl") or f"https://{job.get('careerPageName')}.gupy.io/job/{job_id}"
 
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] 🎯 NOVA VAGA: {name} ({company})")
-                notify(name, company, workplace, job_type, salary_info, url)
+                notify(name, company, workplace_label, job_type, salary_info, url)
 
     state["seen_ids"] = list(seen_ids)
     check_heartbeat(config, state)

@@ -12,6 +12,7 @@
       "companyId": 2245,
       "careerPageName": "goomer",
       "only_remote": false,
+      "strict_location": false,
       "keywords": [],
       "exclude_keywords": []
     },
@@ -20,32 +21,88 @@
       "description": "Flavia Nasser (Fotografia / Vagas)",
       "company": "Flavia Nasser",
       "url": "https://news.google.com/rss/search?q=%22Flavia+Nasser%22+(vaga+OR+vagas+OR+contrata+OR+oportunidade)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": false,
       "keywords": ["vaga", "vagas", "contrata", "oportunidade", "atendimento", "fotografia"],
       "exclude_keywords": []
     },
     {
       "type": "rss",
-      "description": "GFT Brasil (Remoto & Sorocaba | Java & Python)",
+      "description": "GFT Brasil (Remoto & Sorocaba)",
       "company": "GFT Brasil",
-      "url": "https://news.google.com/rss/search?q=%22GFT%22+(Remoto+OR+Sorocaba)+(Java+OR+Python+OR+Starter+OR+Junior)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
-      "keywords": ["java", "python", "starter", "junior", "jr"],
+      "url": "https://news.google.com/rss/search?q=%22GFT%22+(Remoto+OR+Sorocaba)+(Java+OR+Python+OR+React+OR+Node+OR+Fullstack+OR+Starter+OR+Junior)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["java", "python", "react", "node", "typescript", "starter", "junior", "jr"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "cobol", "sap", "gerente", "diretor"]
     },
     {
+      "type": "linkedin",
+      "description": "LinkedIn — Full Stack Júnior (Última Hora)",
+      "keywords_search": "Desenvolvedor Full Stack Junior",
+      "time_range": "r3600",
+      "strict_location": true,
+      "keywords": ["full stack", "fullstack", "desenvolvedor", "developer", "software"],
+      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto", "gerente"]
+    },
+    {
+      "type": "linkedin",
+      "description": "LinkedIn — React / Frontend Júnior (Última Hora)",
+      "keywords_search": "Desenvolvedor React Junior",
+      "time_range": "r3600",
+      "strict_location": true,
+      "keywords": ["react", "frontend", "front-end", "typescript", "javascript", "web"],
+      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
+    },
+    {
+      "type": "linkedin",
+      "description": "LinkedIn — Node.js / Backend Júnior (Última Hora)",
+      "keywords_search": "Desenvolvedor Node Junior",
+      "time_range": "r3600",
+      "strict_location": true,
+      "keywords": ["node", "backend", "back-end", "typescript", "javascript", "api"],
+      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
+    },
+    {
+      "type": "linkedin",
+      "description": "LinkedIn — Java Júnior (Última Hora)",
+      "keywords_search": "Desenvolvedor Java Junior",
+      "time_range": "r3600",
+      "strict_location": true,
+      "keywords": ["java", "spring"],
+      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
+    },
+    {
+      "type": "linkedin",
+      "description": "LinkedIn — Python Júnior (Última Hora)",
+      "keywords_search": "Desenvolvedor Python Junior",
+      "time_range": "r3600",
+      "strict_location": true,
+      "keywords": ["python", "django", "fastapi", "flask"],
+      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
+    },
+    {
       "type": "gupy",
-      "description": "Gupy Radar Geral — Java Júnior",
+      "description": "Gupy — Full Stack Júnior",
+      "term": "Full Stack Junior",
+      "limit": 20,
+      "strict_location": true,
+      "keywords": ["full stack", "fullstack", "desenvolvedor"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
+    },
+    {
+      "type": "gupy",
+      "description": "Gupy — Java Júnior",
       "term": "Java Junior",
       "limit": 20,
-      "only_remote": false,
+      "strict_location": true,
       "keywords": ["java"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
     },
     {
       "type": "gupy",
-      "description": "Gupy Radar Geral — Python Júnior",
+      "description": "Gupy — Python Júnior",
       "term": "Python Junior",
       "limit": 20,
-      "only_remote": false,
+      "strict_location": true,
       "keywords": ["python"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
     }

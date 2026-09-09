@@ -2,7 +2,7 @@
   "check_interval_minutes": 60,
   "heartbeat": {
     "enabled": true,
-    "day_of_week": 0,
+    "frequency": "daily",
     "hour_start": 9
   },
   "monitors": [
@@ -30,6 +30,24 @@
       "url": "https://news.google.com/rss/search?q=%22GFT%22+(Remoto+OR+Sorocaba)+(Java+OR+Python+OR+Starter+OR+Junior)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "keywords": ["java", "python", "starter", "junior", "jr"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "cobol", "sap", "gerente", "diretor"]
+    },
+    {
+      "type": "gupy",
+      "description": "Gupy Radar Geral — Java Júnior",
+      "term": "Java Junior",
+      "limit": 20,
+      "only_remote": false,
+      "keywords": ["java"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
+    },
+    {
+      "type": "gupy",
+      "description": "Gupy Radar Geral — Python Júnior",
+      "term": "Python Junior",
+      "limit": 20,
+      "only_remote": false,
+      "keywords": ["python"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
     }
   ]
 }

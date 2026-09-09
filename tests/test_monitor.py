@@ -138,6 +138,30 @@ class TestTelegramNotification:
             assert "inline_keyboard" in call_args["reply_markup"]
             assert call_args["reply_markup"]["inline_keyboard"][0][0]["url"] == "https://jobs.gft.com/123"
 
+    def test_heartbeat_daily_respects_state_and_triggers(self, monkeypatch):
+        from monitor import check_heartbeat
+        monkeypatch.setattr("monitor.TELEGRAM_BOT_TOKEN", "fake_token_123")
+        monkeypatch.setattr("monitor.TELEGRAM_CHAT_ID", "123456789")
+
+        mock_post = MagicMock()
+        mock_post.return_value.status_code = 200
+
+        config = {
+            "heartbeat": {"enabled": True, "frequency": "daily", "hour_start": 0},
+            "monitors": [{"type": "gupy", "description": "M1"}],
+        }
+        state = {"seen_ids": [], "last_heartbeat": ""}
+
+        with patch("monitor.HTTP.post", mock_post):
+            check_heartbeat(config, state)
+            assert mock_post.called
+            assert state["last_heartbeat"] != ""
+
+            # Segunda chamada no mesmo dia não deve disparar de novo
+            mock_post.reset_mock()
+            check_heartbeat(config, state)
+            assert not mock_post.called
+
 
 class TestLiveGupyAPI:
     def test_gupy_endpoint_responds_200(self):

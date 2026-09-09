@@ -261,19 +261,33 @@ def query_rss(feed_url, default_company=""):
 
 
 def check_heartbeat(config, state):
-    """Verifica se deve enviar o heartbeat semanal."""
+    """Verifica se deve enviar o heartbeat (diário ou semanal)."""
     hb_cfg = config.get("heartbeat", {})
     if not hb_cfg.get("enabled", False):
         return
 
     now = datetime.now()
     today_str = now.strftime("%Y-%m-%d")
-    target_day = hb_cfg.get("day_of_week", 0)  # 0 = Segunda-feira
+    frequency = hb_cfg.get("frequency", "daily")  # "daily" ou "weekly"
+    target_day = hb_cfg.get("day_of_week", 0)  # 0 = Segunda-feira (para semanal)
+    target_hour = hb_cfg.get("hour_start", 9)  # Horário de envio preferencial
 
-    if now.weekday() == target_day and state.get("last_heartbeat") != today_str:
+    # Se já enviou hoje, não envia de novo
+    if state.get("last_heartbeat") == today_str:
+        return
+
+    should_send = False
+    if frequency == "daily":
+        if now.hour >= target_hour:
+            should_send = True
+    elif frequency == "weekly":
+        if now.weekday() == target_day and now.hour >= target_hour:
+            should_send = True
+
+    if should_send:
         monitors_count = len(config.get("monitors", []))
         if send_telegram_heartbeat(monitors_count):
-            print(f"[{now.strftime('%H:%M:%S')}] 💚 Heartbeat semanal enviado ao Telegram.")
+            print(f"[{now.strftime('%H:%M:%S')}] 💚 Heartbeat ({frequency}) enviado ao Telegram.")
             state["last_heartbeat"] = today_str
 
 

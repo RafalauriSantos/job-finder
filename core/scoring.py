@@ -68,6 +68,11 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
 
     # 4. Compatibilidade com a Stack do Currículo (Até 30 pts)
     techs = job.technologies
+    if not techs:
+        from core.normalizer import extract_technologies
+        techs = extract_technologies(text_to_analyze)
+        job.technologies = techs
+
     # Core Stack Atual (React, TypeScript, Node.js, PostgreSQL)
     core_matches = [t for t in techs if t in ["react", "typescript", "node.js", "postgresql", "tailwind", "supabase"]]
     if core_matches:

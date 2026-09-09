@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Dict, List, Optional
 import hashlib
 import json
+import unicodedata
 
 
 @dataclass
@@ -56,12 +57,13 @@ class Job:
         Combina: empresa normalizada + título normalizado + modalidade + 
         os primeiros 200 caracteres da descrição limpa (quando disponível).
         """
-        norm_company = self.company.strip().lower()
-        norm_title = self.title.strip().lower()
+        norm_company = "".join(c for c in unicodedata.normalize("NFD", self.company.strip().lower()) if unicodedata.category(c) != "Mn")
+        norm_title = "".join(c for c in unicodedata.normalize("NFD", self.title.strip().lower()) if unicodedata.category(c) != "Mn")
         norm_workplace = self.workplace_type.strip().lower()
         
         # Pega amostra da descrição para diferenciar vagas com mesmo título na mesma empresa
-        desc_sample = " ".join(self.description.lower().split()[:30]) if self.description else ""
+        clean_desc = "".join(c for c in unicodedata.normalize("NFD", self.description.lower()) if unicodedata.category(c) != "Mn")
+        desc_sample = " ".join(clean_desc.split()[:30]) if self.description else ""
 
         payload = f"{norm_company}|{norm_title}|{norm_workplace}|{desc_sample}"
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()

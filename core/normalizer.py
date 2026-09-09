@@ -22,14 +22,18 @@ ALLOWED_REGIONAL_CITIES = [
 ]
 
 
+import unicodedata
+
 def normalize_title(raw_title: str) -> str:
-    """Limpa ruídos, emojis e caracteres especiais do título."""
+    """Limpa ruídos, acentuação, emojis e caracteres especiais do título para evitar duplicidade entre plataformas."""
     if not raw_title:
         return ""
     # Remove emojis e tags HTML
     clean = re.sub(r"<[^>]+>", "", raw_title)
     clean = re.sub(r"[\U00010000-\U0010ffff]", "", clean)
     clean = re.sub(r"\s+", " ", clean).strip()
+    # Normalização unicode (ex: Júnior -> Junior)
+    clean = "".join(c for c in unicodedata.normalize("NFD", clean) if unicodedata.category(c) != "Mn")
     return clean
 
 

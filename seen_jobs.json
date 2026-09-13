@@ -739,7 +739,7 @@
     "4466786454",
     "4464753736",
     "4466792493",
-    "CBMiiAFBVV95cUxPa3FOb21Mc3BpSVFDTnZfbDFZSWItNkl0SDlWU1Y1bDhubGIzTFpVeVcyQk9Ra1k4azBKZXRMLTRiWEJ3bjd5ekJMQUNXT1FmaExvQ3hkd3pjanBNS3hnbW1DRDZlSmNkNVE4bEU5a0RsR0pNWDU0LTFZRGhRNmJDYzhFUDUyUU0y"
+    "CBMie0FVX3lxTE9YVWd4LXBfbkItNmo4VDJYbm82Q0JkR1VVUkoyVHBxV1BBS3VmeGlXRlpjTm1BQWUxUnNmeEMtVmlsWkpvX3A1cGdYeHRxXzRUdGFZNFR1MWY1NkF0VzNEZlVoV21yN2RFRnFkWU93QzhKcXgydjJralNERQ"
   ],
   "seen_fingerprints": [
     "3c6ef57545ac43c10ea525b778bed40748bfe8a207d8b46844b8b0a647389033",
@@ -1470,7 +1470,7 @@
     "e635caede491a9c1404f4158811cea2b5628e4c23636f27433dac4ef4b74917f",
     "464e5f26e557c4e9eb3741bef6d2388b2debdefbff708c287612137d02b42e2c",
     "5cc66b3c96b1fe0423e82bf3f72fc84463730bd71ad8ad63eca04367cd791454",
-    "6af0408ad1a81b5518951d839de7c77bca7cdd0c8e05ef8b849f98ddbb628932"
+    "e85495f267b2f8a1d101fae4b75c14fde47aea077f34bea80e9bcfba1039ee03"
   ],
   "last_heartbeat": "2026-09-13",
   "recent_decisions": [
@@ -2825,7 +2825,7 @@
       "final_score": 0
     },
     {
-      "timestamp": "2026-09-13T21:52:25.920990",
+      "timestamp": "2026-09-13T18:30:15.284459",
       "job_id": "4466793449",
       "source": "linkedin",
       "raw_url": "",
@@ -2840,7 +2840,7 @@
       "final_score": 0
     },
     {
-      "timestamp": "2026-09-13T21:52:25.921107",
+      "timestamp": "2026-09-13T18:30:15.284459",
       "job_id": "4466797432",
       "source": "linkedin",
       "raw_url": "",
@@ -2855,7 +2855,7 @@
       "final_score": 0
     },
     {
-      "timestamp": "2026-09-13T21:52:25.921355",
+      "timestamp": "2026-09-13T18:30:15.284459",
       "job_id": "4464750706",
       "source": "linkedin",
       "raw_url": "",
@@ -2870,7 +2870,7 @@
       "final_score": 0
     },
     {
-      "timestamp": "2026-09-13T21:52:25.921602",
+      "timestamp": "2026-09-13T18:30:15.285458",
       "job_id": "4466786454",
       "source": "linkedin",
       "raw_url": "",
@@ -2885,7 +2885,7 @@
       "final_score": 0
     },
     {
-      "timestamp": "2026-09-13T21:52:25.921895",
+      "timestamp": "2026-09-13T18:30:15.285458",
       "job_id": "4464753736",
       "source": "linkedin",
       "raw_url": "",
@@ -2900,7 +2900,7 @@
       "final_score": 0
     },
     {
-      "timestamp": "2026-09-13T21:52:25.922019",
+      "timestamp": "2026-09-13T18:30:15.285458",
       "job_id": "4466792493",
       "source": "linkedin",
       "raw_url": "",
@@ -2915,19 +2915,19 @@
       "final_score": 0
     },
     {
-      "timestamp": "2026-09-13T21:52:26.357396",
-      "job_id": "CBMiiAFBVV95cUxPa3FOb21Mc3BpSVFDTnZfbDFZSWItNkl0SDlWU1Y1bDhubGIzTFpVeVcyQk9Ra1k4azBKZXRMLTRiWEJ3bjd5ekJMQUNXT1FmaExvQ3hkd3pjanBNS3hnbW1DRDZlSmNkNVE4bEU5a0RsR0pNWDU0LTFZRGhRNmJDYzhFUDUyUU0y",
+      "timestamp": "2026-09-13T18:30:15.286458",
+      "job_id": "CBMie0FVX3lxTE9YVWd4LXBfbkItNmo4VDJYbm82Q0JkR1VVUkoyVHBxV1BBS3VmeGlXRlpjTm1BQWUxUnNmeEMtVmlsWkpvX3A1cGdYeHRxXzRUdGFZNFR1MWY1NkF0VzNEZlVoV21yN2RFRnFkWU93QzhKcXgydjJralNERQ",
       "source": "rss",
-      "raw_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPa3FOb21Mc3BpSVFDTnZfbDFZSWItNkl0SDlWU1Y1bDhubGIzTFpVeVcyQk9Ra1k4azBKZXRMLTRiWEJ3bjd5ekJMQUNXT1FmaExvQ3hkd3pjanBNS3hnbW1DRDZlSmNkNVE4bEU5a0RsR0pNWDU0LTFZRGhRNmJDYzhFUDUyUU0y?oc=5",
-      "canonical_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPa3FOb21Mc3BpSVFDTnZfbDFZSWItNkl0SDlWU1Y1bDhubGIzTFpVeVcyQk9Ra1k4azBKZXRMLTRiWEJ3bjd5ekJMQUNXT1FmaExvQ3hkd3pjanBNS3hnbW1DRDZlSmNkNVE4bEU5a0RsR0pNWDU0LTFZRGhRNmJDYzhFUDUyUU0y?oc=5",
-      "identity_fingerprint": "6af0408ad1a81b5518951d839de7c77bca7cdd0c8e05ef8b849f98ddbb628932",
+      "raw_url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9YVWd4LXBfbkItNmo4VDJYbm82Q0JkR1VVUkoyVHBxV1BBS3VmeGlXRlpjTm1BQWUxUnNmeEMtVmlsWkpvX3A1cGdYeHRxXzRUdGFZNFR1MWY1NkF0VzNEZlVoV21yN2RFRnFkWU93QzhKcXgydjJralNERQ?oc=5",
+      "canonical_url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9YVWd4LXBfbkItNmo4VDJYbm82Q0JkR1VVUkoyVHBxV1BBS3VmeGlXRlpjTm1BQWUxUnNmeEMtVmlsWkpvX3A1cGdYeHRxXzRUdGFZNFR1MWY1NkF0VzNEZlVoV21yN2RFRnFkWU93QzhKcXgydjJralNERQ?oc=5",
+      "identity_fingerprint": "e85495f267b2f8a1d101fae4b75c14fde47aea077f34bea80e9bcfba1039ee03",
       "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "evidence_level": "LOW_EVIDENCE",
-      "decision": "NOTIFY",
+      "decision": "DISCARD_LOW_SCORE",
       "decision_reason": "Sinal de vaga no titulo: vaga, vagas, desenvolvedor (+30 pts)",
       "heuristic_score": 0,
       "llm_score": null,
-      "final_score": 50
+      "final_score": 30
     }
   ]
 }

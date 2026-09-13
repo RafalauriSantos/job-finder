@@ -58,13 +58,22 @@
       "exclude_keywords": ["fotografia", "ensaio", "modelo", "atendimento", "recepcionista"]
     },
     {
-      "type": "rss",
-      "description": "GFT Brasil (Remoto & Sorocaba)",
-      "company": "GFT Brasil",
-      "url": "https://news.google.com/rss/search?q=%22GFT%22+(Remoto+OR+Sorocaba)+(Java+OR+Python+OR+React+OR+Node+OR+Fullstack+OR+Starter+OR+Junior)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "type": "linkedin",
+      "description": "LinkedIn — GFT Brasil (Oportunidades Dev / Júnior)",
+      "keywords_search": "GFT Brasil desenvolvedor",
+      "time_range": "r7200",
       "strict_location": true,
-      "keywords": ["java", "python", "react", "node", "typescript", "starter", "junior", "jr"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "cobol", "sap", "gerente", "diretor"]
+      "keywords": ["gft"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "gerente", "diretor", "coordenador"]
+    },
+    {
+      "type": "rss",
+      "description": "GFT Brasil — Portal Oficial de Carreiras (jobs.gft.com)",
+      "company": "GFT Brasil",
+      "url": "https://news.google.com/rss/search?q=site:jobs.gft.com+(Brasil+OR+Sorocaba+OR+Remoto)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["desenvolvedor", "developer", "software", "engenharia", "java", "python", "react", "node", "dados", "starter", "junior", "jr", "estagio", "estágio"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor", "coordenador"]
     },
     {
       "type": "rss",

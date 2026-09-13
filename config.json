@@ -8,13 +8,17 @@
   "monitors": [
     {
       "type": "github_issues",
-      "description": "GitHub Vagas BR (Frontend, Backend, React)",
+      "description": "GitHub Vagas (Frontend, Backend, React, Java, Node, PT/Remoto)",
       "repos": [
         "frontendbr/vagas",
         "backend-br/vagas",
-        "react-brasil/vagas"
+        "react-brasil/vagas",
+        "soujava/vagas-java",
+        "nodejsdevbr/vagas",
+        "frontend-pt/vagas",
+        "backend-pt/vagas"
       ],
-      "keywords": ["react", "frontend", "front-end", "backend", "back-end", "node", "typescript", "javascript", "fullstack", "full stack", "junior", "júnior", "estagio", "estágio"],
+      "keywords": ["react", "frontend", "front-end", "backend", "back-end", "node", "typescript", "javascript", "fullstack", "full stack", "java", "spring", "python", "junior", "júnior", "estagio", "estágio"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador", "gerente"]
     },
     {

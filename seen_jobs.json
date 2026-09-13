@@ -523,7 +523,12 @@
     "4858486145",
     "4412160301",
     "4412153375",
-    "4412145871"
+    "4412145871",
+    "4396317818",
+    "4407639826",
+    "4447738174",
+    "4466785316",
+    "4457562498"
   ],
   "seen_fingerprints": [
     "3c6ef57545ac43c10ea525b778bed40748bfe8a207d8b46844b8b0a647389033",
@@ -1038,7 +1043,74 @@
     "0eb31aaa1fdff9f5e44172962e9b7ac805313f0904ecf9a4ae15a8bc0c002841",
     "0e09554da48909442fa19812d3ada17e2d6c2ac3147330bf40569c8bdc3d298d",
     "4b404ca6944664e0e62079dbbafb4cb5aa292a749cbe2764a4c70d845b4bbbee",
-    "6ca8682393e290d9ce462f9742aeefb9f99159b107d7ef43a31e9e93f43480f6"
+    "6ca8682393e290d9ce462f9742aeefb9f99159b107d7ef43a31e9e93f43480f6",
+    "16808cfb4e487e73d55058bb9717a9d9d5b5a2ebe99e6085600032d6ac983b8d",
+    "44b3aa86417e2361bb090385866b917c8ba1f8bc7ddba49bc01eea294173c909",
+    "c622d4dbb2e42a35b6d1302d696c28aecd3389e67c5337ded4d424003bbfdb82",
+    "8886b7d9f71e9219b00d4e8e1a3852b5774453e913ad41b7c1ece3c9de2cb4d8",
+    "f7d1967a9e26da667c839330b9bb557446431601eb851100c902410eb29c44a1"
   ],
-  "last_heartbeat": "2026-09-13"
+  "last_heartbeat": "2026-09-13",
+  "recent_decisions": [
+    {
+      "timestamp": "2026-09-13T18:03:06.331109",
+      "job_id": "4396317818",
+      "source": "linkedin",
+      "identity_fingerprint": "16808cfb4e487e73d55058bb9717a9d9d5b5a2ebe99e6085600032d6ac983b8d",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T18:03:06.331827",
+      "job_id": "4407639826",
+      "source": "linkedin",
+      "identity_fingerprint": "44b3aa86417e2361bb090385866b917c8ba1f8bc7ddba49bc01eea294173c909",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": "DISCARD_LOW_SCORE",
+      "decision_reason": "Stack Estratégica: python (+5 pts)",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 5
+    },
+    {
+      "timestamp": "2026-09-13T18:03:06.331971",
+      "job_id": "4447738174",
+      "source": "linkedin",
+      "identity_fingerprint": "c622d4dbb2e42a35b6d1302d696c28aecd3389e67c5337ded4d424003bbfdb82",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T18:03:06.332283",
+      "job_id": "4466785316",
+      "source": "linkedin",
+      "identity_fingerprint": "8886b7d9f71e9219b00d4e8e1a3852b5774453e913ad41b7c1ece3c9de2cb4d8",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T18:03:06.332588",
+      "job_id": "4457562498",
+      "source": "linkedin",
+      "identity_fingerprint": "f7d1967a9e26da667c839330b9bb557446431601eb851100c902410eb29c44a1",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    }
+  ]
 }

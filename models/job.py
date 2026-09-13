@@ -28,6 +28,10 @@ class Job:
     match_score: int = 0                 # 0 a 100
     match_reasons: List[str] = field(default_factory=list)
     pcd_signal: str = ""               # "", "TITLE" — origem do sinal PCD detectado
+    raw_url: str = ""                  # URL bruta original do feed / agregador
+    resolved_url: str = ""             # URL final após resolução de redirecionamentos HTTP
+    canonical_url: str = ""            # URL canônica limpa (sem parâmetros de tracking)
+    evidence_level: str = "HIGH_EVIDENCE"  # "LOW_EVIDENCE", "MEDIUM_EVIDENCE", "HIGH_EVIDENCE"
     sources: Dict[str, JobSource] = field(default_factory=dict)
     first_seen: str = field(default_factory=lambda: datetime.now().isoformat())
 
@@ -43,13 +47,17 @@ class Job:
     @property
     def primary_url(self) -> str:
         """Retorna o melhor link de candidatura disponível."""
+        if self.canonical_url:
+            return self.canonical_url
+        if self.resolved_url:
+            return self.resolved_url
         # Preferência: link oficial direto
         for src in ["gupy", "linkedin", "career_page"]:
             if src in self.sources and self.sources[src].url:
                 return self.sources[src].url
         if self.sources:
             return next(iter(self.sources.values())).url
-        return ""
+        return self.raw_url
 
     @property
     def identity_fingerprint(self) -> str:
@@ -95,6 +103,10 @@ class Job:
             "match_score": self.match_score,
             "match_reasons": self.match_reasons,
             "pcd_signal": self.pcd_signal,
+            "raw_url": self.raw_url,
+            "resolved_url": self.resolved_url,
+            "canonical_url": self.canonical_url,
+            "evidence_level": self.evidence_level,
             "primary_url": self.primary_url,
             "sources": {
                 name: {

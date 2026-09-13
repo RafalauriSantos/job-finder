@@ -155,6 +155,13 @@
       "strict_location": true,
       "keywords": ["python"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
+    },
+    {
+      "type": "trampos",
+      "description": "Trampos.co — Oportunidades de Desenvolvimento & TI",
+      "keywords": ["desenvolvedor", "developer", "programador", "front", "back", "fullstack", "react", "node", "typescript", "junior", "estagio", "estágio", "ti"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "diretor", "gerente", "coordenador"],
+      "max_pages": 1
     }
   ]
 }

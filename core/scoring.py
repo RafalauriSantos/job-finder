@@ -177,16 +177,24 @@ def calculate_rss_relevance(job: Job) -> Tuple[int, List[str]]:
 
 def evaluate_job(job: Job, is_rss: bool = False) -> Tuple[int, List[str]]:
     """
-    Ponto único de entrada do funil. Roda o heurístico primeiro (sempre, é grátis)
-    e só chama o LLM Judge se o heurístico não descartou a vaga de cara.
+    Ponto único de entrada do funil (SPEC-008). Roda o heurístico primeiro (sempre, é grátis).
+    Só chama o LLM Judge se:
+    1. O score heurístico não descartou a vaga;
+    2. O perfil de evidência indicar que há contexto suficiente (should_route_to_llm).
     """
     from core import llm_judge
+    from core.evidence import should_route_to_llm
 
     heuristic_score, reasons = (
         calculate_rss_relevance(job) if is_rss else calculate_match_score(job)
     )
 
     if not llm_judge.should_invoke_judge(heuristic_score):
+        return heuristic_score, reasons
+
+    # SPEC-008: Evidence Profiling — poupa LLM se evidência for rasa (ex: RSS sem descrição)
+    if not should_route_to_llm(job):
+        reasons.append("Heurística Conclusiva: contexto textual insuficiente para LLM (LOW_EVIDENCE)")
         return heuristic_score, reasons
 
     result = llm_judge.judge(job.title, job.company, job.description)

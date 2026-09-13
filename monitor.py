@@ -16,6 +16,7 @@ from collectors.gupy_collector import GupyCollector
 from collectors.linkedin_collector import LinkedInCollector
 from collectors.rss_collector import RssCollector
 from collectors.github_collector import GithubIssuesCollector
+from collectors.trampos_collector import TramposCollector
 from notify.telegram_notifier import TelegramNotifier
 from storage.state_store import StateStore
 
@@ -97,6 +98,7 @@ def run_check():
     linkedin_searches = []
     rss_configs = []
     github_configs = []
+    trampos_configs = []
 
     for m in monitors:
         m_type = m.get("type", "")
@@ -118,16 +120,20 @@ def run_check():
             rss_configs.append(m)
         elif m_type == "github_issues":
             github_configs.append(m)
+        elif m_type == "trampos":
+            trampos_configs.append(m)
 
     # 2. Executa a Coleta (Fase de Descoberta / Recall Alto)
     discovered_gupy = []
     discovered_linkedin = []
     discovered_rss = []
     discovered_github = []
+    discovered_trampos = []
     gupy_status = "OK"
     linkedin_status = "OK"
     rss_status = "OK"
     github_status = "OK"
+    trampos_status = "OK"
 
     if gupy_queries:
         try:
@@ -163,7 +169,20 @@ def run_check():
         except Exception as e:
             github_status = f"FALHA ({e})"
 
-    discovered_jobs = discovered_gupy + discovered_linkedin + discovered_rss + discovered_github
+    if trampos_configs:
+        try:
+            for cfg in trampos_configs:
+                t_col = TramposCollector(
+                    HTTP,
+                    keywords=cfg.get("keywords"),
+                    exclude_keywords=cfg.get("exclude_keywords"),
+                    max_pages=cfg.get("max_pages", 1)
+                )
+                discovered_trampos.extend(t_col.collect())
+        except Exception as e:
+            trampos_status = f"FALHA ({e})"
+
+    discovered_jobs = discovered_gupy + discovered_linkedin + discovered_rss + discovered_github + discovered_trampos
 
     # 3. Deduplicação e Fusão de Múltiplas Fontes
     unique_jobs = deduplicator.process(discovered_jobs)
@@ -201,7 +220,11 @@ def run_check():
             print(f"✗ PCD: BLOQUEADA ({pcd_reason})")
             print(f"DECISÃO: DESCARTADA (Vaga Afirmativa PCD)")
             discarded_pcd += 1
-            store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "DISCARD_PCD", pcd_reason)
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DISCARD_PCD", pcd_reason,
+                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
+            )
             store.mark_seen(fp, source_ids)
             continue
 
@@ -211,7 +234,11 @@ def run_check():
             print(f"✗ Localização: REJEITADA ({loc_reason})")
             print(f"DECISÃO: DESCARTADA (Filtro Regional)")
             discarded_location += 1
-            store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "DISCARD_LOCATION", loc_reason)
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DISCARD_LOCATION", loc_reason,
+                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
+            )
             store.mark_seen(fp, source_ids)
             continue
         else:
@@ -235,7 +262,11 @@ def run_check():
                 print(f"   • {r}")
             print(f"DECISÃO: DESCARTADA ({label})")
             discarded_senior += 1
-            store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "DISCARD_SENIOR_OR_VETO", veto_reason or label, final_score=score)
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DISCARD_SENIOR_OR_VETO", veto_reason or label, final_score=score,
+                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
+            )
             store.mark_seen(fp, source_ids)
             continue
 
@@ -245,7 +276,11 @@ def run_check():
                 print(f"   • {r}")
             print(f"DECISÃO: DESCARTADA (Score insuficiente)")
             discarded_score += 1
-            store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "DISCARD_LOW_SCORE", reasons[0] if reasons else "Score insuficiente", final_score=score)
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DISCARD_LOW_SCORE", reasons[0] if reasons else "Score insuficiente", final_score=score,
+                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
+            )
             store.mark_seen(fp, source_ids)
             continue
 
@@ -258,7 +293,11 @@ def run_check():
         sent = notifier.send_job_alert(job)
         if sent:
             notified_count += 1
-        store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "NOTIFY", reasons[0] if reasons else "Aprovada", final_score=score)
+        store.record_decision(
+            job_id, primary_source, job.identity_fingerprint, job.content_hash,
+            "NOTIFY", reasons[0] if reasons else "Aprovada", final_score=score,
+            raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
+        )
 
         # Marca como vista para nunca repetir a mesma vaga
         store.mark_seen(fp, source_ids)

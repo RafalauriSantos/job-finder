@@ -107,16 +107,22 @@ class StateStore:
         heuristic_score: int = 0,
         llm_score: Any = None,
         final_score: int = 0,
-        max_history: int = 100,
+        raw_url: str = "",
+        canonical_url: str = "",
+        evidence_level: str = "",
+        max_history: int = 150,
     ):
-        """Registra a trilha de auditoria para responder por que cada vaga foi aceita ou rejeitada."""
+        """Registra a trilha de auditoria para responder por que cada vaga foi aceita ou rejeitada (SPEC-008)."""
         import datetime
         entry = {
             "timestamp": datetime.datetime.now().isoformat(),
             "job_id": str(job_id),
             "source": source,
+            "raw_url": raw_url,
+            "canonical_url": canonical_url,
             "identity_fingerprint": identity_fingerprint,
             "content_hash": content_hash,
+            "evidence_level": evidence_level,
             "decision": decision,
             "decision_reason": decision_reason,
             "heuristic_score": heuristic_score,

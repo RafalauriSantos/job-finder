@@ -732,7 +732,14 @@
     "4464743609",
     "4464747498",
     "774446",
-    "774455"
+    "774455",
+    "4466793449",
+    "4466797432",
+    "4464750706",
+    "4466786454",
+    "4464753736",
+    "4466792493",
+    "CBMiiAFBVV95cUxPa3FOb21Mc3BpSVFDTnZfbDFZSWItNkl0SDlWU1Y1bDhubGIzTFpVeVcyQk9Ra1k4azBKZXRMLTRiWEJ3bjd5ekJMQUNXT1FmaExvQ3hkd3pjanBNS3hnbW1DRDZlSmNkNVE4bEU5a0RsR0pNWDU0LTFZRGhRNmJDYzhFUDUyUU0y"
   ],
   "seen_fingerprints": [
     "3c6ef57545ac43c10ea525b778bed40748bfe8a207d8b46844b8b0a647389033",
@@ -1456,7 +1463,14 @@
     "34dccd4456ae624e368a8edbdf76a636ed8c0699078688a576a31595374e8c10",
     "9f5bd0d02bbd5ef6477885eb5cdcdf69f0605527c3d3c1fde7f6d4269e6477d9",
     "e7fb592efb717f4700be794253fe404f98640df1400e1f1d7fbcc42e0aa482b6",
-    "fa24bc5c4c18df50d13eee4ba5d34a5ff589a695aaab4c3234044baccbf3623c"
+    "fa24bc5c4c18df50d13eee4ba5d34a5ff589a695aaab4c3234044baccbf3623c",
+    "8310aa894092ad34d704e50d5e48efe02a5ccea12d61adce1589a9db671c10f8",
+    "2fadf0dafec2e7a143e0d36200dd7c82522c2822f54e964791f79aa7f4a22ef9",
+    "86ea50cc9395bfd0241c19b13887f851f8af299f6ec145c23715534fb7891ff5",
+    "e635caede491a9c1404f4158811cea2b5628e4c23636f27433dac4ef4b74917f",
+    "464e5f26e557c4e9eb3741bef6d2388b2debdefbff708c287612137d02b42e2c",
+    "5cc66b3c96b1fe0423e82bf3f72fc84463730bd71ad8ad63eca04367cd791454",
+    "6af0408ad1a81b5518951d839de7c77bca7cdd0c8e05ef8b849f98ddbb628932"
   ],
   "last_heartbeat": "2026-09-13",
   "recent_decisions": [
@@ -2809,10 +2823,111 @@
       "heuristic_score": 0,
       "llm_score": null,
       "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T21:52:25.920990",
+      "job_id": "4466793449",
+      "source": "linkedin",
+      "raw_url": "",
+      "canonical_url": "",
+      "identity_fingerprint": "8310aa894092ad34d704e50d5e48efe02a5ccea12d61adce1589a9db671c10f8",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_level": "HIGH_EVIDENCE",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T21:52:25.921107",
+      "job_id": "4466797432",
+      "source": "linkedin",
+      "raw_url": "",
+      "canonical_url": "",
+      "identity_fingerprint": "2fadf0dafec2e7a143e0d36200dd7c82522c2822f54e964791f79aa7f4a22ef9",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_level": "HIGH_EVIDENCE",
+      "decision": "DISCARD_LOCATION",
+      "decision_reason": "Vaga hybrid fora da região atendida (Tatuí/Sorocaba/Boituva/Itapetininga)",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T21:52:25.921355",
+      "job_id": "4464750706",
+      "source": "linkedin",
+      "raw_url": "",
+      "canonical_url": "",
+      "identity_fingerprint": "86ea50cc9395bfd0241c19b13887f851f8af299f6ec145c23715534fb7891ff5",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_level": "HIGH_EVIDENCE",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T21:52:25.921602",
+      "job_id": "4466786454",
+      "source": "linkedin",
+      "raw_url": "",
+      "canonical_url": "",
+      "identity_fingerprint": "e635caede491a9c1404f4158811cea2b5628e4c23636f27433dac4ef4b74917f",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_level": "HIGH_EVIDENCE",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T21:52:25.921895",
+      "job_id": "4464753736",
+      "source": "linkedin",
+      "raw_url": "",
+      "canonical_url": "",
+      "identity_fingerprint": "464e5f26e557c4e9eb3741bef6d2388b2debdefbff708c287612137d02b42e2c",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_level": "HIGH_EVIDENCE",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T21:52:25.922019",
+      "job_id": "4466792493",
+      "source": "linkedin",
+      "raw_url": "",
+      "canonical_url": "",
+      "identity_fingerprint": "5cc66b3c96b1fe0423e82bf3f72fc84463730bd71ad8ad63eca04367cd791454",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_level": "HIGH_EVIDENCE",
+      "decision": "DISCARD_SENIOR_OR_VETO",
+      "decision_reason": "Senioridade/Relevância",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0
+    },
+    {
+      "timestamp": "2026-09-13T21:52:26.357396",
+      "job_id": "CBMiiAFBVV95cUxPa3FOb21Mc3BpSVFDTnZfbDFZSWItNkl0SDlWU1Y1bDhubGIzTFpVeVcyQk9Ra1k4azBKZXRMLTRiWEJ3bjd5ekJMQUNXT1FmaExvQ3hkd3pjanBNS3hnbW1DRDZlSmNkNVE4bEU5a0RsR0pNWDU0LTFZRGhRNmJDYzhFUDUyUU0y",
+      "source": "rss",
+      "raw_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPa3FOb21Mc3BpSVFDTnZfbDFZSWItNkl0SDlWU1Y1bDhubGIzTFpVeVcyQk9Ra1k4azBKZXRMLTRiWEJ3bjd5ekJMQUNXT1FmaExvQ3hkd3pjanBNS3hnbW1DRDZlSmNkNVE4bEU5a0RsR0pNWDU0LTFZRGhRNmJDYzhFUDUyUU0y?oc=5",
+      "canonical_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPa3FOb21Mc3BpSVFDTnZfbDFZSWItNkl0SDlWU1Y1bDhubGIzTFpVeVcyQk9Ra1k4azBKZXRMLTRiWEJ3bjd5ekJMQUNXT1FmaExvQ3hkd3pjanBNS3hnbW1DRDZlSmNkNVE4bEU5a0RsR0pNWDU0LTFZRGhRNmJDYzhFUDUyUU0y?oc=5",
+      "identity_fingerprint": "6af0408ad1a81b5518951d839de7c77bca7cdd0c8e05ef8b849f98ddbb628932",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence_level": "LOW_EVIDENCE",
+      "decision": "NOTIFY",
+      "decision_reason": "Sinal de vaga no titulo: vaga, vagas, desenvolvedor (+30 pts)",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 50
     }
-  ],
-  "llm_usage": {
-    "date": "2026-09-13",
-    "calls": 3
-  }
+  ]
 }

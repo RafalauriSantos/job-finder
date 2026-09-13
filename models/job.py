@@ -55,18 +55,19 @@ class Job:
     def fingerprint(self) -> str:
         """
         Gera uma assinatura única robusta para evitar duplicações.
-        Combina: empresa normalizada + título normalizado + modalidade + 
+        Combina: empresa normalizada + título normalizado + modalidade + localização +
         os primeiros 200 caracteres da descrição limpa (quando disponível).
         """
         norm_company = "".join(c for c in unicodedata.normalize("NFD", self.company.strip().lower()) if unicodedata.category(c) != "Mn")
         norm_title = "".join(c for c in unicodedata.normalize("NFD", self.title.strip().lower()) if unicodedata.category(c) != "Mn")
         norm_workplace = self.workplace_type.strip().lower()
-        
+        norm_location = "".join(c for c in unicodedata.normalize("NFD", (self.location or "").strip().lower()) if unicodedata.category(c) != "Mn")
+
         # Pega amostra da descrição para diferenciar vagas com mesmo título na mesma empresa
         clean_desc = "".join(c for c in unicodedata.normalize("NFD", self.description.lower()) if unicodedata.category(c) != "Mn")
         desc_sample = " ".join(clean_desc.split()[:30]) if self.description else ""
 
-        payload = f"{norm_company}|{norm_title}|{norm_workplace}|{desc_sample}"
+        payload = f"{norm_company}|{norm_title}|{norm_workplace}|{norm_location}|{desc_sample}"
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
     def to_dict(self) -> dict:

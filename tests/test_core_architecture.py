@@ -41,6 +41,24 @@ class TestJobModel:
         assert unified[0].sources["linkedin"].url == "https://linkedin.com/jobs/12345"
         assert unified[0].sources["gupy"].url == "https://goomer.gupy.io/jobs/98765"
 
+    def test_different_locations_produce_different_fingerprints(self):
+        """Vagas com mesmo título e empresa em localidades distintas geram fingerprints diferentes."""
+        job_sorocaba = Job(
+            title="Desenvolvedor Java Junior",
+            company="GFT Brasil",
+            workplace_type="on-site",
+            location="Sorocaba - SP",
+            description="Atuação no escritório de Sorocaba",
+        )
+        job_curitiba = Job(
+            title="Desenvolvedor Java Junior",
+            company="GFT Brasil",
+            workplace_type="on-site",
+            location="Curitiba - PR",
+            description="Atuação no escritório de Curitiba",
+        )
+        assert job_sorocaba.fingerprint != job_curitiba.fingerprint
+
 
 class TestNormalizer:
     def test_normalizes_workplace(self):

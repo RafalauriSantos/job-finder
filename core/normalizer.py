@@ -73,6 +73,25 @@ def is_location_allowed(workplace: str, location_text: str = "", title_text: str
     return True, "Modalidade a confirmar"
 
 
+def is_pcd_exclusive(title: str) -> Tuple[bool, str]:
+    """
+    Heurística: detecta se a vaga é afirmativa/exclusiva para PCD com base no título.
+    Não usa disabilities flag da Gupy (muitas empresas marcam todas as vagas por compliance).
+    Não analisa description (disclaimers de diversidade seriam falsos positivos).
+    Retorna (is_blocked, reason). O sinal é registrado no Job.pcd_signal para auditoria.
+    """
+    # Normaliza: minúsculo, remove pontos e acentos
+    clean = title.lower().replace(".", "")
+    clean = "".join(c for c in unicodedata.normalize("NFD", clean)
+                    if unicodedata.category(c) != "Mn")
+
+    if re.search(r"\bpcd\b", clean):
+        return True, "Titulo contem 'PCD' (heuristica: vaga afirmativa/exclusiva)"
+    if re.search(r"pessoas?\s+com\s+deficiencia", clean):
+        return True, "Titulo contem 'Pessoa com Deficiencia'"
+    return False, ""
+
+
 def extract_technologies(text: str) -> List[str]:
     """Varre o texto da vaga e extrai tecnologias conhecidas da stack do candidato."""
     if not text:

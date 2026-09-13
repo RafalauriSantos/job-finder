@@ -19,14 +19,22 @@ class StateStore:
             with open(self.filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 if isinstance(data, list):
-                    return {"seen_ids": data, "seen_fingerprints": [], "last_heartbeat": ""}
-                if isinstance(data, dict):
-                    return {
+                    result = {"seen_ids": data, "seen_fingerprints": [], "last_heartbeat": ""}
+                elif isinstance(data, dict):
+                    result = {
                         "seen_ids": data.get("seen_ids", []),
                         "seen_fingerprints": data.get("seen_fingerprints", []),
                         "last_heartbeat": data.get("last_heartbeat", ""),
                     }
-                return default_state
+                else:
+                    return default_state
+
+                # Normaliza IDs para string (corrige inconsistência int/str de versões anteriores)
+                result["seen_ids"] = [str(x) for x in result.get("seen_ids", [])]
+                # Remove duplicatas causadas pela normalização (ex: 12184580 e "12184580")
+                result["seen_ids"] = list(dict.fromkeys(result["seen_ids"]))
+
+                return result
         except Exception:
             return default_state
 
@@ -48,8 +56,9 @@ class StateStore:
             self.state["seen_fingerprints"].append(fingerprint)
 
         for sid in source_ids:
-            if sid not in self.state["seen_ids"]:
-                self.state["seen_ids"].append(sid)
+            sid_str = str(sid)
+            if sid_str not in self.state["seen_ids"]:
+                self.state["seen_ids"].append(sid_str)
 
     def get_last_heartbeat(self) -> str:
         return self.state.get("last_heartbeat", "")

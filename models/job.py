@@ -27,6 +27,7 @@ class Job:
     seniority: str = "junior"            # "intern", "junior", "mid", "senior", "unknown"
     match_score: int = 0                 # 0 a 100
     match_reasons: List[str] = field(default_factory=list)
+    pcd_signal: str = ""               # "", "TITLE" — origem do sinal PCD detectado
     sources: Dict[str, JobSource] = field(default_factory=dict)
     first_seen: str = field(default_factory=lambda: datetime.now().isoformat())
 
@@ -81,6 +82,7 @@ class Job:
             "seniority": self.seniority,
             "match_score": self.match_score,
             "match_reasons": self.match_reasons,
+            "pcd_signal": self.pcd_signal,
             "primary_url": self.primary_url,
             "sources": {
                 name: {

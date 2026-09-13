@@ -9,11 +9,12 @@ from urllib3.util.retry import Retry
 from dotenv import load_dotenv
 
 from models.job import Job
-from core.normalizer import is_location_allowed
-from core.scoring import calculate_match_score
+from core.normalizer import is_location_allowed, is_pcd_exclusive
+from core.scoring import evaluate_job
 from core.deduplicator import Deduplicator
 from collectors.gupy_collector import GupyCollector
 from collectors.linkedin_collector import LinkedInCollector
+from collectors.rss_collector import RssCollector
 from notify.telegram_notifier import TelegramNotifier
 from storage.state_store import StateStore
 
@@ -93,6 +94,7 @@ def run_check():
     # 1. Agrupa configurações por tipo de coletor
     gupy_queries = []
     linkedin_searches = []
+    rss_configs = []
 
     for m in monitors:
         m_type = m.get("type", "")
@@ -110,12 +112,16 @@ def run_check():
                 "time_range": m.get("time_range", "r3600"),
                 "geo_id": m.get("geo_id", "106057199"),
             })
+        elif m_type == "rss":
+            rss_configs.append(m)
 
     # 2. Executa a Coleta (Fase de Descoberta / Recall Alto)
     discovered_gupy = []
     discovered_linkedin = []
+    discovered_rss = []
     gupy_status = "OK"
     linkedin_status = "OK"
+    rss_status = "OK"
 
     if gupy_queries:
         try:
@@ -131,14 +137,22 @@ def run_check():
         except Exception as e:
             linkedin_status = f"FALHA ({e})"
 
-    discovered_jobs = discovered_gupy + discovered_linkedin
+    if rss_configs:
+        try:
+            rss_col = RssCollector(HTTP, rss_configs)
+            discovered_rss = rss_col.collect()
+        except Exception as e:
+            rss_status = f"FALHA ({e})"
+
+    discovered_jobs = discovered_gupy + discovered_linkedin + discovered_rss
 
     # 3. Deduplicação e Fusão de Múltiplas Fontes
     unique_jobs = deduplicator.process(discovered_jobs)
 
-    # 4. Decisão e Classificação (Scoring + Localidade Estrita)
+    # 4. Decisão e Classificação (Scoring + Localidade Estrita + Filtro PCD)
     notified_count = 0
     discarded_seen = 0
+    discarded_pcd = 0
     discarded_location = 0
     discarded_senior = 0
     discarded_score = 0
@@ -152,19 +166,23 @@ def run_check():
             discarded_seen += 1
             continue
 
-        # Validação de Localidade Estrita (Tatuí / Sorocaba / Remoto)
-        loc_allowed, loc_reason = is_location_allowed(job.workplace_type, job.location, job.title)
-        
-        # Cálculo do Match Score com o CV
-        score, reasons = calculate_match_score(job)
-        job.match_score = score
-        job.match_reasons = reasons
-
         # Auditoria individual da decisão
         print(f"\n--- [Auditoria Vaga #{idx}] ---")
         print(f"Empresa: {job.company} | Título: {job.title}")
         print(f"Modalidade: {job.workplace_type} | Local: {job.location or 'Não especificado'}")
-        
+
+        # Heurística PCD: bloqueia apenas com sinal forte no título
+        is_pcd, pcd_reason = is_pcd_exclusive(job.title)
+        if is_pcd:
+            job.pcd_signal = "TITLE"
+            print(f"✗ PCD: BLOQUEADA ({pcd_reason})")
+            print(f"DECISÃO: DESCARTADA (Vaga Afirmativa PCD)")
+            discarded_pcd += 1
+            store.mark_seen(fp, source_ids)
+            continue
+
+        # Validação de Localidade Estrita (Tatuí / Sorocaba / Remoto)
+        loc_allowed, loc_reason = is_location_allowed(job.workplace_type, job.location, job.title)
         if not loc_allowed:
             print(f"✗ Localização: REJEITADA ({loc_reason})")
             print(f"DECISÃO: DESCARTADA (Filtro Regional)")
@@ -174,9 +192,19 @@ def run_check():
         else:
             print(f"✓ Localização: APROVADA ({loc_reason})")
 
+        # Cálculo do Score: Juiz Semântico com Fallback Heurístico
+        score, reasons = evaluate_job(job, is_rss=("rss" in job.sources))
+
+        job.match_score = score
+        job.match_reasons = reasons
+
         if score <= 0:
-            print(f"✗ Senioridade: BLOQUEADA (Penalidade Sênior/Pleno)")
-            print(f"DECISÃO: DESCARTADA (Senioridade)")
+            veto_reason = next((r for r in reasons if "LLM Judge" in r), None)
+            label = "Vaga não-real (Veto LLM)" if veto_reason else "Senioridade/Relevância"
+            print(f"✗ {label}: BLOQUEADA (Score <= 0)")
+            for r in reasons:
+                print(f"   • {r}")
+            print(f"DECISÃO: DESCARTADA ({label})")
             discarded_senior += 1
             store.mark_seen(fp, source_ids)
             continue
@@ -210,10 +238,12 @@ def run_check():
     print("=" * 48)
     print(f"├─ Gupy:     {gupy_status:<8} | {len(discovered_gupy)} vaga(s)")
     print(f"├─ LinkedIn: {linkedin_status:<8} | {len(discovered_linkedin)} vaga(s)")
+    print(f"├─ RSS:      {rss_status:<8} | {len(discovered_rss)} vaga(s)")
     print("├" + "─" * 46)
     print(f"├─ Descoberta Bruta:    {len(discovered_jobs)}")
     print(f"├─ Vagas Únicas:        {len(unique_jobs)}")
     print(f"├─ Já Vistas:           {discarded_seen}")
+    print(f"├─ Rejeitadas PCD:      {discarded_pcd}")
     print(f"├─ Rejeitadas Região:   {discarded_location}")
     print(f"├─ Rejeitadas Nível:    {discarded_senior}")
     print(f"├─ Rejeitadas Score:    {discarded_score}")

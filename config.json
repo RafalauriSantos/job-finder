@@ -10,11 +10,28 @@
       "type": "gupy",
       "description": "Goomer (Vagas de Tecnologia / Dev)",
       "companyId": 2245,
-      "careerPageName": "goomer",
       "only_remote": false,
       "strict_location": true,
       "keywords": ["desenvolvedor", "developer", "software", "frontend", "front-end", "backend", "back-end", "fullstack", "full stack", "react", "node", "typescript", "python", "java", "estagio", "estágio", "junior", "júnior"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador", "gerente"]
+    },
+    {
+      "type": "linkedin",
+      "description": "LinkedIn — Goomer (Todas as vagas)",
+      "keywords_search": "Goomer desenvolvedor",
+      "time_range": "r7200",
+      "strict_location": true,
+      "keywords": ["goomer"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "gerente"]
+    },
+    {
+      "type": "rss",
+      "description": "Google News — Goomer Contratações",
+      "company": "Goomer",
+      "url": "https://news.google.com/rss/search?q=%22Goomer%22+(vaga+OR+contratando+OR+oportunidade+OR+desenvolvedor+OR+programador)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["vaga", "contratando", "oportunidade", "desenvolvedor", "programador", "dev"],
+      "exclude_keywords": ["cardápio", "restaurante", "cliente", "pedido"]
     },
     {
       "type": "rss",

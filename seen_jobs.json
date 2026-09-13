@@ -1034,9 +1034,5 @@
     "4d8ce335f1c7aa22d6cb3717628a62ea95c0275160f42c195e10accceb6c44e7",
     "0eb31aaa1fdff9f5e44172962e9b7ac805313f0904ecf9a4ae15a8bc0c002841"
   ],
-  "last_heartbeat": "2026-09-13",
-  "llm_usage": {
-    "date": "2026-09-13",
-    "calls": 4
-  }
+  "last_heartbeat": "2026-09-13"
 }

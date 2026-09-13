@@ -59,6 +59,28 @@ class TestJobModel:
         )
         assert job_sorocaba.fingerprint != job_curitiba.fingerprint
 
+    def test_description_updates_preserve_identity_fingerprint_but_change_content_hash(self):
+        """Pequenas correções de texto na descrição pelo RH não alteram a identidade canônica."""
+        job_original = Job(
+            title="Desenvolvedor React Junior",
+            company="Goomer",
+            workplace_type="remote",
+            location="Remoto",
+            description="Buscamos dev júnior com React e Node.",
+        )
+        job_edited_by_hr = Job(
+            title="Desenvolvedor React Junior",
+            company="Goomer",
+            workplace_type="remote",
+            location="Remoto",
+            description="Buscamos dev júnior com React, Node e Tailwind (corrigido typo).",
+        )
+        # Identidade Canônica permanece a MESMA (não gera falsa duplicata)
+        assert job_original.identity_fingerprint == job_edited_by_hr.identity_fingerprint
+        assert job_original.fingerprint == job_edited_by_hr.fingerprint
+        # Mas o content_hash detecta a alteração de conteúdo
+        assert job_original.content_hash != job_edited_by_hr.content_hash
+
 
 class TestNormalizer:
     def test_normalizes_workplace(self):

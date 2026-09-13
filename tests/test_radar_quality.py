@@ -150,6 +150,68 @@ BENCHMARK_GROUND_TRUTH = [
         "expected": "REJECT_DEGREE",
         "mock_llm": {"is_real_job_opportunity": True, "cv_compatibility_score": 15, "reasoning": "Exige bacharelado completo obrigatório; candidato cursa Fatec/técnico", "recommendation": "SKIP"}
     },
+
+    # --- Expansão de Casos (v2.1 Regression Benchmark) ---
+    {
+        "id": "GT-POS-05",
+        "title": "Desenvolvedora Frontend Jr",
+        "company": "Flavia Nasser",
+        "workplace_type": "remote",
+        "location": "Remoto",
+        "description": "Oportunidade para atuar com desenvolvimento web usando React e Tailwind no ecossistema Flavia Nasser.",
+        "expected": "SHOULD_NOTIFY",
+        "mock_llm": {"is_real_job_opportunity": True, "cv_compatibility_score": 95, "reasoning": "Frontend Jr na Flavia Nasser com fit na stack", "recommendation": "APPLY_NOW"}
+    },
+    {
+        "id": "GT-POS-06",
+        "title": "Junior Software Engineer (Node/PostgreSQL)",
+        "company": "Fintech BR",
+        "workplace_type": "remote",
+        "location": "Remoto",
+        "description": "Estamos contratando desenvolvedor júnior focado em APIs Node.js e banco de dados PostgreSQL.",
+        "expected": "SHOULD_NOTIFY",
+        "mock_llm": {"is_real_job_opportunity": True, "cv_compatibility_score": 90, "reasoning": "Node/Postgres Jr remoto", "recommendation": "APPLY_NOW"}
+    },
+    {
+        "id": "GT-NEG-NONJOB-02",
+        "title": "Goomer lança recurso de cardápio digital integrado ao WhatsApp",
+        "company": "Goomer",
+        "workplace_type": "remote",
+        "location": "Remoto",
+        "description": "Comunicado oficial sobre o lançamento de nova funcionalidade para donos de restaurantes.",
+        "expected": "REJECT_NON_JOB",
+        "mock_llm": {"is_real_job_opportunity": False, "cv_compatibility_score": 0, "reasoning": "Notícia institucional de produto, não é vaga", "recommendation": "SKIP"}
+    },
+    {
+        "id": "GT-NEG-SENIOR-03",
+        "title": "Backend Developer Node.js",
+        "company": "Tech Corp",
+        "workplace_type": "remote",
+        "location": "Remoto",
+        "description": "Requisitos: Mínimo 5 anos de experiência comprovada com microsserviços em produção e arquitetura distribuída.",
+        "expected": "REJECT_SENIOR",
+        "mock_llm": {"is_real_job_opportunity": True, "cv_compatibility_score": 10, "reasoning": "Exige 5 anos de experiência (nível pleno/sênior)", "recommendation": "SKIP"}
+    },
+    {
+        "id": "GT-NEG-LOC-03",
+        "title": "Desenvolvedor React Jr",
+        "company": "Hub Campinas",
+        "workplace_type": "on-site",
+        "location": "Campinas - SP",
+        "description": "Atuação 100% presencial em Campinas.",
+        "expected": "REJECT_LOCATION",
+        "mock_llm": None
+    },
+    {
+        "id": "GT-NEG-PCD-03",
+        "title": "Desenvolvedor Front-end Jr [PCD]",
+        "company": "Seguradora",
+        "workplace_type": "remote",
+        "location": "Remoto",
+        "description": "Vaga afirmativa PCD.",
+        "expected": "REJECT_PCD",
+        "mock_llm": None
+    },
 ]
 
 
@@ -224,7 +286,7 @@ class TestRadarQualityMetrics:
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
 
         print(f"\n==========================================")
-        print(f" [*] RADAR QUALITY BENCHMARK REPORT")
+        print(f" [*] GROUND TRUTH REGRESSION SUITE REPORT")
         print(f"==========================================")
         print(f"|-- Total de Casos de Teste: {len(BENCHMARK_GROUND_TRUTH)}")
         print(f"|-- True Positives (TP):     {tp}")
@@ -232,8 +294,8 @@ class TestRadarQualityMetrics:
         print(f"|-- False Positives (FP):    {fp}")
         print(f"|-- False Negatives (FN):    {fn}")
         print(f"|-----------------------------------------")
-        print(f"|-- Precision (Pureza):      {precision * 100:.1f}%")
-        print(f"|-- Recall (Cobertura):      {recall * 100:.1f}%")
+        print(f"|-- Precision:               {precision * 100:.1f}% ({len(BENCHMARK_GROUND_TRUTH)} casos de controle)")
+        print(f"|-- Recall:                  {recall * 100:.1f}% ({len(BENCHMARK_GROUND_TRUTH)} casos de controle)")
         print(f"==========================================\n")
 
         # ASSERTIVIDADE CRÍTICA DE PRODUTO:

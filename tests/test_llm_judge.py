@@ -108,7 +108,7 @@ class TestEvaluateJobIntegration:
             assert score < 30
 
     def test_fallback_to_heuristic_when_judge_fails(self):
-        """Se o LLM falhar, a vaga preserva seu score heurístico intacto."""
+        """Se o LLM falhar, a vaga preserva seu score heurístico intacto e marca fallback."""
         job = Job(
             title="Desenvolvedor React Junior",
             company="Startup",
@@ -118,6 +118,31 @@ class TestEvaluateJobIntegration:
             score, reasons = evaluate_job(job)
             assert score >= 50
             assert any("react" in r.lower() or "júnior" in r.lower() or "junior" in r.lower() for r in reasons)
+            assert any("Fallback Heurístico Ativado" in r for r in reasons)
+
+    def test_429_exhaustion_all_models_falls_back_cleanly(self):
+        """
+        Cenário de pico real: 429 persistente em todas as retentativas e em ambos os modelos.
+        Deve retornar None sem crash, acionar o fallback heurístico em evaluate_job
+        e marcar a ativação do fallback nas razões.
+        """
+        resp_429 = MagicMock()
+        resp_429.status_code = 429
+        resp_429.headers = {"Retry-After": "1"}
+
+        job = Job(
+            title="Desenvolvedor React Junior",
+            company="Goomer",
+            workplace_type="remote",
+        )
+
+        with patch("time.sleep"):
+            with patch("core.llm_judge._enforce_pacing"):
+                with patch.dict(os.environ, {"GEMINI_API_KEY": "fake_gemini_key"}, clear=True):
+                    with patch("requests.post", return_value=resp_429):
+                        score, reasons = evaluate_job(job)
+                        assert score > 50
+                        assert any("Fallback Heurístico Ativado" in r for r in reasons)
 
     def test_llm_veto_zeros_score(self):
         """Veto do LLM (ex: notícia ou desabafo) zera o score e adiciona razão."""

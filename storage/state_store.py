@@ -67,7 +67,15 @@ class StateStore:
         self.state["last_heartbeat"] = date_str
 
     def record_llm_call(self) -> int:
-        """Registra uma chamada ao LLM no contador diário (RPD tracking)."""
+        """
+        Registra uma chamada ao LLM no contador diário (RPD tracking).
+        NOTA DE ARQUITETURA (Gatilho: ~700 chamadas/dia):
+        O Google AI Studio reseta a cota diária à meia-noite do Horário do Pacífico (PT / UTC-8).
+        Atualmente a margem é > 99% (< 20 calls/dia).
+        TODO: Quando o volume diário se aproximar de 700 calls/dia, migrar para:
+              from zoneinfo import ZoneInfo
+              today_str = datetime.datetime.now(ZoneInfo("America/Los_Angeles")).date().isoformat()
+        """
         import datetime
         today_str = datetime.date.today().isoformat()
         usage = self.state.get("llm_usage", {})

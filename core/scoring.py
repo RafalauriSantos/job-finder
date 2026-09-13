@@ -192,6 +192,7 @@ def evaluate_job(job: Job, is_rss: bool = False) -> Tuple[int, List[str]]:
     result = llm_judge.judge(job.title, job.company, job.description)
 
     if result is None:
+        reasons.append("Fallback Heurístico Ativado (LLM indisponível/429)")
         return heuristic_score, reasons
 
     if not result["is_real_job_opportunity"]:

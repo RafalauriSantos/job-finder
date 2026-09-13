@@ -175,6 +175,7 @@ def run_check():
     discarded_location = 0
     discarded_senior = 0
     discarded_score = 0
+    fallback_count = 0
 
     for idx, job in enumerate(unique_jobs, 1):
         fp = job.fingerprint
@@ -215,6 +216,8 @@ def run_check():
         score, reasons = evaluate_job(job, is_rss=("rss" in job.sources))
         if any("LLM Judge" in r for r in reasons):
             store.record_llm_call()
+        if any("Fallback Heurístico Ativado" in r for r in reasons):
+            fallback_count += 1
 
         job.match_score = score
         job.match_reasons = reasons
@@ -275,9 +278,14 @@ def run_check():
     print(f"├─ 🎯 Notificadas:       {notified_count}")
     print("├" + "─" * 46)
     print(f"├─ LLM Calls Hoje:     {today_llm_calls}/1000 (RPD)")
+    fallback_str = f"{fallback_count} vaga(s)" if fallback_count > 0 else "0 (LLM 100% ativo)"
+    print(f"├─ Fallback Heurístico: {fallback_str}")
     print(f"├─ Duração:             {elapsed:.1f}s")
     print(f"└─ Status do Ciclo:     SUCCESS")
     print("=" * 48 + "\n")
+
+    if fallback_count > 0:
+        print(f"⚠️  ALERTA: O Fallback Heurístico foi acionado em {fallback_count} vaga(s) devido a indisponibilidade ou rate limit da IA!\n")
 
     # 5. Heartbeat e Persistência
     check_heartbeat(config, store, notifier)

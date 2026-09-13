@@ -25,6 +25,7 @@ class StateStore:
                         "seen_ids": data.get("seen_ids", []),
                         "seen_fingerprints": data.get("seen_fingerprints", []),
                         "last_heartbeat": data.get("last_heartbeat", ""),
+                        "recent_decisions": data.get("recent_decisions", []),
                     }
                 else:
                     return default_state
@@ -94,6 +95,39 @@ class StateStore:
         if usage.get("date") != today_str:
             return {"date": today_str, "calls": 0}
         return usage
+
+    def record_decision(
+        self,
+        job_id: str,
+        source: str,
+        identity_fingerprint: str,
+        content_hash: str,
+        decision: str,
+        decision_reason: str,
+        heuristic_score: int = 0,
+        llm_score: Any = None,
+        final_score: int = 0,
+        max_history: int = 100,
+    ):
+        """Registra a trilha de auditoria para responder por que cada vaga foi aceita ou rejeitada."""
+        import datetime
+        entry = {
+            "timestamp": datetime.datetime.now().isoformat(),
+            "job_id": str(job_id),
+            "source": source,
+            "identity_fingerprint": identity_fingerprint,
+            "content_hash": content_hash,
+            "decision": decision,
+            "decision_reason": decision_reason,
+            "heuristic_score": heuristic_score,
+            "llm_score": llm_score,
+            "final_score": final_score,
+        }
+        if "recent_decisions" not in self.state:
+            self.state["recent_decisions"] = []
+        self.state["recent_decisions"].append(entry)
+        if len(self.state["recent_decisions"]) > max_history:
+            self.state["recent_decisions"] = self.state["recent_decisions"][-max_history:]
 
     def save(self):
         with open(self.filepath, "w", encoding="utf-8") as f:

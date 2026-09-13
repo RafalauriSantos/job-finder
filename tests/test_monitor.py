@@ -54,6 +54,30 @@ class TestStateStorePersistence:
             assert reloaded.is_seen("fp_novo") is True
             assert "999" in reloaded.state["seen_ids"]
 
+    def test_records_decision_audit_trail(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_file = os.path.join(tmpdir, "seen.json")
+            store = StateStore(test_file)
+            store.record_decision(
+                job_id="job-101",
+                source="github",
+                identity_fingerprint="fp-canonico",
+                content_hash="hash-desc",
+                decision="DISCARD_PCD",
+                decision_reason="Titulo contem 'PCD'",
+                heuristic_score=0,
+                final_score=0
+            )
+            store.save()
+
+            reloaded = StateStore(test_file)
+            assert len(reloaded.state.get("recent_decisions", [])) == 1
+            entry = reloaded.state["recent_decisions"][0]
+            assert entry["job_id"] == "job-101"
+            assert entry["decision"] == "DISCARD_PCD"
+            assert entry["identity_fingerprint"] == "fp-canonico"
+            assert "timestamp" in entry
+
 
 class TestTelegramNotifier:
     def test_telegram_sends_formatted_alert_with_score_and_buttons(self):

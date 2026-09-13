@@ -191,6 +191,9 @@ def run_check():
         print(f"Empresa: {job.company} | Título: {job.title}")
         print(f"Modalidade: {job.workplace_type} | Local: {job.location or 'Não especificado'}")
 
+        job_id = source_ids[0] if source_ids else "unknown"
+        primary_source = next(iter(job.sources.keys()), "unknown")
+
         # Heurística PCD: bloqueia apenas com sinal forte no título
         is_pcd, pcd_reason = is_pcd_exclusive(job.title)
         if is_pcd:
@@ -198,6 +201,7 @@ def run_check():
             print(f"✗ PCD: BLOQUEADA ({pcd_reason})")
             print(f"DECISÃO: DESCARTADA (Vaga Afirmativa PCD)")
             discarded_pcd += 1
+            store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "DISCARD_PCD", pcd_reason)
             store.mark_seen(fp, source_ids)
             continue
 
@@ -207,6 +211,7 @@ def run_check():
             print(f"✗ Localização: REJEITADA ({loc_reason})")
             print(f"DECISÃO: DESCARTADA (Filtro Regional)")
             discarded_location += 1
+            store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "DISCARD_LOCATION", loc_reason)
             store.mark_seen(fp, source_ids)
             continue
         else:
@@ -230,6 +235,7 @@ def run_check():
                 print(f"   • {r}")
             print(f"DECISÃO: DESCARTADA ({label})")
             discarded_senior += 1
+            store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "DISCARD_SENIOR_OR_VETO", veto_reason or label, final_score=score)
             store.mark_seen(fp, source_ids)
             continue
 
@@ -239,6 +245,7 @@ def run_check():
                 print(f"   • {r}")
             print(f"DECISÃO: DESCARTADA (Score insuficiente)")
             discarded_score += 1
+            store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "DISCARD_LOW_SCORE", reasons[0] if reasons else "Score insuficiente", final_score=score)
             store.mark_seen(fp, source_ids)
             continue
 
@@ -251,6 +258,7 @@ def run_check():
         sent = notifier.send_job_alert(job)
         if sent:
             notified_count += 1
+        store.record_decision(job_id, primary_source, job.identity_fingerprint, job.content_hash, "NOTIFY", reasons[0] if reasons else "Aprovada", final_score=score)
 
         # Marca como vista para nunca repetir a mesma vaga
         store.mark_seen(fp, source_ids)

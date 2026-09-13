@@ -67,6 +67,24 @@
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "cobol", "sap", "gerente", "diretor"]
     },
     {
+      "type": "rss",
+      "description": "Indeed — Desenvolvedor Júnior Remoto",
+      "company": "Indeed",
+      "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador)+(junior+OR+jr+OR+estagio)+remoto&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["desenvolvedor", "developer", "programador", "junior", "jr", "estagio", "estágio", "front", "back", "fullstack", "react", "node", "python", "java"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "gerente"]
+    },
+    {
+      "type": "rss",
+      "description": "Indeed — TI & Desenvolvimento (Sorocaba e Região)",
+      "company": "Indeed",
+      "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador+OR+estagio+OR+ti)+(sorocaba+OR+tatui)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["desenvolvedor", "developer", "programador", "estagio", "estágio", "junior", "jr", "ti", "sistemas"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "gerente", "diretor"]
+    },
+    {
       "type": "linkedin",
       "description": "LinkedIn — Full Stack Júnior (Janela Sobreposta 2h)",
       "keywords_search": "Desenvolvedor Full Stack Junior",

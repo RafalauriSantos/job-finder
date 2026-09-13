@@ -7,6 +7,17 @@
   },
   "monitors": [
     {
+      "type": "github_issues",
+      "description": "GitHub Vagas BR (Frontend, Backend, React)",
+      "repos": [
+        "frontendbr/vagas",
+        "backend-br/vagas",
+        "react-brasil/vagas"
+      ],
+      "keywords": ["react", "frontend", "front-end", "backend", "back-end", "node", "typescript", "javascript", "fullstack", "full stack", "junior", "júnior", "estagio", "estágio"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador", "gerente"]
+    },
+    {
       "type": "gupy",
       "description": "Goomer (Vagas de Tecnologia / Dev)",
       "companyId": 2245,

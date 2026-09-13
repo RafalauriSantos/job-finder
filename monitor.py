@@ -15,6 +15,7 @@ from core.deduplicator import Deduplicator
 from collectors.gupy_collector import GupyCollector
 from collectors.linkedin_collector import LinkedInCollector
 from collectors.rss_collector import RssCollector
+from collectors.github_collector import GithubIssuesCollector
 from notify.telegram_notifier import TelegramNotifier
 from storage.state_store import StateStore
 
@@ -95,6 +96,7 @@ def run_check():
     gupy_queries = []
     linkedin_searches = []
     rss_configs = []
+    github_configs = []
 
     for m in monitors:
         m_type = m.get("type", "")
@@ -114,14 +116,18 @@ def run_check():
             })
         elif m_type == "rss":
             rss_configs.append(m)
+        elif m_type == "github_issues":
+            github_configs.append(m)
 
     # 2. Executa a Coleta (Fase de Descoberta / Recall Alto)
     discovered_gupy = []
     discovered_linkedin = []
     discovered_rss = []
+    discovered_github = []
     gupy_status = "OK"
     linkedin_status = "OK"
     rss_status = "OK"
+    github_status = "OK"
 
     if gupy_queries:
         try:
@@ -144,7 +150,20 @@ def run_check():
         except Exception as e:
             rss_status = f"FALHA ({e})"
 
-    discovered_jobs = discovered_gupy + discovered_linkedin + discovered_rss
+    if github_configs:
+        try:
+            for cfg in github_configs:
+                gh_col = GithubIssuesCollector(
+                    HTTP,
+                    repos=cfg.get("repos"),
+                    keywords=cfg.get("keywords"),
+                    exclude_keywords=cfg.get("exclude_keywords")
+                )
+                discovered_github.extend(gh_col.collect())
+        except Exception as e:
+            github_status = f"FALHA ({e})"
+
+    discovered_jobs = discovered_gupy + discovered_linkedin + discovered_rss + discovered_github
 
     # 3. Deduplicação e Fusão de Múltiplas Fontes
     unique_jobs = deduplicator.process(discovered_jobs)
@@ -194,6 +213,8 @@ def run_check():
 
         # Cálculo do Score: Juiz Semântico com Fallback Heurístico
         score, reasons = evaluate_job(job, is_rss=("rss" in job.sources))
+        if any("LLM Judge" in r for r in reasons):
+            store.record_llm_call()
 
         job.match_score = score
         job.match_reasons = reasons
@@ -232,6 +253,9 @@ def run_check():
         store.mark_seen(fp, source_ids)
 
     elapsed = time.time() - start_time
+    llm_usage = store.get_llm_usage()
+    today_llm_calls = llm_usage.get("calls", 0)
+
     # Relatório Estruturado do Funil e Saúde do Sistema
     print("\n" + "=" * 48)
     print(" 📊 FUNIL DE EXECUÇÃO E SAÚDE DO SISTEMA")
@@ -239,6 +263,7 @@ def run_check():
     print(f"├─ Gupy:     {gupy_status:<8} | {len(discovered_gupy)} vaga(s)")
     print(f"├─ LinkedIn: {linkedin_status:<8} | {len(discovered_linkedin)} vaga(s)")
     print(f"├─ RSS:      {rss_status:<8} | {len(discovered_rss)} vaga(s)")
+    print(f"├─ GitHub:   {github_status:<8} | {len(discovered_github)} vaga(s)")
     print("├" + "─" * 46)
     print(f"├─ Descoberta Bruta:    {len(discovered_jobs)}")
     print(f"├─ Vagas Únicas:        {len(unique_jobs)}")
@@ -249,6 +274,7 @@ def run_check():
     print(f"├─ Rejeitadas Score:    {discarded_score}")
     print(f"├─ 🎯 Notificadas:       {notified_count}")
     print("├" + "─" * 46)
+    print(f"├─ LLM Calls Hoje:     {today_llm_calls}/1000 (RPD)")
     print(f"├─ Duração:             {elapsed:.1f}s")
     print(f"└─ Status do Ciclo:     SUCCESS")
     print("=" * 48 + "\n")

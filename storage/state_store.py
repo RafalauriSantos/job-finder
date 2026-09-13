@@ -66,6 +66,27 @@ class StateStore:
     def set_last_heartbeat(self, date_str: str):
         self.state["last_heartbeat"] = date_str
 
+    def record_llm_call(self) -> int:
+        """Registra uma chamada ao LLM no contador diário (RPD tracking)."""
+        import datetime
+        today_str = datetime.date.today().isoformat()
+        usage = self.state.get("llm_usage", {})
+        if usage.get("date") != today_str:
+            usage = {"date": today_str, "calls": 0}
+
+        usage["calls"] = usage.get("calls", 0) + 1
+        self.state["llm_usage"] = usage
+        return usage["calls"]
+
+    def get_llm_usage(self) -> Dict[str, Any]:
+        """Retorna o uso diário de chamadas ao LLM."""
+        import datetime
+        today_str = datetime.date.today().isoformat()
+        usage = self.state.get("llm_usage", {})
+        if usage.get("date") != today_str:
+            return {"date": today_str, "calls": 0}
+        return usage
+
     def save(self):
         with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(self.state, f, indent=2, ensure_ascii=False)

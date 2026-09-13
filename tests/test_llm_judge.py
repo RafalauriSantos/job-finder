@@ -47,6 +47,52 @@ class TestLlmJudgeUnits:
                 result = llm_judge.judge("Dev", "Corp", "Desc")
                 assert result is None
 
+    def test_pacing_enforced(self):
+        with patch("time.sleep") as mock_sleep:
+            llm_judge.PACING_SECONDS = 4.5
+            llm_judge._LAST_CALL_TIMESTAMP = 100.0
+            with patch("time.time", return_value=101.0):
+                llm_judge._enforce_pacing()
+                assert mock_sleep.called
+                # Sleep must be around 3.5s (4.5 - 1.0 + jitter)
+                sleep_arg = mock_sleep.call_args[0][0]
+                assert 3.4 <= sleep_arg <= 4.1
+
+    def test_429_retry_and_backoff(self):
+        resp_429 = MagicMock()
+        resp_429.status_code = 429
+        resp_429.headers = {"Retry-After": "5"}
+
+        resp_200 = MagicMock()
+        resp_200.status_code = 200
+        resp_200.json.return_value = {
+            "candidates": [{
+                "content": {
+                    "parts": [{"text": '{"is_real_job_opportunity": true, "cv_compatibility_score": 90, "reasoning": "ok", "recommendation": "APPLY_NOW"}'}]
+                }
+            }]
+        }
+
+        with patch("time.sleep") as mock_sleep:
+            with patch("core.llm_judge._enforce_pacing"):
+                with patch("requests.post", side_effect=[resp_429, resp_200]) as mock_post:
+                    res = llm_judge._call_gemini("fake_key", "prompt")
+                    assert res is not None
+                    assert res["cv_compatibility_score"] == 90
+                    assert mock_sleep.called
+                    # The sleep argument was the Retry-After header: 5.0s
+                    assert mock_sleep.call_args_list[0][0][0] == 5.0
+
+    def test_rpd_tracking_in_state_store(self, tmp_path):
+        from storage.state_store import StateStore
+        test_file = str(tmp_path / "test_seen.json")
+        store = StateStore(test_file)
+        assert store.get_llm_usage()["calls"] == 0
+        store.record_llm_call()
+        store.record_llm_call()
+        usage = store.get_llm_usage()
+        assert usage["calls"] == 2
+
 
 class TestEvaluateJobIntegration:
     def test_skips_judge_when_heuristic_score_below_floor(self):

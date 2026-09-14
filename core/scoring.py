@@ -149,6 +149,22 @@ RSS_NOISE_SIGNALS = [
 ]
 
 
+# Sinais que indicam papéis de comércio, culinária, saúde, recepção que não pertencem a TI
+NON_TECH_ROLES = [
+    "padaria", "confeitaria", "balconista", "atendente", "caixa", "cozinha",
+    "garcom", "garçom", "copeiro", "limpeza", "farmacia", "farmácia", "enfermagem",
+    "odontologia", "recepcionista", "vendedor", "vendedora", "auxiliar de loja"
+]
+
+# Sinais mínimos de computação/desenvolvimento
+TECH_ROLE_SIGNALS = [
+    "desenvolvedor", "developer", "programador", "programacao", "programação",
+    "software", "frontend", "front-end", "backend", "back-end", "fullstack", "full stack",
+    "web", "ti", "sistemas", "computacao", "computação", "informatica", "informática",
+    "dados", "qa", "devops", "engenharia de software", "react", "node", "python", "java"
+]
+
+
 def calculate_rss_relevance(job: Job) -> Tuple[int, List[str]]:
     """
     Scoring dedicado para itens RSS/Google News.
@@ -164,14 +180,20 @@ def calculate_rss_relevance(job: Job) -> Tuple[int, List[str]]:
     title_clean = "".join(c for c in unicodedata.normalize("NFD", title_lower)
                          if unicodedata.category(c) != "Mn")
 
+    # 0. Trava de Papéis Não-Tecnológicos (Padaria, Recepção, Balcão, etc)
+    non_tech_matches = [s for s in NON_TECH_ROLES if matches_any([s], title_clean)]
+    if non_tech_matches:
+        reasons.append(f"Cargo não-tecnológico detectado ({', '.join(non_tech_matches)}): veto imediato (-100 pts)")
+        return 0, reasons
+
     # 1. Sinais de vaga no título (+30)
-    job_matches = [s for s in RSS_JOB_SIGNALS if s in title_clean]
+    job_matches = [s for s in RSS_JOB_SIGNALS if matches_any([s], title_clean)]
     if job_matches:
         score += 30
         reasons.append(f"Sinal de vaga no titulo: {', '.join(job_matches[:3])} (+30 pts)")
 
     # 2. Sinais de ruído/notícia no título (-30)
-    noise_matches = [s for s in RSS_NOISE_SIGNALS if s in title_clean]
+    noise_matches = [s for s in RSS_NOISE_SIGNALS if matches_any([s], title_clean)]
     if noise_matches:
         score -= 30
         reasons.append(f"Sinal de noticia/produto: {', '.join(noise_matches[:3])} (-30 pts)")
@@ -184,9 +206,17 @@ def calculate_rss_relevance(job: Job) -> Tuple[int, List[str]]:
         score -= 60
         reasons.append("Senioridade alta detectada (-60 pts)")
         return 0, reasons
+
+    # Trava de Estágio: Se for estágio, EXIGE contexto explícito de TI/desenvolvimento
+    has_tech_signal = matches_any(TECH_ROLE_SIGNALS, title_clean)
     if has_junior:
-        score += 20
-        reasons.append(f"Nivel Junior / Entrada identificado (+20 pts)")
+        if "estag" in title_clean and not has_tech_signal:
+            score -= 50
+            reasons.append("Estágio sem menção explícita a TI/desenvolvimento (-50 pts)")
+        else:
+            score += 20
+            reasons.append(f"Nivel Junior / Entrada identificado (+20 pts)")
+
 
     # 4. Empresa Monitorada prioritária
     comp_lower = job.company.lower()
@@ -203,8 +233,9 @@ def calculate_rss_relevance(job: Job) -> Tuple[int, List[str]]:
         reasons.append(f"Tecnologias detectadas: {', '.join(techs)} (+{pts} pts)")
         job.technologies = techs
 
-    final_score = max(-100, min(100, score))
+    final_score = max(0, min(100, score))
     return final_score, reasons
+
 
 
 def evaluate_job(job: Job, is_rss: bool = False) -> Tuple[int, List[str]]:

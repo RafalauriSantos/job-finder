@@ -194,6 +194,28 @@ class TestRssRelevanceScoring:
         score, _ = calculate_rss_relevance(job)
         assert score <= 0
 
+    def test_non_tech_bakery_vetoed_in_rss(self):
+        from core.scoring import calculate_rss_relevance
+        job = Job(
+            title="Estágio de Atendimento - Padaria Central em Sorocaba",
+            company="Indeed",
+            workplace_type="unknown",
+        )
+        score, reasons = calculate_rss_relevance(job)
+        assert score == 0
+        assert any("não-tecnológico" in r.lower() or "padaria" in r.lower() for r in reasons)
+
+    def test_generic_internship_without_tech_penalized(self):
+        from core.scoring import calculate_rss_relevance
+        job = Job(
+            title="Vaga de Estágio Administrativo",
+            company="Indeed",
+            workplace_type="unknown",
+        )
+        score, reasons = calculate_rss_relevance(job)
+        assert score < 30
+
+
 
 class TestSeenIdsNormalization:
     """Testa que seen_ids são normalizados para string."""

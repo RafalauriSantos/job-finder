@@ -77,21 +77,39 @@
     },
     {
       "type": "rss",
-      "description": "Indeed — Desenvolvedor Júnior Remoto",
+      "description": "Indeed — Dev Júnior Remoto (Geral)",
       "company": "Indeed",
-      "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador)+(junior+OR+jr+OR+estagio)+remoto&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador+OR+software)+(junior+OR+jr+OR+estagio)+remoto&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
       "keywords": ["desenvolvedor", "developer", "programador", "junior", "jr", "estagio", "estágio", "front", "back", "fullstack", "react", "node", "python", "java"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "gerente", "padaria", "confeitaria", "recepcionista", "atendente", "caixa"]
+    },
+    {
+      "type": "rss",
+      "description": "Indeed — React / Node / TS Júnior (Remoto)",
+      "company": "Indeed",
+      "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(react+OR+node+OR+typescript)+(junior+OR+jr+OR+estagio)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["react", "node", "typescript", "junior", "jr", "estagio", "estágio"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "gerente"]
+    },
+    {
+      "type": "rss",
+      "description": "Indeed — Full Stack / Frontend / Backend Júnior",
+      "company": "Indeed",
+      "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(frontend+OR+backend+OR+fullstack)+(junior+OR+jr+OR+estagio)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["frontend", "front-end", "backend", "back-end", "fullstack", "full stack", "junior", "jr", "estagio", "estágio"],
       "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "gerente"]
     },
     {
       "type": "rss",
       "description": "Indeed — TI & Desenvolvimento (Sorocaba e Região)",
       "company": "Indeed",
-      "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador+OR+estagio+OR+ti)+(sorocaba+OR+tatui)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador+OR+software+OR+ti)+(sorocaba+OR+tatui)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["desenvolvedor", "developer", "programador", "estagio", "estágio", "junior", "jr", "ti", "sistemas"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "gerente", "diretor"]
+      "keywords": ["desenvolvedor", "developer", "programador", "estagio", "estágio", "junior", "jr", "ti", "sistemas", "software"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "gerente", "diretor", "padaria", "confeitaria", "recepcionista", "atendente", "caixa"]
     },
     {
       "type": "linkedin",

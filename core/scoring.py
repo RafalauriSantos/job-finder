@@ -1,8 +1,34 @@
 from typing import List, Tuple
 from models.job import Job
 
+import json
+from pathlib import Path
+
+_PROFILE_PATH = Path(__file__).parent.parent / "profile.json"
+
+
+def _load_priority_companies() -> List[str]:
+    default_companies = ["goomer", "gft", "flavia nasser", "flávia nasser"]
+    if _PROFILE_PATH.exists():
+        try:
+            with open(_PROFILE_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                companies = data.get("empresas_prioritarias", [])
+                if companies:
+                    result = []
+                    for comp in companies:
+                        c_lower = comp.strip().lower()
+                        result.append(c_lower)
+                        if "flavia" in c_lower and "flávia nasser" not in result:
+                            result.append("flávia nasser")
+                    return result
+        except Exception:
+            pass
+    return default_companies
+
+
 # Empresas prioritárias de monitoramento
-PRIORITY_COMPANIES = ["goomer", "gft", "flavia nasser", "flávia nasser"]
+PRIORITY_COMPANIES = _load_priority_companies()
 
 # Dicionários de Senioridade
 SENIOR_KEYWORDS = [
@@ -28,11 +54,12 @@ def matches_any(keywords: List[str], text: str) -> bool:
 
 def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
     """
-    Calcula o Match Score (0 a 100) da vaga contra o perfil técnico do Rafael Lauri:
-    - Base: React, TypeScript, Node.js, PostgreSQL, Supabase, Cloudflare.
-    - Expansão: Java (Spring Boot) e Python (FastAPI).
-    - Trava: Tatuí / Sorocaba / Remoto.
+    Calcula o Match Score (0 a 100) da vaga contra o perfil técnico configurado em profile.json:
+    - Base: Stack Core (React, TypeScript, Node.js, PostgreSQL, etc.)
+    - Expansão: Stack Secundária (Java, Python, Docker, etc.)
+    - Trava: Modalidade Remota ou Cidades Regionais Permitidas.
     """
+
     score = 0
     reasons = []
 
@@ -64,11 +91,11 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
         score += 20
         reasons.append("Vaga 100% Remota (+20 pts)")
     elif job.workplace_type in ["hybrid", "on-site"]:
-        # Se for na região permitida
-        for city in ["tatuí", "tatui", "sorocaba", "votorantim", "boituva", "itapetininga"]:
+        from core.normalizer import ALLOWED_REGIONAL_CITIES
+        for city in ALLOWED_REGIONAL_CITIES:
             if city in (job.location + " " + job.title).lower():
                 score += 20
-                reasons.append(f"Região de Tatuí/Sorocaba atendida: {city.capitalize()} (+20 pts)")
+                reasons.append(f"Região atendida: {city.capitalize()} (+20 pts)")
                 break
 
     # 3. Empresa Monitorada
@@ -84,23 +111,28 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
         techs = extract_technologies(text_to_analyze)
         job.technologies = techs
 
-    # Core Stack Atual (React, TypeScript, Node.js, PostgreSQL)
-    core_matches = [t for t in techs if t in ["react", "typescript", "node.js", "postgresql", "tailwind", "supabase"]]
+    # Carrega stacks dinamicamente do profile
+    from core.llm_judge import get_profile
+    profile = get_profile()
+    core_list = [t.lower() for t in profile.get("stack_core", ["react", "typescript", "node.js", "postgresql", "tailwind", "supabase"])]
+    secondary_list = [t.lower() for t in profile.get("stack_secundaria", ["java", "python", "docker", "git"])]
+
+    core_matches = [t for t in techs if t.lower() in core_list]
     if core_matches:
         pts = min(25, len(core_matches) * 10)
         score += pts
-        reasons.append(f"Stack Core do seu CV: {', '.join(core_matches)} (+{pts} pts)")
+        reasons.append(f"Stack Core do perfil: {', '.join(core_matches)} (+{pts} pts)")
 
-    # Stack de Expansão / Alvo GFT (Java / Python)
-    target_matches = [t for t in techs if t in ["java", "python", "docker", "git"]]
+    target_matches = [t for t in techs if t.lower() in secondary_list]
     if target_matches:
         pts = min(15, len(target_matches) * 5)
         score += pts
-        reasons.append(f"Stack Estratégica: {', '.join(target_matches)} (+{pts} pts)")
+        reasons.append(f"Stack Secundária: {', '.join(target_matches)} (+{pts} pts)")
 
     # Garante teto de 100 e piso de 0
     final_score = max(0, min(100, score))
     return final_score, reasons
+
 
 
 # Sinais de relevância para itens RSS (título é a única fonte de dados)

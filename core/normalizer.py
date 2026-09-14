@@ -17,9 +17,39 @@ KNOWN_TECHNOLOGIES = [
     ("git", ["git", "github", "gitlab"]),
 ]
 
-ALLOWED_REGIONAL_CITIES = [
-    "tatuí", "tatui", "sorocaba", "votorantim", "boituva", "itapetininga"
-]
+import json
+from pathlib import Path
+
+_PROFILE_PATH = Path(__file__).parent.parent / "profile.json"
+
+
+def _load_allowed_cities() -> List[str]:
+    default_cities = ["tatuí", "tatui", "sorocaba", "votorantim", "boituva", "itapetininga"]
+    if _PROFILE_PATH.exists():
+        try:
+            with open(_PROFILE_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                cities = data.get("regiao_aceita_presencial", [])
+                if cities:
+                    result = []
+                    for c in cities:
+                        c_lower = c.strip().lower()
+                        result.append(c_lower)
+                        # Gera variação sem acento se necessário
+                        import unicodedata
+                        unaccented = "".join(
+                            ch for ch in unicodedata.normalize("NFD", c_lower)
+                            if unicodedata.category(ch) != "Mn"
+                        )
+                        if unaccented not in result:
+                            result.append(unaccented)
+                    return result
+        except Exception:
+            pass
+    return default_cities
+
+
+ALLOWED_REGIONAL_CITIES = _load_allowed_cities()
 
 
 import unicodedata

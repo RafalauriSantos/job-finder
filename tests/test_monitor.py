@@ -78,6 +78,27 @@ class TestStateStorePersistence:
             assert entry["identity_fingerprint"] == "fp-canonico"
             assert "timestamp" in entry
 
+    def test_pruning_limits_retention(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_file = os.path.join(tmpdir, "seen.json")
+            store = StateStore(test_file)
+            # Insere 15 IDs e 15 decisões simuladas
+            store.state["seen_ids"] = [f"id-{i}" for i in range(15)]
+            store.state["seen_fingerprints"] = [f"fp-{i}" for i in range(15)]
+            store.state["recent_decisions"] = [{"decision": f"d-{i}"} for i in range(15)]
+
+            # Executa prune com limites baixos
+            store.prune(max_seen_ids=5, max_fingerprints=5, max_decisions=5)
+            store.save()
+
+            reloaded = StateStore(test_file)
+            assert len(reloaded.state["seen_ids"]) == 5
+            assert reloaded.state["seen_ids"] == ["id-10", "id-11", "id-12", "id-13", "id-14"]
+            assert len(reloaded.state["seen_fingerprints"]) == 5
+            assert reloaded.state["seen_fingerprints"] == ["fp-10", "fp-11", "fp-12", "fp-13", "fp-14"]
+            assert len(reloaded.state["recent_decisions"]) == 5
+
+
 
 class TestTelegramNotifier:
     def test_telegram_sends_formatted_alert_with_score_and_buttons(self):

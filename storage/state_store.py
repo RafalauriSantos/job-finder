@@ -135,6 +135,25 @@ class StateStore:
         if len(self.state["recent_decisions"]) > max_history:
             self.state["recent_decisions"] = self.state["recent_decisions"][-max_history:]
 
+    def prune(self, max_seen_ids: int = 2000, max_fingerprints: int = 2000, max_decisions: int = 100):
+        """
+        Mantém o tamanho do arquivo de estado sob controle estrito (ADR-001).
+        Evita crescimento descontrolado no repositório Git descartando identificadores antigos (FIFO).
+        """
+        seen_ids = self.state.get("seen_ids", [])
+        if len(seen_ids) > max_seen_ids:
+            self.state["seen_ids"] = seen_ids[-max_seen_ids:]
+
+        fps = self.state.get("seen_fingerprints", [])
+        if len(fps) > max_fingerprints:
+            self.state["seen_fingerprints"] = fps[-max_fingerprints:]
+
+        decisions = self.state.get("recent_decisions", [])
+        if len(decisions) > max_decisions:
+            self.state["recent_decisions"] = decisions[-max_decisions:]
+
     def save(self):
+        self.prune()
         with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(self.state, f, indent=2, ensure_ascii=False)
+

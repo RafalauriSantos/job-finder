@@ -111,12 +111,16 @@ pip install -r requirements.txt
 TELEGRAM_BOT_TOKEN=your_token_here
 TELEGRAM_CHAT_ID=your_chat_id_here
 
-# Optional: enables LLM semantic evaluation
+# Optional: enables LLM semantic evaluation (Google Gemini)
 GEMINI_API_KEY=your_gemini_key_here
+
+# Optional: secondary LLM fallback (Anthropic Claude)
+ANTHROPIC_API_KEY=your_anthropic_key_here
 
 # Optional: increases GitHub API rate limit from 60 to 5000 req/hr
 GITHUB_TOKEN=your_github_token_here
 ```
+
 
 ### 4. Running
 - **Execute single cycle:**

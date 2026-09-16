@@ -1,40 +1,39 @@
-# ADR-005: Autonomous Application & Kanban Tracking Lifecycle
+# ADR-005: Núcleo Java de carreira integrado ao Hermes instalado
 
-- **Status**: Proposed (Em Análise)
-- **Decision Date**: 2026-09-16
-- **Context Link**: [`hermes-auto-apply-strategy.md`](file:///c:/Users/Rafael%20lauri/Downloads/job-finder/docs/engineering/hermes-auto-apply-strategy.md)
+- Status: Proposto revisado; substitui o conteúdo da proposta anterior deste ADR.
+- Data original e revisão: 2026-09-16.
+- Implementação: não iniciada.
+- Referência operacional: [Plano de projeto](../engineering/hermes-java-project-plan.md).
 
-## Context
-O sistema opera como um buscador e notificador de vagas passivo via Telegram. Para maximizar a conversão de oportunidades e liberar o candidato para foco em aprendizado e nivelamento técnico, surge a necessidade de transformar o sistema em um agente autônomo de aplicação e rastreamento ("Hermes"). Contudo, candidaturas em massa sem limites geram risco severo de banimento em plataformas e ATS, queima de reputação do candidato e perda de contexto sobre as vagas aplicadas.
+## Contexto
 
-## Decision
-1. **Pacing & Quota Segura**:
-   - Limitar candidaturas a um teto nominal de **~20 aplicações por janela de 24 horas**.
-   - Introduzir atrasos estocásticos (*human jitter* de 45 a 180s) entre ações automatizadas.
-2. **Captação Contínua & Fila de Prioridade (Priority Queue)**:
-   - A descoberta e pontuação de vagas **não é interrompida** quando a cota diária é atingida.
-   - Vagas qualificadas (Score 75% a 89%) descobertas após a cota são armazenadas em fila persistente (`storage/priority_queue.json`) e ordenadas por relevância decrescente (`Score DESC, created_at DESC`).
-   - No próximo ciclo diário, as vagas acumuladas na fila de prioridade são processadas antes de novas vagas.
-3. **VIP Override (Vaga Diamante)**:
-   - Vagas com Score $\ge 90\%$ ou com empresa prioritária + stack core contornam o limite diário e disparam aplicação imediata, sujeitas a um teto rígido de segurança (+5 overrides/dia máx).
-4. **Desacoplamento de Kanban & Feedback Loop**:
-   - Registrar candidaturas em quadro Kanban modular (`BaseKanban` com suporte a GitHub Projects / Notion / Trello).
-   - Ouvir respostas de recrutadores por e-mail (IMAP) para avançar status para `[Entrevista/Teste]` ou `[Rejeitado]`.
-5. **Priorização de Fontes de Baixa Concorrência**:
-   - Priorizar a coleta em canais de nicho dev (ex: repositórios de vagas do GitHub Brasil), onde a concorrência média é de 15 a 30 inscritos (contra 500 a 800 em plataformas generalistas de massa).
-6. **Radar de Voluntariado & Open Source Comunitário**:
-   - Monitorar demandas e issues comunitárias acessíveis (`good first issue`, `help wanted`) na stack do candidato, promovendo ganho de experiência prática em equipe e construção de portfólio no GitHub sem a pressão de metas corporativas.
+O Job Finder atual é um radar Python. Rafael pretende aprender Java e IA aplicada construindo um produto útil para encontrar vagas e acompanhar candidaturas. O Hermes instalado será integrado como consumidor de ferramentas. A proposta anterior não exigia Java e apresentava cotas e promessas de proteção contra bloqueios sem validação.
 
-## Consequences
+## Direção proposta
 
-### Positive
-- Protege o candidato contra suspensões de conta e filtros anti-bot.
-- Garante que oportunidades de altíssimo fit (vagas diamante) não sejam perdidas por causa de cotas pré-atingidas.
-- Aumenta drasticamente a taxa de leitura do currículo ao focar em vagas com poucos concorrentes.
-- Gera experiência real comprovável no GitHub por meio de colaborações voluntárias orientadas.
-- Elimina a sobrecarga mental de preenchimento manual repetitivo e acompanhamento de status.
+1. Construir um monólito modular Java com Spring Boot e PostgreSQL.
+2. Manter domínio, avaliação, histórico e autorização de ações no Java.
+3. Verificar o contrato real de ferramentas do Hermes no marco M0.
+4. Migrar gradualmente o Python e concluir o caminho principal em Java.
+5. Começar com importação, ranking, triagem e candidaturas registradas manualmente.
+6. Adicionar IA e envio assistido após validar a fundação.
+7. Separar prioridade de autorização; score alto não ultrapassa limites.
+8. Usar banco, idempotência e reconciliação para fila e envio.
+9. Manter Kanban interno como fonte de verdade; integrações externas são opcionais.
 
-### Negative & Trade-offs
-- Requer gestão de estado mais complexa (controle de cota deslizante e fila com prioridade).
-- Mecanismos de automação de formulários (ex: Playwright para LinkedIn) exigem manutenção contínua devido a mudanças de interface externa.
+## Alternativas consideradas
 
+- Apenas Python: preserva operação, mas não atende ao objetivo Java.
+- Reescrita integral imediata: aumenta risco de interromper o radar.
+- Candidaturas automáticas primeiro: depende de infraestrutura e regras ausentes.
+- Microserviços: complexidade operacional sem necessidade demonstrada.
+
+## Consequências
+
+Exige banco, migrações, contrato de integração e aprendizado gradual. A transição terá dois runtimes temporariamente. Permite entregas pequenas e regras testáveis.
+
+Não garante contratação, disponibilidade das fontes ou proteção contra bloqueios. Limites e canais serão validados antes de implementar envio.
+
+## Validação
+
+O plano operacional contém backlog, critérios de aceite, testes e migração. Registrar aceite deste ADR e versões de tecnologia em M0.3. A proposta original permanece no histórico Git; ficam retirados 20+5 envios universais, bypass VIP, simulação humana e estatísticas de concorrência sem fonte.

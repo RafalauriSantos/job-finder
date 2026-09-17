@@ -67,7 +67,7 @@ delivery: null
 - Modify: `.specwright/changes/2026-09-17-001-java-job-evaluation/tasks.md`
 **Validation:** `mvn -f backend/pom.xml test -q`
 
-- [ ] Executar a suíte Java completa e registrar o comando e o resultado.
-- [ ] Marcar os critérios comprovados e as tarefas concluídas somente após a execução passar.
-- [ ] Registrar em `proposal.md` qualquer descoberta não óbvia encontrada durante os testes.
-- [ ] Commitar o estado final da feature.
+- [x] Executar a suíte Java completa e registrar o comando e o resultado.
+- [x] Marcar os critérios comprovados e as tarefas concluídas somente após a execução passar.
+- [x] Registrar em `proposal.md` qualquer descoberta não óbvia encontrada durante os testes.
+- [x] Commitar o estado final da feature.

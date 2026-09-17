@@ -1,7 +1,7 @@
 # Plano de projeto — Job Finder Java integrado ao Hermes
 
 Versão: 1.0 · Revisão: 2026-09-16
-Status: plano de execução proposto; implementação Java ainda não iniciada.
+Status: preparação em execução; implementação Java ainda não iniciada. Progresso em [Acompanhamento da execução](execution-status.md).
 Responsáveis: Rafael (produto, aprendizado e validação) e assistente de desenvolvimento (implementação acompanhada, testes e revisão).
 
 ## 1. Objetivo e resultado esperado

@@ -1,0 +1,770 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "author": "assistant",
+  "reviewStatus": "PENDING_RAFAEL",
+  "purpose": "Proposta de aceitação; não usar como verdade validada antes da revisão do usuário.",
+  "cases": [
+    {
+      "caseId": "J01",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-01",
+        "title": "Java estágio introdutório",
+        "company": "Empresa Sintética J01",
+        "description": "Java básico; aceita estudante de GTI; remoto Brasil.",
+        "skills": [
+          "Java"
+        ],
+        "level": "INTERN",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": "GTI_ACCEPTED",
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Java em nível básico atende requisitos explicitamente introdutórios."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J02",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-02",
+        "title": "React júnior remoto",
+        "company": "Empresa Sintética J02",
+        "description": "React e TypeScript; júnior; remoto Brasil.",
+        "skills": [
+          "React",
+          "TypeScript"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Stack atual compatível."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J03",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-03",
+        "title": "Java sênior remoto",
+        "company": "Empresa Sintética J03",
+        "description": "Java sênior; cinco anos de experiência.",
+        "skills": [
+          "Java"
+        ],
+        "level": "SENIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 5,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Senioridade bloqueada."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J04",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-04",
+        "title": "Backend júnior São Paulo presencial",
+        "company": "Empresa Sintética J04",
+        "description": "Node.js júnior; presencial na capital São Paulo.",
+        "skills": [
+          "Node.js"
+        ],
+        "level": "JUNIOR",
+        "mode": "ONSITE",
+        "location": "São Paulo-SP",
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Fora da região aceita."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J05",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-05",
+        "title": "Java júnior afirmativa PCD",
+        "company": "Empresa Sintética J05",
+        "description": "Java júnior; vaga exclusiva para PCD; remoto Brasil.",
+        "skills": [
+          "Java"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": true,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Exclusividade incompatível com perfil."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J06",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-06",
+        "title": "Java júnior com inclusão geral",
+        "company": "Empresa Sintética J06",
+        "description": "Java básico; júnior; remoto Brasil; pessoas com deficiência são bem-vindas, sem exclusividade.",
+        "skills": [
+          "Java"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Inclusão não equivale a vaga exclusiva."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J07",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-07",
+        "title": "Java júnior graduação obrigatória",
+        "company": "Empresa Sintética J07",
+        "description": "Java júnior; exige graduação superior completa.",
+        "skills": [
+          "Java"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "COMPLETED_REQUIRED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Requisito obrigatório não atendido."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J08",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-08",
+        "title": "Java júnior graduação desejável",
+        "company": "Empresa Sintética J08",
+        "description": "Java básico; graduação desejável; aceita técnico; remoto Brasil.",
+        "skills": [
+          "Java"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "COMPLETED_PREFERRED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Desejável não deve virar veto."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J09",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-09",
+        "title": "Java júnior local não informado",
+        "company": "Empresa Sintética J09",
+        "description": "Java básico; vaga júnior; sem local ou modalidade.",
+        "skills": [
+          "Java"
+        ],
+        "level": "JUNIOR",
+        "mode": "UNKNOWN",
+        "location": null,
+        "remoteCountry": null,
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "NEEDS_REVIEW",
+        "reason": "Não inferir remoto."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J10",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-10",
+        "title": "Java júnior remoto exterior",
+        "company": "Empresa Sintética J10",
+        "description": "Java básico; remoto exclusivamente para residentes nos EUA.",
+        "skills": [
+          "Java"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "US",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Remoto não significa elegibilidade mundial."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J11",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-11",
+        "title": "Backend júnior Sorocaba",
+        "company": "Empresa Sintética J11",
+        "description": "Node.js júnior; híbrido em Sorocaba; aceita formação técnica.",
+        "skills": [
+          "Node.js"
+        ],
+        "level": "JUNIOR",
+        "mode": "HYBRID",
+        "location": "Sorocaba-SP",
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Cidade aceita."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J12",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-12",
+        "title": "Backend pleno remoto",
+        "company": "Empresa Sintética J12",
+        "description": "Java pleno; remoto Brasil; dois anos de experiência.",
+        "skills": [
+          "Java"
+        ],
+        "level": "MID",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 2,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "NEEDS_REVIEW",
+        "reason": "Pleno não tem política definitiva no perfil."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": true
+      }
+    },
+    {
+      "caseId": "J13",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-13",
+        "title": "Atendente júnior",
+        "company": "Empresa Sintética J13",
+        "description": "Atendente de loja júnior; atendimento presencial em Tatuí.",
+        "skills": [],
+        "level": "JUNIOR",
+        "mode": "ONSITE",
+        "location": "Tatuí-SP",
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": false,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Júnior isoladamente não torna a vaga técnica."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J14",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-14",
+        "title": "Goomer sênior",
+        "company": "Goomer",
+        "description": "Goomer; Java sênior; remoto Brasil.",
+        "skills": [
+          "Java"
+        ],
+        "level": "SENIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Empresa prioritária não remove restrição."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J15",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-15",
+        "title": "Java júnior com três anos Spring",
+        "company": "Empresa Sintética J15",
+        "description": "Título júnior, exige três anos profissionais de Spring Boot.",
+        "skills": [
+          "Java",
+          "Spring Boot"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 3,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "NEEDS_REVIEW",
+        "reason": "Experiência não comprovada; sinalizar incompatibilidade sem inventar currículo."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": true
+      }
+    },
+    {
+      "caseId": "J16",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-16",
+        "title": "Estágio exclusivo Ciência da Computação",
+        "company": "Empresa Sintética J16",
+        "description": "Java básico; estágio; matrícula obrigatória em Ciência da Computação.",
+        "skills": [
+          "Java"
+        ],
+        "level": "INTERN",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": "COMPUTER_SCIENCE_ONLY",
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "NEEDS_REVIEW",
+        "reason": "GTI não deve ser declarado equivalente sem validação."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": true
+      }
+    },
+    {
+      "caseId": "J17",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-17",
+        "title": "Java sem senioridade",
+        "company": "Empresa Sintética J17",
+        "description": "Desenvolvimento Java; remoto Brasil; nível não especificado.",
+        "skills": [
+          "Java"
+        ],
+        "level": "UNKNOWN",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "NEEDS_REVIEW",
+        "reason": "Não assumir júnior."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J18",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-18",
+        "title": "Estágio IA com Java introdutório",
+        "company": "Empresa Sintética J18",
+        "description": "Estágio; Java básico e interesse em IA; formação GTI aceita; remoto Brasil.",
+        "skills": [
+          "Java"
+        ],
+        "level": "INTERN",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true,
+        "learningInterest": "IA aplicada"
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Interesse é suficiente porque o anúncio não exige experiência prévia com IA."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J19",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-19",
+        "title": "Engenheiro IA experiente",
+        "company": "Empresa Sintética J19",
+        "description": "Engenheiro de IA sênior; produção de modelos; remoto Brasil.",
+        "skills": [
+          "Machine Learning"
+        ],
+        "level": "SENIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 4,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Interesse em IA não equivale a experiência profissional."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J20",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-20",
+        "title": "Vaga encerrada",
+        "company": "Empresa Sintética J20",
+        "description": "Java júnior; requisitos básicos; inscrições encerradas.",
+        "skills": [
+          "Java"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": false
+      },
+      "proposed": {
+        "eligibility": "INELIGIBLE",
+        "reason": "Arquivar, preservando histórico."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      }
+    },
+    {
+      "caseId": "J21",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-01",
+        "title": "Java estágio introdutório",
+        "company": "Empresa Sintética J01",
+        "description": "Java básico; aceita estudante de GTI; remoto Brasil.",
+        "skills": [
+          "Java"
+        ],
+        "level": "INTERN",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": "GTI_ACCEPTED",
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Manter um registro, sem nova avaliação se conteúdo/perfil/regras não mudaram."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      },
+      "relation": {
+        "kind": "SAME_SOURCE_ID",
+        "target": "J01"
+      }
+    },
+    {
+      "caseId": "J22",
+      "job": {
+        "source": "synthetic-gupy",
+        "externalId": "job-01",
+        "title": "Mesmo ID em outra fonte",
+        "company": "Empresa Sintética J22",
+        "description": "Java básico; júnior; remoto Brasil.",
+        "skills": [
+          "Java"
+        ],
+        "level": "JUNIOR",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": null,
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "ID igual de fonte diferente não pode suprimir vaga."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      },
+      "relation": {
+        "kind": "CROSS_SOURCE_ID_COLLISION",
+        "target": "J01"
+      }
+    },
+    {
+      "caseId": "J23",
+      "job": {
+        "source": "synthetic-github",
+        "externalId": "job-01",
+        "title": "Java estágio introdutório",
+        "company": "Empresa Sintética J01",
+        "description": "Java básico; aceita estudante de GTI; remoto Brasil; bolsa agora informada.",
+        "skills": [
+          "Java"
+        ],
+        "level": "INTERN",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": "GTI_ACCEPTED",
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Atualizar conteúdo; preservar identidade e histórico."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      },
+      "relation": {
+        "kind": "CONTENT_UPDATE",
+        "target": "J01"
+      }
+    },
+    {
+      "caseId": "J24",
+      "job": {
+        "source": "synthetic-rss",
+        "externalId": "rss-24",
+        "title": "Java estágio introdutório",
+        "company": "Empresa Sintética J01",
+        "description": "Java básico; aceita estudante de GTI; remoto Brasil.",
+        "skills": [
+          "Java"
+        ],
+        "level": "INTERN",
+        "mode": "REMOTE",
+        "location": null,
+        "remoteCountry": "BR",
+        "degree": "TECHNICAL_ACCEPTED",
+        "enrollment": "GTI_ACCEPTED",
+        "pcdExclusive": false,
+        "technical": true,
+        "requiredYears": 0,
+        "open": true
+      },
+      "proposed": {
+        "eligibility": "ELIGIBLE",
+        "reason": "Sugerir duplicidade entre fontes; sem fusão destrutiva automática."
+      },
+      "review": {
+        "status": "PENDING_RAFAEL",
+        "requiresDecision": false
+      },
+      "relation": {
+        "kind": "POSSIBLE_DUPLICATE",
+        "target": "J01"
+      }
+    }
+  ]
+}

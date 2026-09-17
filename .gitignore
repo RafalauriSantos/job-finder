@@ -6,3 +6,4 @@ venv/
 *.zip
 .specwright/worktrees/
 backend/target/
+graphify-out/

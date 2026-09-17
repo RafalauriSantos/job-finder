@@ -25,10 +25,10 @@ delivery: null
 - Create: `backend/src/main/java/com/jobfinder/matching/JobEvaluator.java`
 **Validation:** `mvn -f backend/pom.xml test -q`
 
-- [ ] Criar o `pom.xml` com Java 21, JUnit Jupiter e `maven-surefire-plugin`.
-- [ ] Criar records imutáveis para vaga, perfil, evidência e resultado, com enums para status.
-- [ ] Executar `mvn -f backend/pom.xml test -q` e confirmar compilação sem testes.
-- [ ] Commitar a configuração e os tipos de domínio.
+- [x] Criar o `pom.xml` com Java 21, JUnit Jupiter e `maven-surefire-plugin`.
+- [x] Criar records imutáveis para vaga, perfil, evidência e resultado, com enums para status.
+- [x] Executar `mvn -f backend/pom.xml test -q` e confirmar compilação sem testes.
+- [x] Commitar a configuração e os tipos de domínio.
 
 ### T2: Definir testes de aceitação do avaliador
 

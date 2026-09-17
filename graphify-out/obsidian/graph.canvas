@@ -1,0 +1,4707 @@
+{
+  "nodes": [
+    {
+      "id": "g0",
+      "type": "group",
+      "label": "Job",
+      "x": 0,
+      "y": 0,
+      "width": 1980,
+      "height": 1020,
+      "color": "1"
+    },
+    {
+      "id": "n_core_deduplicator_deduplicator_init",
+      "type": "file",
+      "file": "dot-__init__()_5.md",
+      "x": 20,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_job_add_source",
+      "type": "file",
+      "file": "dot-add_source().md",
+      "x": 220,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_job_content_hash",
+      "type": "file",
+      "file": "dot-content_hash().md",
+      "x": 420,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_job_fingerprint",
+      "type": "file",
+      "file": "dot-fingerprint().md",
+      "x": 620,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_job_identity_fingerprint",
+      "type": "file",
+      "file": "dot-identity_fingerprint().md",
+      "x": 820,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_job_primary_url",
+      "type": "file",
+      "file": "dot-primary_url().md",
+      "x": 1020,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_deduplicator_deduplicator_process",
+      "type": "file",
+      "file": "dot-process().md",
+      "x": 1220,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testscoring_test_calculates_high_score_for_matching_candidate_cv",
+      "type": "file",
+      "file": "dot-test_calculates_high_score_for_matching_candidate_cv().md",
+      "x": 1420,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_10_seen_job_not_notified_again",
+      "type": "file",
+      "file": "dot-test_case_10_seen_job_not_notified_again().md",
+      "x": 1620,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_1_fullstack_jr_remote_stack",
+      "type": "file",
+      "file": "dot-test_case_1_fullstack_jr_remote_stack().md",
+      "x": 20,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_2_backend_jr_remote_node",
+      "type": "file",
+      "file": "dot-test_case_2_backend_jr_remote_node().md",
+      "x": 220,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_3_java_jr_remote",
+      "type": "file",
+      "file": "dot-test_case_3_java_jr_remote().md",
+      "x": 420,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_4_pleno_remote_rejected",
+      "type": "file",
+      "file": "dot-test_case_4_pleno_remote_rejected().md",
+      "x": 620,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_5_senior_remote_rejected",
+      "type": "file",
+      "file": "dot-test_case_5_senior_remote_rejected().md",
+      "x": 820,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_6_jr_onsite_rj_rejected",
+      "type": "file",
+      "file": "dot-test_case_6_jr_onsite_rj_rejected().md",
+      "x": 1020,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_7_jr_hybrid_sp_capital_rejected",
+      "type": "file",
+      "file": "dot-test_case_7_jr_hybrid_sp_capital_rejected().md",
+      "x": 1220,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_8_jr_onsite_sorocaba_accepted",
+      "type": "file",
+      "file": "dot-test_case_8_jr_onsite_sorocaba_accepted().md",
+      "x": 1420,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases_test_case_9_multi_source_gupy_linkedin_merged",
+      "type": "file",
+      "file": "dot-test_case_9_multi_source_gupy_linkedin_merged().md",
+      "x": 1620,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testjobmodel_test_description_updates_preserve_identity_fingerprint_but_change_content_hash",
+      "type": "file",
+      "file": "dot-test_description_updates_preserve_identity_fingerprint_but_change_content_hash().md",
+      "x": 20,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testjobmodel_test_different_locations_produce_different_fingerprints",
+      "type": "file",
+      "file": "dot-test_different_locations_produce_different_fingerprints().md",
+      "x": 220,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testnormalizer_test_extract_technologies",
+      "type": "file",
+      "file": "dot-test_extract_technologies().md",
+      "x": 420,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_fixtures_ground_truth_testfixturesgroundtruth_test_hybrid_sp_capital_is_rejected_by_location_policy",
+      "type": "file",
+      "file": "dot-test_hybrid_sp_capital_is_rejected_by_location_policy().md",
+      "x": 620,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testjobmodel_test_job_creates_fingerprint_and_merges_sources",
+      "type": "file",
+      "file": "dot-test_job_creates_fingerprint_and_merges_sources().md",
+      "x": 820,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_fixtures_ground_truth_testfixturesgroundtruth_test_junior_matching_reaches_high_score_and_approved_location",
+      "type": "file",
+      "file": "dot-test_junior_matching_reaches_high_score_and_approved_location().md",
+      "x": 1020,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testnormalizer_test_location_allowed_rules",
+      "type": "file",
+      "file": "dot-test_location_allowed_rules().md",
+      "x": 1220,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_fixtures_ground_truth_testfixturesgroundtruth_test_multi_source_deduplication_merges_gupy_and_linkedin",
+      "type": "file",
+      "file": "dot-test_multi_source_deduplication_merges_gupy_and_linkedin().md",
+      "x": 1420,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testnormalizer_test_normalizes_workplace",
+      "type": "file",
+      "file": "dot-test_normalizes_workplace().md",
+      "x": 1620,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testscoring_test_penalizes_senior_positions",
+      "type": "file",
+      "file": "dot-test_penalizes_senior_positions().md",
+      "x": 20,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_fixtures_ground_truth_testfixturesgroundtruth_test_senior_react_is_severely_penalized",
+      "type": "file",
+      "file": "dot-test_senior_react_is_severely_penalized().md",
+      "x": 220,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_resilience_sliding_window_testslidingwindowresilience_test_sliding_window_deduplication_and_failure_recovery",
+      "type": "file",
+      "file": "dot-test_sliding_window_deduplication_and_failure_recovery().md",
+      "x": 420,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_testfiltersandlocation_test_strict_location_rules",
+      "type": "file",
+      "file": "dot-test_strict_location_rules().md",
+      "x": 620,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_job_to_dict",
+      "type": "file",
+      "file": "dot-to_dict().md",
+      "x": 820,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_rationale_89",
+      "type": "file",
+      "file": "Alias para identity_fingerprint garantindo compatibilidade com o pipeline\u2026.md",
+      "x": 1020,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_rationale_85",
+      "type": "file",
+      "file": "Aplica a regra estrita de localidade - Remoto 100% Permitido em qualquer\u2026.md",
+      "x": 1220,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_rationale_39",
+      "type": "file",
+      "file": "Associa uma nova fonte a esta vaga (suporte a vaga multi-fonte)..md",
+      "x": 1420,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_rationale_9",
+      "type": "file",
+      "file": "Bateria de valida\u00e7\u00e3o dos 10 casos fundamentais de decis\u00e3o operacional 1. Full\u2026.md",
+      "x": 1620,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_rationale_56",
+      "type": "file",
+      "file": "Calcula o Match Score (0 a 100) da vaga contra o perfil t\u00e9cnico configurado em\u2026.md",
+      "x": 20,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_deduplicator_deduplicator",
+      "type": "file",
+      "file": "Deduplicator.md",
+      "x": 220,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_identity_fingerprint_rationale_11",
+      "type": "file",
+      "file": "Garante que a identidade da vaga n\u00e3o mude quando o RH altera o texto da\u2026.md",
+      "x": 420,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_identity_fingerprint_rationale_33",
+      "type": "file",
+      "file": "Garante que a identidade mude se a modalidade ou localiza\u00e7\u00e3o forem diferentes..md",
+      "x": 620,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_identity_fingerprint_rationale_51",
+      "type": "file",
+      "file": "Garante que os novos campos da SPEC-008 existam no Job..md",
+      "x": 820,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_deduplicator_rationale_6",
+      "type": "file",
+      "file": "Gerencia a deduplica\u00e7\u00e3o de vagas e a fus\u00e3o de m\u00faltiplas fontes para a mesma\u2026.md",
+      "x": 1020,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_rationale_80",
+      "type": "file",
+      "file": "Hash do conte\u00fado textual da vaga. Permite auditar se a descri\u00e7\u00e3o sofreu\u2026.md",
+      "x": 1220,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_rationale_64",
+      "type": "file",
+      "file": "Identidade Can\u00f4nica da Vaga (Imut\u00e1vel contra edi\u00e7\u00f5es de texto pelo RH).\u2026.md",
+      "x": 1420,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_deduplicator_py_job",
+      "type": "file",
+      "file": "Job_8.md",
+      "x": 1620,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_job",
+      "type": "file",
+      "file": "Job_11.md",
+      "x": 20,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_jobsource",
+      "type": "file",
+      "file": "JobSource.md",
+      "x": 220,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_rationale_63",
+      "type": "file",
+      "file": "Pequenas corre\u00e7\u00f5es de texto na descri\u00e7\u00e3o pelo RH n\u00e3o alteram a identidade\u2026.md",
+      "x": 420,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_deduplicator_rationale_13",
+      "type": "file",
+      "file": "Recebe uma lista de vagas brutas de coletores diferentes. Se uma vaga com a\u2026.md",
+      "x": 620,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job_rationale_49",
+      "type": "file",
+      "file": "Retorna o melhor link de candidatura dispon\u00edvel..md",
+      "x": 820,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_resilience_sliding_window_rationale_8",
+      "type": "file",
+      "file": "Simula o cen\u00e1rio do audit - Execu\u00e7\u00e3o 1000 vaga A coletada e persistida. -\u2026.md",
+      "x": 1020,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_testfiltersandlocation",
+      "type": "file",
+      "file": "TestFiltersAndLocation.md",
+      "x": 1220,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_fixtures_ground_truth_testfixturesgroundtruth",
+      "type": "file",
+      "file": "TestFixturesGroundTruth.md",
+      "x": 1420,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testjobmodel",
+      "type": "file",
+      "file": "TestJobModel.md",
+      "x": 1620,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testnormalizer",
+      "type": "file",
+      "file": "TestNormalizer.md",
+      "x": 20,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix_testoperationalmatrix10cases",
+      "type": "file",
+      "file": "TestOperationalMatrix10Cases.md",
+      "x": 220,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_testscoring",
+      "type": "file",
+      "file": "TestScoring.md",
+      "x": 420,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_resilience_sliding_window_testslidingwindowresilience",
+      "type": "file",
+      "file": "TestSlidingWindowResilience.md",
+      "x": 620,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture_rationale_45",
+      "type": "file",
+      "file": "Vagas com mesmo t\u00edtulo e empresa em localidades distintas geram fingerprints\u2026.md",
+      "x": 820,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_rationale_126",
+      "type": "file",
+      "file": "Varre o texto da vaga e extrai tecnologias conhecidas da stack do candidato..md",
+      "x": 1020,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_load_priority_companies",
+      "type": "file",
+      "file": "_load_priority_companies().md",
+      "x": 1220,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_calculate_match_score",
+      "type": "file",
+      "file": "calculate_match_score().md",
+      "x": 1420,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_deduplicator",
+      "type": "file",
+      "file": "deduplicator.py.md",
+      "x": 1620,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_extract_technologies",
+      "type": "file",
+      "file": "extract_technologies().md",
+      "x": 20,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_is_location_allowed",
+      "type": "file",
+      "file": "is_location_allowed().md",
+      "x": 220,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_models_job",
+      "type": "file",
+      "file": "job.py.md",
+      "x": 420,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_matches_any",
+      "type": "file",
+      "file": "matches_any().md",
+      "x": 620,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring",
+      "type": "file",
+      "file": "scoring.py.md",
+      "x": 820,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store",
+      "type": "file",
+      "file": "state_store.py.md",
+      "x": 1020,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_core_architecture",
+      "type": "file",
+      "file": "test_core_architecture.py.md",
+      "x": 1220,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_fixtures_ground_truth",
+      "type": "file",
+      "file": "test_fixtures_ground_truth.py.md",
+      "x": 1420,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_identity_fingerprint",
+      "type": "file",
+      "file": "test_identity_fingerprint.py.md",
+      "x": 1620,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_identity_fingerprint_test_identity_fingerprint_differs_on_location_or_workplace",
+      "type": "file",
+      "file": "test_identity_fingerprint_differs_on_location_or_workplace().md",
+      "x": 20,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_identity_fingerprint_test_identity_fingerprint_immutable_on_description_change",
+      "type": "file",
+      "file": "test_identity_fingerprint_immutable_on_description_change().md",
+      "x": 220,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge",
+      "type": "file",
+      "file": "test_llm_judge.py.md",
+      "x": 420,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor",
+      "type": "file",
+      "file": "test_monitor.py.md",
+      "x": 620,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_operational_matrix",
+      "type": "file",
+      "file": "test_operational_matrix.py.md",
+      "x": 820,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_radar_quality",
+      "type": "file",
+      "file": "test_radar_quality.py.md",
+      "x": 1020,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_resilience_sliding_window",
+      "type": "file",
+      "file": "test_resilience_sliding_window.py.md",
+      "x": 1220,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_identity_fingerprint_test_url_tripartite_and_evidence_level_fields",
+      "type": "file",
+      "file": "test_url_tripartite_and_evidence_level_fields().md",
+      "x": 1420,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g1",
+      "type": "group",
+      "label": "LinkedInCollector",
+      "x": 2060,
+      "y": 0,
+      "width": 1540,
+      "height": 720,
+      "color": "2"
+    },
+    {
+      "id": "n_collectors_gupy_collector_gupycollector_init",
+      "type": "file",
+      "file": "dot-__init__()_1.md",
+      "x": 2080,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_linkedin_collector_linkedincollector_init",
+      "type": "file",
+      "file": "dot-__init__()_2.md",
+      "x": 2280,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_linkedin_collector_mockresponse_init",
+      "type": "file",
+      "file": "dot-__init__()_8.md",
+      "x": 2480,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_gupy_collector_gupycollector_query_api",
+      "type": "file",
+      "file": "dot-_query_api().md",
+      "x": 2680,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_linkedin_collector_linkedincollector_query_search",
+      "type": "file",
+      "file": "dot-_query_search().md",
+      "x": 2880,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_base_basecollector_collect",
+      "type": "file",
+      "file": "dot-collect().md",
+      "x": 3080,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_gupy_collector_gupycollector_collect",
+      "type": "file",
+      "file": "dot-collect()_2.md",
+      "x": 3280,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_linkedin_collector_linkedincollector_collect",
+      "type": "file",
+      "file": "dot-collect()_3.md",
+      "x": 2080,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_testcollectorslivesmoke_test_live_gupy_collector_structure",
+      "type": "file",
+      "file": "dot-test_live_gupy_collector_structure().md",
+      "x": 2280,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_testcollectorslivesmoke_test_live_linkedin_collector_structure",
+      "type": "file",
+      "file": "dot-test_live_linkedin_collector_structure().md",
+      "x": 2480,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_abc",
+      "type": "file",
+      "file": "ABC.md",
+      "x": 2680,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_gupy_collector_py_any",
+      "type": "file",
+      "file": "Any.md",
+      "x": 2880,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_linkedin_collector_py_any",
+      "type": "file",
+      "file": "Any_1.md",
+      "x": 3080,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_base_basecollector",
+      "type": "file",
+      "file": "BaseCollector.md",
+      "x": 3280,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_rationale_71",
+      "type": "file",
+      "file": "Classifica a modalidade em 'remote', 'hybrid', 'on-site' ou 'unknown'..md",
+      "x": 2080,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_base_rationale_13",
+      "type": "file",
+      "file": "Executa a coleta e retorna uma lista de inst\u00e2ncias de Job padronizadas..md",
+      "x": 2280,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_gupy_collector_gupycollector",
+      "type": "file",
+      "file": "GupyCollector.md",
+      "x": 2480,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_base_rationale_7",
+      "type": "file",
+      "file": "Interface abstrata para qualquer coletor de vagas (Gupy, LinkedIn, RSS, etc).\u2026.md",
+      "x": 2680,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_base_py_job",
+      "type": "file",
+      "file": "Job_2.md",
+      "x": 2880,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_gupy_collector_py_job",
+      "type": "file",
+      "file": "Job_4.md",
+      "x": 3080,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_linkedin_collector_py_job",
+      "type": "file",
+      "file": "Job_5.md",
+      "x": 3280,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_rationale_58",
+      "type": "file",
+      "file": "Limpa ru\u00eddos, acentua\u00e7\u00e3o, emojis e caracteres especiais do t\u00edtulo para evitar\u2026.md",
+      "x": 2080,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_linkedin_collector_linkedincollector",
+      "type": "file",
+      "file": "LinkedInCollector.md",
+      "x": 2280,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_linkedin_collector_mockresponse",
+      "type": "file",
+      "file": "MockResponse.md",
+      "x": 2480,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_gupy_collector_py_session",
+      "type": "file",
+      "file": "Session_1.md",
+      "x": 2680,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_linkedin_collector_py_session",
+      "type": "file",
+      "file": "Session_2.md",
+      "x": 2880,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_testcollectorslivesmoke",
+      "type": "file",
+      "file": "TestCollectorsLiveSmoke.md",
+      "x": 3080,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_load_allowed_cities",
+      "type": "file",
+      "file": "_load_allowed_cities().md",
+      "x": 3280,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_base",
+      "type": "file",
+      "file": "base.py.md",
+      "x": 2080,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector",
+      "type": "file",
+      "file": "github_collector.py.md",
+      "x": 2280,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_gupy_collector",
+      "type": "file",
+      "file": "gupy_collector.py.md",
+      "x": 2480,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_linkedin_collector",
+      "type": "file",
+      "file": "linkedin_collector.py.md",
+      "x": 2680,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_normalize_title",
+      "type": "file",
+      "file": "normalize_title().md",
+      "x": 2880,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_normalize_workplace",
+      "type": "file",
+      "file": "normalize_workplace().md",
+      "x": 3080,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer",
+      "type": "file",
+      "file": "normalizer.py.md",
+      "x": 3280,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_linkedin_collector",
+      "type": "file",
+      "file": "test_linkedin_collector.py.md",
+      "x": 2080,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_linkedin_collector_test_linkedin_collector_handles_http_errors_gracefully",
+      "type": "file",
+      "file": "test_linkedin_collector_handles_http_errors_gracefully().md",
+      "x": 2280,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_linkedin_collector_test_linkedin_collector_handles_malformed_html",
+      "type": "file",
+      "file": "test_linkedin_collector_handles_malformed_html().md",
+      "x": 2480,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_linkedin_collector_test_linkedin_collector_parses_html_successfully",
+      "type": "file",
+      "file": "test_linkedin_collector_parses_html_successfully().md",
+      "x": 2680,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_trampos_collector",
+      "type": "file",
+      "file": "trampos_collector.py.md",
+      "x": 2880,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g2",
+      "type": "group",
+      "label": ".evaluate",
+      "x": 3680,
+      "y": 0,
+      "width": 1320,
+      "height": 720,
+      "color": "3"
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore",
+      "type": "file",
+      "file": "dot-compatibleJobIsEligibleWithExplainedScore().md",
+      "x": 3700,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill",
+      "type": "file",
+      "file": "dot-containsSkill().md",
+      "x": 3900,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile_copy",
+      "type": "file",
+      "file": "dot-copy().md",
+      "x": 4100,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "type": "file",
+      "file": "dot-evaluate().md",
+      "x": 4300,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "type": "file",
+      "file": "dot-evaluate()_1.md",
+      "x": 4500,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible",
+      "type": "file",
+      "file": "dot-incompatibleLevelIsIneligible().md",
+      "x": 4700,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "type": "file",
+      "file": "dot-job().md",
+      "x": 3700,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience",
+      "type": "file",
+      "file": "dot-learningInterestDoesNotCountAsSkillExperience().md",
+      "x": 3900,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "type": "file",
+      "file": "dot-norm().md",
+      "x": 4100,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result",
+      "type": "file",
+      "file": "dot-result().md",
+      "x": 4300,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult",
+      "type": "file",
+      "file": "dot-sameInputProducesSameResult().md",
+      "x": 4500,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_text",
+      "type": "file",
+      "file": "dot-text().md",
+      "x": 4700,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview",
+      "type": "file",
+      "file": "dot-unknownModeNeedsReview().md",
+      "x": 3700,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile",
+      "type": "file",
+      "file": "CandidateProfile.md",
+      "x": 3900,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile",
+      "type": "file",
+      "file": "CandidateProfile.java.md",
+      "x": 4100,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "type": "file",
+      "file": "DeterministicJobEvaluator.md",
+      "x": 4300,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator",
+      "type": "file",
+      "file": "DeterministicJobEvaluator.java.md",
+      "x": 4500,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "type": "file",
+      "file": "DeterministicJobEvaluatorTest.md",
+      "x": 4700,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest",
+      "type": "file",
+      "file": "DeterministicJobEvaluatorTest.java.md",
+      "x": 3700,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_eligible",
+      "type": "file",
+      "file": "ELIGIBLE.md",
+      "x": 3900,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "type": "file",
+      "file": "EvaluationResult.md",
+      "x": 4100,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult",
+      "type": "file",
+      "file": "EvaluationResult.java.md",
+      "x": 4300,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "type": "file",
+      "file": "EvaluationStatus.md",
+      "x": 4500,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus",
+      "type": "file",
+      "file": "EvaluationStatus.java.md",
+      "x": 4700,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "type": "file",
+      "file": "Evidence.md",
+      "x": 3700,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evidence",
+      "type": "file",
+      "file": "Evidence.java.md",
+      "x": 3900,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_ineligible",
+      "type": "file",
+      "file": "INELIGIBLE.md",
+      "x": 4100,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_job_job",
+      "type": "file",
+      "file": "Job.md",
+      "x": 4300,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_java_job",
+      "type": "file",
+      "file": "Job_1.md",
+      "x": 4500,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_job",
+      "type": "file",
+      "file": "Job.java.md",
+      "x": 4700,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator",
+      "type": "file",
+      "file": "JobEvaluator.md",
+      "x": 3700,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator",
+      "type": "file",
+      "file": "JobEvaluator.java.md",
+      "x": 3900,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_needs_review",
+      "type": "file",
+      "file": "NEEDS_REVIEW.md",
+      "x": 4100,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_override",
+      "type": "file",
+      "file": "Override.md",
+      "x": 4300,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_org_junit_jupiter_api_test",
+      "type": "file",
+      "file": "org.junit.jupiter.api.Test.md",
+      "x": 4500,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g3",
+      "type": "group",
+      "label": "StateStore",
+      "x": 5080,
+      "y": 0,
+      "width": 1320,
+      "height": 720,
+      "color": "4"
+    },
+    {
+      "id": "n_storage_state_store_statestore_init",
+      "type": "file",
+      "file": "dot-__init__()_7.md",
+      "x": 5100,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_load",
+      "type": "file",
+      "file": "dot-_load().md",
+      "x": 5300,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_get_last_heartbeat",
+      "type": "file",
+      "file": "dot-get_last_heartbeat().md",
+      "x": 5500,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_get_llm_usage",
+      "type": "file",
+      "file": "dot-get_llm_usage().md",
+      "x": 5700,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_is_seen",
+      "type": "file",
+      "file": "dot-is_seen().md",
+      "x": 5900,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_mark_seen",
+      "type": "file",
+      "file": "dot-mark_seen().md",
+      "x": 6100,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_prune",
+      "type": "file",
+      "file": "dot-prune().md",
+      "x": 5100,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_record_decision",
+      "type": "file",
+      "file": "dot-record_decision().md",
+      "x": 5300,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_record_llm_call",
+      "type": "file",
+      "file": "dot-record_llm_call().md",
+      "x": 5500,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_save",
+      "type": "file",
+      "file": "dot-save().md",
+      "x": 5700,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore_set_last_heartbeat",
+      "type": "file",
+      "file": "dot-set_last_heartbeat().md",
+      "x": 5900,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits_test_429_retry_and_backoff",
+      "type": "file",
+      "file": "dot-test_429_retry_and_backoff().md",
+      "x": 6100,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits_test_get_profile_loads_data",
+      "type": "file",
+      "file": "dot-test_get_profile_loads_data().md",
+      "x": 5100,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits_test_judge_calls_gemini_when_gemini_key_present",
+      "type": "file",
+      "file": "dot-test_judge_calls_gemini_when_gemini_key_present().md",
+      "x": 5300,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits_test_judge_handles_api_exception_gracefully",
+      "type": "file",
+      "file": "dot-test_judge_handles_api_exception_gracefully().md",
+      "x": 5500,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits_test_judge_returns_none_when_no_api_key",
+      "type": "file",
+      "file": "dot-test_judge_returns_none_when_no_api_key().md",
+      "x": 5700,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_teststatestorepersistence_test_loads_legacy_and_persists_fingerprints",
+      "type": "file",
+      "file": "dot-test_loads_legacy_and_persists_fingerprints().md",
+      "x": 5900,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testseenidsnormalization_test_mixed_types_normalized",
+      "type": "file",
+      "file": "dot-test_mixed_types_normalized().md",
+      "x": 6100,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits_test_pacing_enforced",
+      "type": "file",
+      "file": "dot-test_pacing_enforced().md",
+      "x": 5100,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_teststatestorepersistence_test_pruning_limits_retention",
+      "type": "file",
+      "file": "dot-test_pruning_limits_retention().md",
+      "x": 5300,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_teststatestorepersistence_test_records_decision_audit_trail",
+      "type": "file",
+      "file": "dot-test_records_decision_audit_trail().md",
+      "x": 5500,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits_test_rpd_tracking_in_state_store",
+      "type": "file",
+      "file": "dot-test_rpd_tracking_in_state_store().md",
+      "x": 5700,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits_test_should_invoke_judge_threshold",
+      "type": "file",
+      "file": "dot-test_should_invoke_judge_threshold().md",
+      "x": 5900,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_py_any",
+      "type": "file",
+      "file": "Any_5.md",
+      "x": 6100,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_rationale_139",
+      "type": "file",
+      "file": "Mant\u00e9m o tamanho do arquivo de estado sob controle estrito (ADR-001). Evita\u2026.md",
+      "x": 5100,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_rationale_7",
+      "type": "file",
+      "file": "Persist\u00eancia do estado do monitor (fingerprints vistas, datas e heartbeat)..md",
+      "x": 5300,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_rationale_115",
+      "type": "file",
+      "file": "Registra a trilha de auditoria para responder por que cada vaga foi aceita ou\u2026.md",
+      "x": 5500,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_rationale_71",
+      "type": "file",
+      "file": "Registra uma chamada ao LLM no contador di\u00e1rio (RPD tracking). NOTA DE\u2026.md",
+      "x": 5700,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_rationale_91",
+      "type": "file",
+      "file": "Retorna o uso di\u00e1rio de chamadas ao LLM..md",
+      "x": 5900,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_statestore",
+      "type": "file",
+      "file": "StateStore.md",
+      "x": 6100,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testllmjudgeunits",
+      "type": "file",
+      "file": "TestLlmJudgeUnits.md",
+      "x": 5100,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testseenidsnormalization",
+      "type": "file",
+      "file": "TestSeenIdsNormalization.md",
+      "x": 5300,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_teststatestorepersistence",
+      "type": "file",
+      "file": "TestStateStorePersistence.md",
+      "x": 5500,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_221",
+      "type": "file",
+      "file": "Testa que seen_ids s\u00e3o normalizados para string..md",
+      "x": 5700,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_storage_state_store_rationale_43",
+      "type": "file",
+      "file": "Verifica se a vaga j\u00e1 foi vista por fingerprint ou por ID espec\u00edfico..md",
+      "x": 5900,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g4",
+      "type": "group",
+      "label": "RssCollector",
+      "x": 6480,
+      "y": 0,
+      "width": 1320,
+      "height": 720,
+      "color": "5"
+    },
+    {
+      "id": "n_collectors_rss_collector_rsscollector_init",
+      "type": "file",
+      "file": "dot-__init__()_3.md",
+      "x": 6500,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrsscollector_make_collector",
+      "type": "file",
+      "file": "dot-_make_collector().md",
+      "x": 6700,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rsscollector_matches_filters",
+      "type": "file",
+      "file": "dot-_matches_filters()_1.md",
+      "x": 6900,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rsscollector_parse_feed",
+      "type": "file",
+      "file": "dot-_parse_feed().md",
+      "x": 7100,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rsscollector_collect",
+      "type": "file",
+      "file": "dot-collect()_4.md",
+      "x": 7300,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrsscollector_test_empty_feed_returns_empty_list",
+      "type": "file",
+      "file": "dot-test_empty_feed_returns_empty_list().md",
+      "x": 7500,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrsscollector_test_exclude_keyword_filter_applied",
+      "type": "file",
+      "file": "dot-test_exclude_keyword_filter_applied().md",
+      "x": 6500,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrssrelevancescoring_test_generic_internship_without_tech_penalized",
+      "type": "file",
+      "file": "dot-test_generic_internship_without_tech_penalized().md",
+      "x": 6700,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrssrelevancescoring_test_job_signal_scores_high",
+      "type": "file",
+      "file": "dot-test_job_signal_scores_high().md",
+      "x": 6900,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrsscollector_test_keyword_filter_applied",
+      "type": "file",
+      "file": "dot-test_keyword_filter_applied().md",
+      "x": 7100,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrssrelevancescoring_test_news_signal_scores_low",
+      "type": "file",
+      "file": "dot-test_news_signal_scores_low().md",
+      "x": 7300,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrssrelevancescoring_test_non_tech_bakery_vetoed_in_rss",
+      "type": "file",
+      "file": "dot-test_non_tech_bakery_vetoed_in_rss().md",
+      "x": 7500,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrsscollector_test_parses_atom_feed",
+      "type": "file",
+      "file": "dot-test_parses_atom_feed().md",
+      "x": 6500,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrsscollector_test_parses_rss_20_feed",
+      "type": "file",
+      "file": "dot-test_parses_rss_20_feed().md",
+      "x": 6700,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrsscollector_test_rss_source_name_is_rss",
+      "type": "file",
+      "file": "dot-test_rss_source_name_is_rss().md",
+      "x": 6900,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrssrelevancescoring_test_senior_penalized_in_rss",
+      "type": "file",
+      "file": "dot-test_senior_penalized_in_rss().md",
+      "x": 7100,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_py_any",
+      "type": "file",
+      "file": "Any_2.md",
+      "x": 7300,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rationale_125",
+      "type": "file",
+      "file": "Aplica keywordexclude_keyword filters do config ao t\u00edtulo do item RSS..md",
+      "x": 7500,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rationale_65",
+      "type": "file",
+      "file": "Coletor de vagas via feeds RSS 2.0 e Atom com suporte \u00e0 SPEC-008..md",
+      "x": 6500,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_98",
+      "type": "file",
+      "file": "Cria um RssCollector com HTTP mockado retornando o XML fornecido..md",
+      "x": 6700,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rationale_73",
+      "type": "file",
+      "file": "Faz fetch e parse do XML do feed, retorna lista de {id, title, link, pub_date}..md",
+      "x": 6900,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_136",
+      "type": "file",
+      "file": "Itens com exclude_keywords s\u00e3o removidos..md",
+      "x": 7100,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_py_job",
+      "type": "file",
+      "file": "Job_6.md",
+      "x": 7300,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_148",
+      "type": "file",
+      "file": "Jobs vindos do RSS devem ter 'rss' como chave no sources dict..md",
+      "x": 7500,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rsscollector",
+      "type": "file",
+      "file": "RssCollector.md",
+      "x": 6500,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_rationale_169",
+      "type": "file",
+      "file": "Scoring dedicado para itens RSSGoogle News. RSS n\u00e3o tem campos estruturados\u2026.md",
+      "x": 6700,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_py_session",
+      "type": "file",
+      "file": "Session_3.md",
+      "x": 6900,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_122",
+      "type": "file",
+      "file": "Somente itens com keywords sobrevivem..md",
+      "x": 7100,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrsscollector",
+      "type": "file",
+      "file": "TestRssCollector.md",
+      "x": 7300,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testrssrelevancescoring",
+      "type": "file",
+      "file": "TestRssRelevanceScoring.md",
+      "x": 7500,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_64",
+      "type": "file",
+      "file": "Testa o coletor RSS com XML mockado..md",
+      "x": 6500,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_163",
+      "type": "file",
+      "file": "Testa o scoring dedicado para itens RSS..md",
+      "x": 6700,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_calculate_rss_relevance",
+      "type": "file",
+      "file": "calculate_rss_relevance().md",
+      "x": 6900,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss",
+      "type": "file",
+      "file": "test_pcd_and_rss.py.md",
+      "x": 7100,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g5",
+      "type": "group",
+      "label": "rss_collector.py",
+      "x": 0,
+      "y": 1100,
+      "width": 1320,
+      "height": 620,
+      "color": "6"
+    },
+    {
+      "id": "n_core_url_resolver_rationale_37",
+      "type": "file",
+      "file": "Calcula pontua\u00e7\u00e3o de ru\u00eddo anti-agregador (SPEC-008). Detecta p\u00e1ginas de busca\u2026.md",
+      "x": 20,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rationale_44",
+      "type": "file",
+      "file": "Classifica rec\u00eancia da vaga sem assun\u00e7\u00f5es destrutivas. Retorna (status,\u2026.md",
+      "x": 220,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_rationale_14",
+      "type": "file",
+      "file": "Faz parse robusto de timestamps de feeds (RFC-8221123 e ISO-8601), convertendo\u2026.md",
+      "x": 420,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_url_resolver_rationale_14",
+      "type": "file",
+      "file": "Remove par\u00e2metros de tracking e fragmentos da URL, gerando uma URL can\u00f4nica\u2026.md",
+      "x": 620,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_url_resolver_rationale_72",
+      "type": "file",
+      "file": "Resolve URLs intermedi\u00e1rias (ex Google News) para obter a URL de destino real.\u2026.md",
+      "x": 820,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_url_resolver_py_session",
+      "type": "file",
+      "file": "Session_5.md",
+      "x": 1020,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_url_resolver_calculate_noise_score",
+      "type": "file",
+      "file": "calculate_noise_score().md",
+      "x": 20,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_classify_freshness",
+      "type": "file",
+      "file": "classify_freshness().md",
+      "x": 220,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_datetime",
+      "type": "file",
+      "file": "datetime.md",
+      "x": 420,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector_parse_feed_datetime",
+      "type": "file",
+      "file": "parse_feed_datetime().md",
+      "x": 620,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_url_resolver_resolve_url_tripartite",
+      "type": "file",
+      "file": "resolve_url_tripartite().md",
+      "x": 820,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_rss_collector",
+      "type": "file",
+      "file": "rss_collector.py.md",
+      "x": 1020,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_url_resolver_sanitize_canonical_url",
+      "type": "file",
+      "file": "sanitize_canonical_url().md",
+      "x": 20,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_url_resolution_test_calculate_noise_score_clean_job_is_zero",
+      "type": "file",
+      "file": "test_calculate_noise_score_clean_job_is_zero().md",
+      "x": 220,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_url_resolution_test_calculate_noise_score_detects_aggregation_pages",
+      "type": "file",
+      "file": "test_calculate_noise_score_detects_aggregation_pages().md",
+      "x": 420,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_url_resolution_test_calculate_noise_score_detects_salary_pages",
+      "type": "file",
+      "file": "test_calculate_noise_score_detects_salary_pages().md",
+      "x": 620,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_temporal_parser_test_classify_freshness_fresh",
+      "type": "file",
+      "file": "test_classify_freshness_fresh().md",
+      "x": 820,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_temporal_parser_test_classify_freshness_stale",
+      "type": "file",
+      "file": "test_classify_freshness_stale().md",
+      "x": 1020,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_temporal_parser_test_classify_freshness_unknown",
+      "type": "file",
+      "file": "test_classify_freshness_unknown().md",
+      "x": 20,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_temporal_parser_test_parse_invalid_date_returns_none",
+      "type": "file",
+      "file": "test_parse_invalid_date_returns_none().md",
+      "x": 220,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_temporal_parser_test_parse_iso8601_date",
+      "type": "file",
+      "file": "test_parse_iso8601_date().md",
+      "x": 420,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_temporal_parser_test_parse_rfc822_date",
+      "type": "file",
+      "file": "test_parse_rfc822_date().md",
+      "x": 620,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_url_resolution_test_resolve_url_tripartite_fallback_on_head_failure",
+      "type": "file",
+      "file": "test_resolve_url_tripartite_fallback_on_head_failure().md",
+      "x": 820,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_url_resolution_test_resolve_url_tripartite_success",
+      "type": "file",
+      "file": "test_resolve_url_tripartite_success().md",
+      "x": 1020,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_url_resolution_test_sanitize_canonical_url_strips_tracking",
+      "type": "file",
+      "file": "test_sanitize_canonical_url_strips_tracking().md",
+      "x": 20,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_temporal_parser",
+      "type": "file",
+      "file": "test_temporal_parser.py.md",
+      "x": 220,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_url_resolution",
+      "type": "file",
+      "file": "test_url_resolution.py.md",
+      "x": 420,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_url_resolver",
+      "type": "file",
+      "file": "url_resolver.py.md",
+      "x": 620,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g6",
+      "type": "group",
+      "label": "evaluate_job",
+      "x": 2060,
+      "y": 1100,
+      "width": 1320,
+      "height": 620,
+      "color": "1"
+    },
+    {
+      "id": "n_tests_test_llm_judge_testevaluatejobintegration_test_429_exhaustion_all_models_falls_back_cleanly",
+      "type": "file",
+      "file": "dot-test_429_exhaustion_all_models_falls_back_cleanly().md",
+      "x": 2080,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testevaluatejobintegration_test_combined_score_weighting",
+      "type": "file",
+      "file": "dot-test_combined_score_weighting().md",
+      "x": 2280,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testevaluatejobintegration_test_fallback_to_heuristic_when_judge_fails",
+      "type": "file",
+      "file": "dot-test_fallback_to_heuristic_when_judge_fails().md",
+      "x": 2480,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testevaluatejobintegration_test_llm_veto_zeros_score",
+      "type": "file",
+      "file": "dot-test_llm_veto_zeros_score().md",
+      "x": 2680,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testevaluatejobintegration_test_skips_judge_when_heuristic_score_below_floor",
+      "type": "file",
+      "file": "dot-test_skips_judge_when_heuristic_score_below_floor().md",
+      "x": 2880,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_py_any",
+      "type": "file",
+      "file": "Any_4.md",
+      "x": 3080,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_rationale_146",
+      "type": "file",
+      "file": "Avalia a vaga usando o provedor de IA dispon\u00edvel (Gemini Gr\u00e1tis ou Claude).\u2026.md",
+      "x": 2080,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_rationale_124",
+      "type": "file",
+      "file": "Cen\u00e1rio de pico real 429 persistente em todas as retentativas e em ambos os\u2026.md",
+      "x": 2280,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_rationale_133",
+      "type": "file",
+      "file": "Chama a API da Anthropic (Claude Haiku)..md",
+      "x": 2480,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_rationale_87",
+      "type": "file",
+      "file": "Chama a API do Google Gemini com rate pacing (4.5s) e retry com backoff em caso\u2026.md",
+      "x": 2680,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_rationale_71",
+      "type": "file",
+      "file": "Garante espa\u00e7amento de ~4.5s (+ jitter) entre chamadas sucessivas ao LLM (15\u2026.md",
+      "x": 2880,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_py_job",
+      "type": "file",
+      "file": "Job_10.md",
+      "x": 3080,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_rationale_1",
+      "type": "file",
+      "file": "LLM Judge camada sem\u00e2ntica que roda em cima do scoring heur\u00edstico. S\u00f3 \u00e9\u2026.md",
+      "x": 2080,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_rationale_242",
+      "type": "file",
+      "file": "Ponto \u00fanico de entrada do funil (SPEC-008). Roda o heur\u00edstico primeiro (sempre,\u2026.md",
+      "x": 2280,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_rationale_166",
+      "type": "file",
+      "file": "Score combinado 30% heur\u00edstico + 70% LLM..md",
+      "x": 2480,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_rationale_111",
+      "type": "file",
+      "file": "Se o LLM falhar, a vaga preserva seu score heur\u00edstico intacto e marca fallback..md",
+      "x": 2680,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_testevaluatejobintegration",
+      "type": "file",
+      "file": "TestEvaluateJobIntegration.md",
+      "x": 2880,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_rationale_99",
+      "type": "file",
+      "file": "Vaga com score  30 nem bate na API do LLM..md",
+      "x": 3080,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_llm_judge_rationale_148",
+      "type": "file",
+      "file": "Veto do LLM (ex not\u00edcia ou desabafo) zera o score e adiciona raz\u00e3o..md",
+      "x": 2080,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_call_anthropic",
+      "type": "file",
+      "file": "_call_anthropic().md",
+      "x": 2280,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_call_gemini",
+      "type": "file",
+      "file": "_call_gemini().md",
+      "x": 2480,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_enforce_pacing",
+      "type": "file",
+      "file": "_enforce_pacing().md",
+      "x": 2680,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_scoring_evaluate_job",
+      "type": "file",
+      "file": "evaluate_job().md",
+      "x": 2880,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_get_profile",
+      "type": "file",
+      "file": "get_profile().md",
+      "x": 3080,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_judge",
+      "type": "file",
+      "file": "judge().md",
+      "x": 2080,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge",
+      "type": "file",
+      "file": "llm_judge.py.md",
+      "x": 2280,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_llm_judge_should_invoke_judge",
+      "type": "file",
+      "file": "should_invoke_judge().md",
+      "x": 2480,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g7",
+      "type": "group",
+      "label": "is_pcd_exclusive",
+      "x": 3680,
+      "y": 1100,
+      "width": 1100,
+      "height": 620,
+      "color": "2"
+    },
+    {
+      "id": "n_tests_test_radar_quality_testradarqualitymetrics_evaluate_single_case",
+      "type": "file",
+      "file": "dot-_evaluate_single_case().md",
+      "x": 3700,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_allows_normal_job",
+      "type": "file",
+      "file": "dot-test_allows_normal_job().md",
+      "x": 3900,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_allows_pcd_only_in_description",
+      "type": "file",
+      "file": "dot-test_allows_pcd_only_in_description().md",
+      "x": 4100,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_allows_pcd_substring_in_word",
+      "type": "file",
+      "file": "dot-test_allows_pcd_substring_in_word().md",
+      "x": 4300,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_blocks_pcd_case_insensitive",
+      "type": "file",
+      "file": "dot-test_blocks_pcd_case_insensitive().md",
+      "x": 4500,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_blocks_pcd_in_title",
+      "type": "file",
+      "file": "dot-test_blocks_pcd_in_title().md",
+      "x": 3700,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_blocks_pcd_with_dots",
+      "type": "file",
+      "file": "dot-test_blocks_pcd_with_dots().md",
+      "x": 3900,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_blocks_pessoa_com_deficiencia",
+      "type": "file",
+      "file": "dot-test_blocks_pessoa_com_deficiencia().md",
+      "x": 4100,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_blocks_pessoas_com_deficiencia_plural",
+      "type": "file",
+      "file": "dot-test_blocks_pessoas_com_deficiencia_plural().md",
+      "x": 4300,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter_test_pcd_signal_recorded_on_job",
+      "type": "file",
+      "file": "dot-test_pcd_signal_recorded_on_job().md",
+      "x": 4500,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_radar_quality_testradarqualitymetrics_test_precision_and_recall_benchmarks",
+      "type": "file",
+      "file": "dot-test_precision_and_recall_benchmarks().md",
+      "x": 3700,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_radar_quality_rationale_219",
+      "type": "file",
+      "file": "Avalia\u00e7\u00e3o formal de Radar Quality Testa a esteira inteira (Filtro PCD -\u2026.md",
+      "x": 3900,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_rationale_107",
+      "type": "file",
+      "file": "Heur\u00edstica detecta se a vaga \u00e9 afirmativaexclusiva para PCD com base no\u2026.md",
+      "x": 4100,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_55",
+      "type": "file",
+      "file": "O campo pcd_signal do Job deve registrar a origem do sinal..md",
+      "x": 4300,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_26",
+      "type": "file",
+      "file": "P.C.D. deve ser detectado ap\u00f3s remo\u00e7\u00e3o de pontos..md",
+      "x": 4500,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_45",
+      "type": "file",
+      "file": "PCD mencionado apenas na descri\u00e7\u00e3o n\u00e3o deve bloquear (t\u00edtulo limpo)..md",
+      "x": 3700,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_50",
+      "type": "file",
+      "file": "SPCDAM n\u00e3o deve casar com bpcdb (PCD dentro de palavra)..md",
+      "x": 3900,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_testpcdfilter",
+      "type": "file",
+      "file": "TestPcdFilter.md",
+      "x": 4100,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_radar_quality_testradarqualitymetrics",
+      "type": "file",
+      "file": "TestRadarQualityMetrics.md",
+      "x": 4300,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_14",
+      "type": "file",
+      "file": "Testa a heur\u00edstica de detec\u00e7\u00e3o de vaga afirmativaexclusiva PCD..md",
+      "x": 4500,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_pcd_and_rss_rationale_40",
+      "type": "file",
+      "file": "Vaga regular sem PCD no t\u00edtulo N\u00c3O deve ser bloqueada..md",
+      "x": 3700,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_normalizer_is_pcd_exclusive",
+      "type": "file",
+      "file": "is_pcd_exclusive().md",
+      "x": 3900,
+      "y": 1500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g8",
+      "type": "group",
+      "label": "TramposCollector",
+      "x": 5080,
+      "y": 1100,
+      "width": 1100,
+      "height": 520,
+      "color": "3"
+    },
+    {
+      "id": "n_collectors_trampos_collector_tramposcollector_init",
+      "type": "file",
+      "file": "dot-__init__()_4.md",
+      "x": 5100,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_trampos_collector_tramposcollector_matches_filters",
+      "type": "file",
+      "file": "dot-_matches_filters()_2.md",
+      "x": 5300,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_trampos_collector_tramposcollector_collect",
+      "type": "file",
+      "file": "dot-collect()_5.md",
+      "x": 5500,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_evidence_py_any",
+      "type": "file",
+      "file": "Any_3.md",
+      "x": 5700,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_evidence_rationale_6",
+      "type": "file",
+      "file": "Avalia a densidade de evid\u00eancia da vaga (SPEC-008). Classifica\u00e7\u00e3o -\u2026.md",
+      "x": 5900,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_trampos_collector_rationale_10",
+      "type": "file",
+      "file": "Coletor de vagas via API p\u00fablica REST da Trampos.co (SPEC-008). Consome\u2026.md",
+      "x": 5100,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_trampos_collector_py_job",
+      "type": "file",
+      "file": "Job_7.md",
+      "x": 5300,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_evidence_py_job",
+      "type": "file",
+      "file": "Job_9.md",
+      "x": 5500,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_evidence_rationale_71",
+      "type": "file",
+      "file": "Regra de decis\u00e3o da SPEC-008 Vagas LOW_EVIDENCE (especialmente RSS raso ou sem\u2026.md",
+      "x": 5700,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_trampos_collector_py_session",
+      "type": "file",
+      "file": "Session_4.md",
+      "x": 5900,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_trampos_collector_tramposcollector",
+      "type": "file",
+      "file": "TramposCollector.md",
+      "x": 5100,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_evidence",
+      "type": "file",
+      "file": "evidence.py.md",
+      "x": 5300,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_evidence_profile_job_evidence",
+      "type": "file",
+      "file": "profile_job_evidence().md",
+      "x": 5500,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_core_evidence_should_route_to_llm",
+      "type": "file",
+      "file": "should_route_to_llm().md",
+      "x": 5700,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_evidence_profiler",
+      "type": "file",
+      "file": "test_evidence_profiler.py.md",
+      "x": 5900,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_evidence_profiler_test_profile_empty_description_is_low_evidence",
+      "type": "file",
+      "file": "test_profile_empty_description_is_low_evidence().md",
+      "x": 5100,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_evidence_profiler_test_profile_medium_evidence",
+      "type": "file",
+      "file": "test_profile_medium_evidence().md",
+      "x": 5300,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_evidence_profiler_test_profile_rich_gupy_description_is_high_evidence",
+      "type": "file",
+      "file": "test_profile_rich_gupy_description_is_high_evidence().md",
+      "x": 5500,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_trampos_collector",
+      "type": "file",
+      "file": "test_trampos_collector.py.md",
+      "x": 5700,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_trampos_collector_test_trampos_collector_maps_api_response_to_job",
+      "type": "file",
+      "file": "test_trampos_collector_maps_api_response_to_job().md",
+      "x": 5900,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g9",
+      "type": "group",
+      "label": "GithubIssuesCollector",
+      "x": 6480,
+      "y": 1100,
+      "width": 1100,
+      "height": 520,
+      "color": "4"
+    },
+    {
+      "id": "n_collectors_github_collector_githubissuescollector_init",
+      "type": "file",
+      "file": "dot-__init__().md",
+      "x": 6500,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_githubissuescollector_determine_seniority",
+      "type": "file",
+      "file": "dot-_determine_seniority().md",
+      "x": 6700,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_githubissuescollector_determine_workplace_type",
+      "type": "file",
+      "file": "dot-_determine_workplace_type().md",
+      "x": 6900,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_githubissuescollector_extract_company_from_title",
+      "type": "file",
+      "file": "dot-_extract_company_from_title().md",
+      "x": 7100,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_githubissuescollector_get_headers",
+      "type": "file",
+      "file": "dot-_get_headers().md",
+      "x": 7300,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_githubissuescollector_matches_filters",
+      "type": "file",
+      "file": "dot-_matches_filters().md",
+      "x": 6500,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_githubissuescollector_collect",
+      "type": "file",
+      "file": "dot-collect()_1.md",
+      "x": 6700,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_github_collector_testgithubissuescollector_sample_issues",
+      "type": "file",
+      "file": "dot-sample_issues().md",
+      "x": 6900,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_github_collector_testgithubissuescollector_test_auth_headers_with_github_token",
+      "type": "file",
+      "file": "dot-test_auth_headers_with_github_token().md",
+      "x": 7100,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_github_collector_testgithubissuescollector_test_auth_headers_without_github_token",
+      "type": "file",
+      "file": "dot-test_auth_headers_without_github_token().md",
+      "x": 7300,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_github_collector_testgithubissuescollector_test_collect_and_parsing",
+      "type": "file",
+      "file": "dot-test_collect_and_parsing().md",
+      "x": 6500,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_rationale_18",
+      "type": "file",
+      "file": "Coletor de vagas via GitHub Issues (ecossistema aberto de vagas dev no Brasil).\u2026.md",
+      "x": 6700,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_githubissuescollector",
+      "type": "file",
+      "file": "GithubIssuesCollector.md",
+      "x": 6900,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_py_job",
+      "type": "file",
+      "file": "Job_3.md",
+      "x": 7100,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_py_session",
+      "type": "file",
+      "file": "Session.md",
+      "x": 7300,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_collectors_github_collector_rationale_47",
+      "type": "file",
+      "file": "Tenta extrair o nome da empresa do t\u00edtulo padr\u00e3o de issues de vagas..md",
+      "x": 6500,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_github_collector_testgithubissuescollector",
+      "type": "file",
+      "file": "TestGithubIssuesCollector.md",
+      "x": 6700,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fixture",
+      "type": "file",
+      "file": "fixture.md",
+      "x": 6900,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_github_collector",
+      "type": "file",
+      "file": "test_github_collector.py.md",
+      "x": 7100,
+      "y": 1420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g10",
+      "type": "group",
+      "label": "monitor.py",
+      "x": 0,
+      "y": 1800,
+      "width": 1100,
+      "height": 520,
+      "color": "5"
+    },
+    {
+      "id": "n_notify_telegram_notifier_telegramnotifier_init",
+      "type": "file",
+      "file": "dot-__init__()_6.md",
+      "x": 20,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notify_telegram_notifier_telegramnotifier_send_heartbeat",
+      "type": "file",
+      "file": "dot-send_heartbeat().md",
+      "x": 220,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notify_telegram_notifier_telegramnotifier_send_job_alert",
+      "type": "file",
+      "file": "dot-send_job_alert().md",
+      "x": 420,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_testtelegramnotifier_test_telegram_sends_formatted_alert_with_score_and_buttons",
+      "type": "file",
+      "file": "dot-test_telegram_sends_formatted_alert_with_score_and_buttons().md",
+      "x": 620,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notify_telegram_notifier_py_job",
+      "type": "file",
+      "file": "Job_12.md",
+      "x": 820,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor_rationale_38",
+      "type": "file",
+      "file": "Retorna sess\u00e3o requests com retentativas autom\u00e1ticas e backoff exponencial..md",
+      "x": 20,
+      "y": 1960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor_py_session",
+      "type": "file",
+      "file": "Session_6.md",
+      "x": 220,
+      "y": 1960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notify_telegram_notifier_py_session",
+      "type": "file",
+      "file": "Session_7.md",
+      "x": 420,
+      "y": 1960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notify_telegram_notifier_telegramnotifier",
+      "type": "file",
+      "file": "TelegramNotifier.md",
+      "x": 620,
+      "y": 1960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_monitor_testtelegramnotifier",
+      "type": "file",
+      "file": "TestTelegramNotifier.md",
+      "x": 820,
+      "y": 1960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor_rationale_63",
+      "type": "file",
+      "file": "Verifica se deve enviar o heartbeat di\u00e1rio ao Telegram..md",
+      "x": 20,
+      "y": 2040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor_check_heartbeat",
+      "type": "file",
+      "file": "check_heartbeat().md",
+      "x": 220,
+      "y": 2040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor_get_http_session",
+      "type": "file",
+      "file": "get_http_session().md",
+      "x": 420,
+      "y": 2040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor_load_config",
+      "type": "file",
+      "file": "load_config().md",
+      "x": 620,
+      "y": 2040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor_main",
+      "type": "file",
+      "file": "main().md",
+      "x": 820,
+      "y": 2040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor",
+      "type": "file",
+      "file": "monitor.py.md",
+      "x": 20,
+      "y": 2120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_monitor_run_check",
+      "type": "file",
+      "file": "run_check().md",
+      "x": 220,
+      "y": 2120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notify_telegram_notifier",
+      "type": "file",
+      "file": "telegram_notifier.py.md",
+      "x": 420,
+      "y": 2120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g11",
+      "type": "group",
+      "label": "test_acceptance_dataset.py",
+      "x": 2060,
+      "y": 1800,
+      "width": 660,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_tests_test_acceptance_dataset_rationale_1",
+      "type": "file",
+      "file": "Consistency checks for the proposed acceptance corpus; not a scoring\u2026.md",
+      "x": 2080,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_acceptance_dataset_load_cases",
+      "type": "file",
+      "file": "load_cases().md",
+      "x": 2280,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_acceptance_dataset",
+      "type": "file",
+      "file": "test_acceptance_dataset.py.md",
+      "x": 2480,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_acceptance_dataset_test_corpus_has_unique_cases_and_explicit_review_provenance",
+      "type": "file",
+      "file": "test_corpus_has_unique_cases_and_explicit_review_provenance().md",
+      "x": 2080,
+      "y": 1960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tests_test_acceptance_dataset_test_identity_scenarios_are_internally_consistent",
+      "type": "file",
+      "file": "test_identity_scenarios_are_internally_consistent().md",
+      "x": 2280,
+      "y": 1960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g12",
+      "type": "group",
+      "label": "collectors/__init__.py",
+      "x": 3680,
+      "y": 1800,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_collectors_init",
+      "type": "file",
+      "file": "collectors__init__.py.md",
+      "x": 3700,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g13",
+      "type": "group",
+      "label": "core/__init__.py",
+      "x": 5080,
+      "y": 1800,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_core_init",
+      "type": "file",
+      "file": "core__init__.py.md",
+      "x": 5100,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g14",
+      "type": "group",
+      "label": "models/__init__.py",
+      "x": 6480,
+      "y": 1800,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_models_init",
+      "type": "file",
+      "file": "models__init__.py.md",
+      "x": 6500,
+      "y": 1880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g15",
+      "type": "group",
+      "label": "notify/__init__.py",
+      "x": 0,
+      "y": 2400,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_notify_init",
+      "type": "file",
+      "file": "notify__init__.py.md",
+      "x": 20,
+      "y": 2480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g16",
+      "type": "group",
+      "label": "com.jobfinder:job-finder-matching",
+      "x": 2060,
+      "y": 2400,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_pkg_com_jobfinder_job_finder_matching",
+      "type": "file",
+      "file": "com.jobfinderjob-finder-matching.md",
+      "x": 2080,
+      "y": 2480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g17",
+      "type": "group",
+      "label": "storage/__init__.py",
+      "x": 3680,
+      "y": 2400,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_storage_init",
+      "type": "file",
+      "file": "storage__init__.py.md",
+      "x": 3700,
+      "y": 2480,
+      "width": 180,
+      "height": 60
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_candidateprofile_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile_copy",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile_copy",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_candidateprofile_candidateprofile",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_text",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_text",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator",
+      "label": "implements [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_text",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_text",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate_backend_src_main_java_com_jobfinder_matching_job_job",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_job_job",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate_override",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_evaluate",
+      "toNode": "n_override",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill_backend_src_main_java_com_jobfinder_matching_job_job",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_containsskill",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_job_job",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_result",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_text_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_text",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_deterministicjobevaluator_deterministicjobevaluator_norm",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evaluationresult_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationresult_evaluationresult",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evaluationstatus_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_eligible",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_eligible",
+      "label": "case_of [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_ineligible",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_ineligible",
+      "label": "case_of [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_needs_review",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evaluationstatus_evaluationstatus_needs_review",
+      "label": "case_of [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_evidence_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_evidence",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_evidence_evidence",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_job_backend_src_main_java_com_jobfinder_matching_job_job",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_job",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_job_job",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_job_job_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_job_job",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_job_job_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_job_job",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_jobevaluator_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator",
+      "toNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview",
+      "fromNode": "n_backend_src_main_java_com_jobfinder_matching_jobevaluator_jobevaluator_evaluate",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_org_junit_jupiter_api_test",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest",
+      "toNode": "n_org_junit_jupiter_api_test",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore_org_junit_jupiter_api_test",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_compatiblejobiseligiblewithexplainedscore",
+      "toNode": "n_org_junit_jupiter_api_test",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible_org_junit_jupiter_api_test",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_incompatiblelevelisineligible",
+      "toNode": "n_org_junit_jupiter_api_test",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview_org_junit_jupiter_api_test",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_unknownmodeneedsreview",
+      "toNode": "n_org_junit_jupiter_api_test",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience_org_junit_jupiter_api_test",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_learninginterestdoesnotcountasskillexperience",
+      "toNode": "n_org_junit_jupiter_api_test",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult_org_junit_jupiter_api_test",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_sameinputproducessameresult",
+      "toNode": "n_org_junit_jupiter_api_test",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_java_job",
+      "fromNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_deterministicjobevaluatortest_job",
+      "toNode": "n_backend_src_test_java_com_jobfinder_matching_deterministicjobevaluatortest_java_job",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_abc",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_abc",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_collectors_base_basecollector",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_collectors_base_basecollector",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_models_job",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_models_job",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_models_job_job",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_models_job_job",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_collectors_github_collector",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_collectors_github_collector",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_collectors_gupy_collector",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_collectors_gupy_collector",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_collectors_linkedin_collector",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_collectors_linkedin_collector",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_collectors_rss_collector",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_collectors_rss_collector",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_collectors_trampos_collector",
+      "fromNode": "n_collectors_base",
+      "toNode": "n_collectors_trampos_collector",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_abc",
+      "fromNode": "n_collectors_base_basecollector",
+      "toNode": "n_abc",
+      "label": "inherits [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collectors_base_basecollector_collect",
+      "fromNode": "n_collectors_base_basecollector",
+      "toNode": "n_collectors_base_basecollector_collect",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collectors_base_rationale_7",
+      "fromNode": "n_collectors_base_basecollector",
+      "toNode": "n_collectors_base_rationale_7",
+      "label": "rationale_for [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collectors_github_collector",
+      "fromNode": "n_collectors_base_basecollector",
+      "toNode": "n_collectors_github_collector",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collectors_gupy_collector",
+      "fromNode": "n_collectors_base_basecollector",
+      "toNode": "n_collectors_gupy_collector",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collectors_linkedin_collector",
+      "fromNode": "n_collectors_base_basecollector",
+      "toNode": "n_collectors_linkedin_collector",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collectors_rss_collector",
+      "fromNode": "n_collectors_base_basecollector",
+      "toNode": "n_collectors_rss_collector",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collectors_trampos_collector",
+      "fromNode": "n_collectors_base_basecollector",
+      "toNode": "n_collectors_trampos_collector",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collect_collectors_base_py_job",
+      "fromNode": "n_collectors_base_basecollector_collect",
+      "toNode": "n_collectors_base_py_job",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_base_basecollector_collect_collectors_base_rationale_13",
+      "fromNode": "n_collectors_base_basecollector_collect",
+      "toNode": "n_collectors_base_rationale_13",
+      "label": "rationale_for [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_collectors_github_collector_githubissuescollector",
+      "fromNode": "n_collectors_github_collector",
+      "toNode": "n_collectors_github_collector_githubissuescollector",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_core_normalizer",
+      "fromNode": "n_collectors_github_collector",
+      "toNode": "n_core_normalizer",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_core_normalizer_normalize_title",
+      "fromNode": "n_collectors_github_collector",
+      "toNode": "n_core_normalizer_normalize_title",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_core_normalizer_normalize_workplace",
+      "fromNode": "n_collectors_github_collector",
+      "toNode": "n_core_normalizer_normalize_workplace",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_models_job",
+      "fromNode": "n_collectors_github_collector",
+      "toNode": "n_models_job",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_models_job_job",
+      "fromNode": "n_collectors_github_collector",
+      "toNode": "n_models_job_job",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_monitor",
+      "fromNode": "n_collectors_github_collector",
+      "toNode": "n_monitor",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_tests_test_github_collector",
+      "fromNode": "n_collectors_github_collector",
+      "toNode": "n_tests_test_github_collector",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collectors_github_collector_githubissuescollector_collect",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_collectors_github_collector_githubissuescollector_collect",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collectors_github_collector_githubissuescollector_determine_seniority",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_collectors_github_collector_githubissuescollector_determine_seniority",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collectors_github_collector_githubissuescollector_determine_workplace_type",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_collectors_github_collector_githubissuescollector_determine_workplace_type",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collectors_github_collector_githubissuescollector_extract_company_from_title",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_collectors_github_collector_githubissuescollector_extract_company_from_title",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collectors_github_collector_githubissuescollector_get_headers",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_collectors_github_collector_githubissuescollector_get_headers",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collectors_github_collector_githubissuescollector_init",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_collectors_github_collector_githubissuescollector_init",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collectors_github_collector_githubissuescollector_matches_filters",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_collectors_github_collector_githubissuescollector_matches_filters",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collectors_github_collector_rationale_18",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_collectors_github_collector_rationale_18",
+      "label": "rationale_for [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_monitor",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_monitor",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_monitor_run_check",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_monitor_run_check",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_tests_test_github_collector",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_tests_test_github_collector",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_tests_test_github_collector_testgithubissuescollector_test_auth_headers_with_github_token",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_tests_test_github_collector_testgithubissuescollector_test_auth_headers_with_github_token",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_tests_test_github_collector_testgithubissuescollector_test_auth_headers_without_github_token",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_tests_test_github_collector_testgithubissuescollector_test_auth_headers_without_github_token",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_tests_test_github_collector_testgithubissuescollector_test_collect_and_parsing",
+      "fromNode": "n_collectors_github_collector_githubissuescollector",
+      "toNode": "n_tests_test_github_collector_testgithubissuescollector_test_collect_and_parsing",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_init_collectors_github_collector_py_session",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_init",
+      "toNode": "n_collectors_github_collector_py_session",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_get_headers_collectors_github_collector_githubissuescollector_collect",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_get_headers",
+      "toNode": "n_collectors_github_collector_githubissuescollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_extract_company_from_title_collectors_github_collector_githubissuescollector_collect",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_extract_company_from_title",
+      "toNode": "n_collectors_github_collector_githubissuescollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_extract_company_from_title_collectors_github_collector_rationale_47",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_extract_company_from_title",
+      "toNode": "n_collectors_github_collector_rationale_47",
+      "label": "rationale_for [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_determine_workplace_type_collectors_github_collector_githubissuescollector_collect",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_determine_workplace_type",
+      "toNode": "n_collectors_github_collector_githubissuescollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_determine_workplace_type_core_normalizer_normalize_workplace",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_determine_workplace_type",
+      "toNode": "n_core_normalizer_normalize_workplace",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_determine_seniority_collectors_github_collector_githubissuescollector_collect",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_determine_seniority",
+      "toNode": "n_collectors_github_collector_githubissuescollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_matches_filters_collectors_github_collector_githubissuescollector_collect",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_matches_filters",
+      "toNode": "n_collectors_github_collector_githubissuescollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collect_collectors_github_collector_py_job",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_collect",
+      "toNode": "n_collectors_github_collector_py_job",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_github_collector_githubissuescollector_collect_core_normalizer_normalize_title",
+      "fromNode": "n_collectors_github_collector_githubissuescollector_collect",
+      "toNode": "n_core_normalizer_normalize_title",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_collectors_gupy_collector_gupycollector",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_collectors_gupy_collector_gupycollector",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_core_normalizer",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_core_normalizer",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_core_normalizer_extract_technologies",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_core_normalizer_extract_technologies",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_core_normalizer_normalize_title",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_core_normalizer_normalize_title",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_core_normalizer_normalize_workplace",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_core_normalizer_normalize_workplace",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_models_job",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_models_job",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_models_job_job",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_models_job_job",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_monitor",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_monitor",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_tests_test_monitor",
+      "fromNode": "n_collectors_gupy_collector",
+      "toNode": "n_tests_test_monitor",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_collectors_gupy_collector_gupycollector_collect",
+      "fromNode": "n_collectors_gupy_collector_gupycollector",
+      "toNode": "n_collectors_gupy_collector_gupycollector_collect",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_collectors_gupy_collector_gupycollector_init",
+      "fromNode": "n_collectors_gupy_collector_gupycollector",
+      "toNode": "n_collectors_gupy_collector_gupycollector_init",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_collectors_gupy_collector_gupycollector_query_api",
+      "fromNode": "n_collectors_gupy_collector_gupycollector",
+      "toNode": "n_collectors_gupy_collector_gupycollector_query_api",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_monitor",
+      "fromNode": "n_collectors_gupy_collector_gupycollector",
+      "toNode": "n_monitor",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_monitor_run_check",
+      "fromNode": "n_collectors_gupy_collector_gupycollector",
+      "toNode": "n_monitor_run_check",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_tests_test_monitor",
+      "fromNode": "n_collectors_gupy_collector_gupycollector",
+      "toNode": "n_tests_test_monitor",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_tests_test_monitor_testcollectorslivesmoke_test_live_gupy_collector_structure",
+      "fromNode": "n_collectors_gupy_collector_gupycollector",
+      "toNode": "n_tests_test_monitor_testcollectorslivesmoke_test_live_gupy_collector_structure",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_init_collectors_gupy_collector_py_any",
+      "fromNode": "n_collectors_gupy_collector_gupycollector_init",
+      "toNode": "n_collectors_gupy_collector_py_any",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_init_collectors_gupy_collector_py_session",
+      "fromNode": "n_collectors_gupy_collector_gupycollector_init",
+      "toNode": "n_collectors_gupy_collector_py_session",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_py_any_collectors_gupy_collector_gupycollector_query_api",
+      "fromNode": "n_collectors_gupy_collector_py_any",
+      "toNode": "n_collectors_gupy_collector_gupycollector_query_api",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_query_api_collectors_gupy_collector_gupycollector_collect",
+      "fromNode": "n_collectors_gupy_collector_gupycollector_query_api",
+      "toNode": "n_collectors_gupy_collector_gupycollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_collect_collectors_gupy_collector_py_job",
+      "fromNode": "n_collectors_gupy_collector_gupycollector_collect",
+      "toNode": "n_collectors_gupy_collector_py_job",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_collect_core_normalizer_extract_technologies",
+      "fromNode": "n_collectors_gupy_collector_gupycollector_collect",
+      "toNode": "n_core_normalizer_extract_technologies",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_collect_core_normalizer_normalize_title",
+      "fromNode": "n_collectors_gupy_collector_gupycollector_collect",
+      "toNode": "n_core_normalizer_normalize_title",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_gupy_collector_gupycollector_collect_core_normalizer_normalize_workplace",
+      "fromNode": "n_collectors_gupy_collector_gupycollector_collect",
+      "toNode": "n_core_normalizer_normalize_workplace",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_collectors_linkedin_collector_linkedincollector",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_collectors_linkedin_collector_linkedincollector",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_core_normalizer",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_core_normalizer",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_core_normalizer_extract_technologies",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_core_normalizer_extract_technologies",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_core_normalizer_normalize_title",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_core_normalizer_normalize_title",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_core_normalizer_normalize_workplace",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_core_normalizer_normalize_workplace",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_models_job",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_models_job",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_models_job_job",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_models_job_job",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_monitor",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_monitor",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_tests_test_linkedin_collector",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_tests_test_linkedin_collector",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_tests_test_monitor",
+      "fromNode": "n_collectors_linkedin_collector",
+      "toNode": "n_tests_test_monitor",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_collectors_linkedin_collector_linkedincollector_collect",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_collectors_linkedin_collector_linkedincollector_collect",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_collectors_linkedin_collector_linkedincollector_init",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_collectors_linkedin_collector_linkedincollector_init",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_collectors_linkedin_collector_linkedincollector_query_search",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_collectors_linkedin_collector_linkedincollector_query_search",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_monitor",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_monitor",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_monitor_run_check",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_monitor_run_check",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_tests_test_linkedin_collector",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_tests_test_linkedin_collector",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_tests_test_linkedin_collector_test_linkedin_collector_handles_http_errors_gracefully",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_tests_test_linkedin_collector_test_linkedin_collector_handles_http_errors_gracefully",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_tests_test_linkedin_collector_test_linkedin_collector_handles_malformed_html",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_tests_test_linkedin_collector_test_linkedin_collector_handles_malformed_html",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_tests_test_linkedin_collector_test_linkedin_collector_parses_html_successfully",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_tests_test_linkedin_collector_test_linkedin_collector_parses_html_successfully",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_tests_test_monitor",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_tests_test_monitor",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_tests_test_monitor_testcollectorslivesmoke_test_live_linkedin_collector_structure",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector",
+      "toNode": "n_tests_test_monitor_testcollectorslivesmoke_test_live_linkedin_collector_structure",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_init_collectors_linkedin_collector_py_any",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector_init",
+      "toNode": "n_collectors_linkedin_collector_py_any",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_init_collectors_linkedin_collector_py_session",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector_init",
+      "toNode": "n_collectors_linkedin_collector_py_session",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_py_any_collectors_linkedin_collector_linkedincollector_query_search",
+      "fromNode": "n_collectors_linkedin_collector_py_any",
+      "toNode": "n_collectors_linkedin_collector_linkedincollector_query_search",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_query_search_collectors_linkedin_collector_linkedincollector_collect",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector_query_search",
+      "toNode": "n_collectors_linkedin_collector_linkedincollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_query_search_collectors_linkedin_collector_py_job",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector_query_search",
+      "toNode": "n_collectors_linkedin_collector_py_job",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_query_search_core_normalizer_extract_technologies",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector_query_search",
+      "toNode": "n_core_normalizer_extract_technologies",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_query_search_core_normalizer_normalize_title",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector_query_search",
+      "toNode": "n_core_normalizer_normalize_title",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_linkedincollector_query_search_core_normalizer_normalize_workplace",
+      "fromNode": "n_collectors_linkedin_collector_linkedincollector_query_search",
+      "toNode": "n_core_normalizer_normalize_workplace",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_linkedin_collector_py_job_collectors_linkedin_collector_linkedincollector_collect",
+      "fromNode": "n_collectors_linkedin_collector_py_job",
+      "toNode": "n_collectors_linkedin_collector_linkedincollector_collect",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_collectors_rss_collector_classify_freshness",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_collectors_rss_collector_classify_freshness",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_collectors_rss_collector_parse_feed_datetime",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_collectors_rss_collector_parse_feed_datetime",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_collectors_rss_collector_rsscollector",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_collectors_rss_collector_rsscollector",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_core_normalizer",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_core_normalizer",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_core_normalizer_normalize_title",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_core_normalizer_normalize_title",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_core_url_resolver",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_core_url_resolver",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_core_url_resolver_calculate_noise_score",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_core_url_resolver_calculate_noise_score",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_core_url_resolver_resolve_url_tripartite",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_core_url_resolver_resolve_url_tripartite",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_datetime",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_datetime",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_models_job",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_models_job",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_models_job_job",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_models_job_job",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_monitor",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_monitor",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_tests_test_temporal_parser",
+      "fromNode": "n_collectors_rss_collector",
+      "toNode": "n_tests_test_temporal_parser",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_parse_feed_datetime_datetime",
+      "fromNode": "n_collectors_rss_collector_parse_feed_datetime",
+      "toNode": "n_datetime",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_parse_feed_datetime_collectors_rss_collector_rationale_14",
+      "fromNode": "n_collectors_rss_collector_parse_feed_datetime",
+      "toNode": "n_collectors_rss_collector_rationale_14",
+      "label": "rationale_for [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_parse_feed_datetime_collectors_rss_collector_rsscollector_collect",
+      "fromNode": "n_collectors_rss_collector_parse_feed_datetime",
+      "toNode": "n_collectors_rss_collector_rsscollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_parse_feed_datetime_tests_test_temporal_parser",
+      "fromNode": "n_collectors_rss_collector_parse_feed_datetime",
+      "toNode": "n_tests_test_temporal_parser",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_parse_feed_datetime_tests_test_temporal_parser_test_parse_invalid_date_returns_none",
+      "fromNode": "n_collectors_rss_collector_parse_feed_datetime",
+      "toNode": "n_tests_test_temporal_parser_test_parse_invalid_date_returns_none",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_parse_feed_datetime_tests_test_temporal_parser_test_parse_iso8601_date",
+      "fromNode": "n_collectors_rss_collector_parse_feed_datetime",
+      "toNode": "n_tests_test_temporal_parser_test_parse_iso8601_date",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_parse_feed_datetime_tests_test_temporal_parser_test_parse_rfc822_date",
+      "fromNode": "n_collectors_rss_collector_parse_feed_datetime",
+      "toNode": "n_tests_test_temporal_parser_test_parse_rfc822_date",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_datetime_collectors_rss_collector_classify_freshness",
+      "fromNode": "n_datetime",
+      "toNode": "n_collectors_rss_collector_classify_freshness",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_datetime_models_job",
+      "fromNode": "n_datetime",
+      "toNode": "n_models_job",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_datetime_monitor",
+      "fromNode": "n_datetime",
+      "toNode": "n_monitor",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_datetime_tests_test_temporal_parser",
+      "fromNode": "n_datetime",
+      "toNode": "n_tests_test_temporal_parser",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_classify_freshness_collectors_rss_collector_rationale_44",
+      "fromNode": "n_collectors_rss_collector_classify_freshness",
+      "toNode": "n_collectors_rss_collector_rationale_44",
+      "label": "rationale_for [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_classify_freshness_collectors_rss_collector_rsscollector_collect",
+      "fromNode": "n_collectors_rss_collector_classify_freshness",
+      "toNode": "n_collectors_rss_collector_rsscollector_collect",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_classify_freshness_tests_test_temporal_parser",
+      "fromNode": "n_collectors_rss_collector_classify_freshness",
+      "toNode": "n_tests_test_temporal_parser",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_classify_freshness_tests_test_temporal_parser_test_classify_freshness_fresh",
+      "fromNode": "n_collectors_rss_collector_classify_freshness",
+      "toNode": "n_tests_test_temporal_parser_test_classify_freshness_fresh",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_classify_freshness_tests_test_temporal_parser_test_classify_freshness_stale",
+      "fromNode": "n_collectors_rss_collector_classify_freshness",
+      "toNode": "n_tests_test_temporal_parser_test_classify_freshness_stale",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_collectors_rss_collector_classify_freshness_tests_test_temporal_parser_test_classify_freshness_unknown",
+      "fromNode": "n_collectors_rss_collector_classify_freshness",
+      "toNode": "n_tests_test_temporal_parser_test_classify_freshness_unknown",
+      "label": "calls [EXTRACTED]"
+    }
+  ]
+}

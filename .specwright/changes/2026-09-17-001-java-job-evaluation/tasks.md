@@ -37,11 +37,11 @@ delivery: null
 - Create: `backend/src/test/java/com/jobfinder/matching/DeterministicJobEvaluatorTest.java`
 **Validation:** `mvn -f backend/pom.xml -Dtest=DeterministicJobEvaluatorTest test -q`
 
-- [ ] Escrever testes para vaga elegível, incompatibilidade explícita e informação essencial desconhecida.
-- [ ] Escrever testes para score por componentes, evidências, interesse em aprender e execução repetida.
-- [ ] Escrever testes que executem apenas objetos em memória e não configurem clientes HTTP ou IA.
-- [ ] Executar `mvn -f backend/pom.xml -Dtest=DeterministicJobEvaluatorTest test -q` e confirmar falhas por implementação ausente.
-- [ ] Commitar os testes falhando como contrato executável.
+- [x] Escrever testes para vaga elegível, incompatibilidade explícita e informação essencial desconhecida.
+- [x] Escrever testes para score por componentes, evidências, interesse em aprender e execução repetida.
+- [x] Escrever testes que executem apenas objetos em memória e não configurem clientes HTTP ou IA.
+- [x] Executar `mvn -f backend/pom.xml -Dtest=DeterministicJobEvaluatorTest test -q` e confirmar falhas por implementação ausente.
+- [x] Commitar os testes falhando como contrato executável.
 
 ### T3: Implementar o avaliador determinístico
 
@@ -51,13 +51,13 @@ delivery: null
 - Modify: `backend/src/test/java/com/jobfinder/matching/DeterministicJobEvaluatorTest.java`
 **Validation:** `mvn -f backend/pom.xml test -q`
 
-- [ ] Implementar a interface `JobEvaluator` aplicando restrições duras antes do score.
-- [ ] Implementar compatibilidade de competências, senioridade, localização/modalidade e preferências com limites 40/30/20/10.
-- [ ] Emitir evidência textual para cada decisão e manter ordem determinística.
-- [ ] Retornar `NEEDS_REVIEW` para modalidade, senioridade ou requisito essencial desconhecido.
-- [ ] Ignorar frases de interesse em aprender ao calcular experiência comprovada.
-- [ ] Executar `mvn -f backend/pom.xml test -q` e confirmar todos os testes passando.
-- [ ] Commitar a implementação do avaliador.
+- [x] Implementar a interface `JobEvaluator` aplicando restrições duras antes do score.
+- [x] Implementar compatibilidade de competências, senioridade, localização/modalidade e preferências com limites 40/30/20/10.
+- [x] Emitir evidência textual para cada decisão e manter ordem determinística.
+- [x] Retornar `NEEDS_REVIEW` para modalidade, senioridade ou requisito essencial desconhecido.
+- [x] Ignorar frases de interesse em aprender ao calcular experiência comprovada.
+- [x] Executar `mvn -f backend/pom.xml test -q` e confirmar todos os testes passando.
+- [x] Commitar a implementação do avaliador.
 
 ### T4: Verificar o handoff da feature
 

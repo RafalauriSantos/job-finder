@@ -244,6 +244,23 @@ def run_check():
         else:
             print(f"✓ Localização: APROVADA ({loc_reason})")
 
+        # Google News/RSS normalmente entrega apenas um título e um link de notícia.
+        # Sem descrição ou metadados suficientes, não há evidência para transformar
+        # o item em alerta de candidatura; isso evita ruído no Telegram.
+        if "rss" in job.sources and job.evidence_level == "LOW_EVIDENCE":
+            reason = "RSS sem evidência suficiente para confirmar uma vaga real"
+            print(f"✗ Evidência: INSUFICIENTE ({reason})")
+            print("DECISÃO: DESCARTADA (RSS raso)")
+            discarded_score += 1
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DISCARD_LOW_EVIDENCE", reason,
+                raw_url=job.raw_url, canonical_url=job.canonical_url,
+                evidence_level=job.evidence_level
+            )
+            store.mark_seen(fp, source_ids)
+            continue
+
         # Cálculo do Score: Juiz Semântico com Fallback Heurístico
         score, reasons = evaluate_job(job, is_rss=("rss" in job.sources))
         if any("LLM Judge" in r for r in reasons):

@@ -52,6 +52,18 @@ def matches_any(keywords: List[str], text: str) -> bool:
             return True
     return False
 
+
+def classify_seniority(title: str) -> str:
+    """Classifica somente sinais explícitos presentes no título."""
+    title_lower = title.lower()
+    if matches_any(SENIOR_KEYWORDS, title_lower):
+        return "senior"
+    if matches_any(MID_KEYWORDS, title_lower):
+        return "mid"
+    if matches_any(JUNIOR_KEYWORDS, title_lower):
+        return "junior"
+    return "unknown"
+
 def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
     """
     Calcula o Match Score (0 a 100) da vaga contra o perfil técnico configurado em profile.json:
@@ -68,9 +80,10 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
 
     # 1. Checagem de Senioridade usando Word Boundaries para evitar falsos positivos (ex: "pl" em "Implementation")
 
-    has_senior = matches_any(SENIOR_KEYWORDS, title_lower)
-    has_mid = matches_any(MID_KEYWORDS, title_lower)
-    has_junior = matches_any(JUNIOR_KEYWORDS, title_lower)
+    seniority = classify_seniority(job.title)
+    has_senior = seniority == "senior"
+    has_mid = seniority == "mid"
+    has_junior = seniority == "junior"
 
     if has_senior:
         score -= 60

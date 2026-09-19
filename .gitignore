@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 venv/
 *.zip
+seen_jobs.json
+seen_jobs.json.lock

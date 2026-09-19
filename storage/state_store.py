@@ -127,6 +127,8 @@ class StateStore:
             current = self._load()
             if self.state.get("deliveries"):
                 current["deliveries"] = self.state["deliveries"]
+            if self.state.get("recent_decisions"):
+                current["recent_decisions"] = self.state["recent_decisions"]
             current.setdefault("delivery_claims", {}).pop(fingerprint, None)
             with open(self.filepath, "w", encoding="utf-8") as handle:
                 json.dump(current, handle, indent=2, ensure_ascii=False)

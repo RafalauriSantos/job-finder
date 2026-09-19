@@ -17,23 +17,6 @@ class StateStore:
         if not os.path.exists(self.filepath):
             return default_state
 
-    def _acquire_lock(self):
-        lock_path = f"{self.filepath}.lock"
-        for _ in range(100):
-            try:
-                fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-                return fd, lock_path
-            except FileExistsError:
-                time.sleep(0.01)
-        raise TimeoutError(f"Não foi possível bloquear o estado: {self.filepath}")
-
-    @staticmethod
-    def _release_lock(fd: int, lock_path: str):
-        os.close(fd)
-        try:
-            os.remove(lock_path)
-        except FileNotFoundError:
-            pass
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -52,14 +35,29 @@ class StateStore:
                 else:
                     return default_state
 
-                # Normaliza IDs para string (corrige inconsistência int/str de versões anteriores)
                 result["seen_ids"] = [str(x) for x in result.get("seen_ids", [])]
-                # Remove duplicatas causadas pela normalização (ex: 12184580 e "12184580")
                 result["seen_ids"] = list(dict.fromkeys(result["seen_ids"]))
-
                 return result
         except Exception:
             return default_state
+
+    def _acquire_lock(self):
+        lock_path = f"{self.filepath}.lock"
+        for _ in range(100):
+            try:
+                fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                return fd, lock_path
+            except FileExistsError:
+                time.sleep(0.01)
+        raise TimeoutError(f"Não foi possível bloquear o estado: {self.filepath}")
+
+    @staticmethod
+    def _release_lock(fd: int, lock_path: str):
+        os.close(fd)
+        try:
+            os.remove(lock_path)
+        except FileNotFoundError:
+            pass
 
     def is_seen(self, fingerprint: str, source_id: str = "") -> bool:
         """Verifica se a vaga já foi vista por fingerprint ou por ID específico."""
@@ -124,7 +122,15 @@ class StateStore:
             self._release_lock(fd, lock_path)
 
     def release_delivery_claim(self, fingerprint: str):
-        self.state.setdefault("delivery_claims", {}).pop(fingerprint, None)
+        fd, lock_path = self._acquire_lock()
+        try:
+            current = self._load()
+            current.setdefault("delivery_claims", {}).pop(fingerprint, None)
+            with open(self.filepath, "w", encoding="utf-8") as handle:
+                json.dump(current, handle, indent=2, ensure_ascii=False)
+            self.state = current
+        finally:
+            self._release_lock(fd, lock_path)
 
     def record_source_health(self, source: str, status: str, discovered: int, details=None):
         """Guarda uma janela curta de saúde operacional por fonte."""

@@ -1,5 +1,6 @@
 {
   "check_interval_minutes": 60,
+  "max_cycle_seconds": 180,
   "resolve_rss_urls": true,
   "heartbeat": {
     "enabled": true,

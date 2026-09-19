@@ -337,6 +337,7 @@ def run_check():
         finalize_delivery(store, job, source_ids, sent, score, reasons[0] if reasons else "Aprovada")
 
     elapsed = time.time() - start_time
+    max_cycle_seconds = config.get("max_cycle_seconds", 180)
     llm_usage = store.get_llm_usage()
     today_llm_calls = llm_usage.get("calls", 0)
 
@@ -374,6 +375,8 @@ def run_check():
     fallback_str = f"{fallback_count} vaga(s)" if fallback_count > 0 else "0 (LLM 100% ativo)"
     print(f"├─ Fallback Heurístico: {fallback_str}")
     print(f"├─ Duração:             {elapsed:.1f}s")
+    if elapsed > max_cycle_seconds:
+        print(f"⚠️ Limite operacional excedido: {elapsed:.1f}s > {max_cycle_seconds}s")
     print(f"└─ Status do Ciclo:     SUCCESS")
     print("=" * 48 + "\n")
 

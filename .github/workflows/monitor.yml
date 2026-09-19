@@ -20,28 +20,27 @@ jobs:
       - name: Checkout repositório
         uses: actions/checkout@v4
 
-      - name: Preparar Python do runner
+      - name: Preparar Python e dependências
         run: |
           $pythonDir = 'C:\actions-runner\python'
           $python = Join-Path $pythonDir 'python.exe'
           if (!(Test-Path $python)) {
             $installer = 'C:\actions-runner\_work\_tool\Python\3.12.10\x64\python-3.12.10-amd64.exe'
             if (!(Test-Path $installer)) { throw "Python installer not found: $installer" }
-            & $installer /quiet InstallAllUsers=0 TargetDir=$pythonDir Include_pip=1 Include_test=0 Include_launcher=0
+            Start-Process -FilePath $installer -Wait -ArgumentList @('/quiet', 'InstallAllUsers=0', "TargetDir=$pythonDir", 'Include_pip=1', 'Include_test=0', 'Include_launcher=0')
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
+          if (!(Test-Path $python)) { throw "Python was not installed at $python" }
           "$pythonDir" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "PYTHON_EXE=$python" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           & $python --version
           & $python -m pip --version
-
-      - name: Instalar dependências
-        run: |
-          C:\actions-runner\python\python.exe -m pip install -r requirements.txt
+          & $python -m pip install -r requirements.txt
 
       - name: Rodar testes automatizados
         if: github.event_name == 'workflow_dispatch'
         run: |
-          C:\actions-runner\python\python.exe -m pytest -v
+          & $env:PYTHON_EXE -m pytest -v
 
       - name: Executar monitor
         env:
@@ -55,7 +54,7 @@ jobs:
           ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          C:\actions-runner\python\python.exe monitor.py --once
+          & $env:PYTHON_EXE monitor.py --once
 
       - name: Persistir vagas já vistas
         run: |

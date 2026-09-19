@@ -310,14 +310,20 @@ def run_check():
         sent = notifier.send_job_alert(job)
         if sent:
             notified_count += 1
-        store.record_decision(
-            job_id, primary_source, job.identity_fingerprint, job.content_hash,
-            "NOTIFY", reasons[0] if reasons else "Aprovada", final_score=score,
-            raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
-        )
-
-        # Marca como vista para nunca repetir a mesma vaga
-        store.mark_seen(fp, source_ids)
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DELIVERED", reasons[0] if reasons else "Aprovada", final_score=score,
+                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
+            )
+            store.record_delivery(fp, source_ids, delivered=True)
+        else:
+            print("⚠️ Entrega Telegram falhou; vaga ficará disponível para retry no próximo ciclo.")
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DELIVERY_FAILED", "Falha ao enviar alerta pelo Telegram", final_score=score,
+                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
+            )
+            store.record_delivery(fp, source_ids, delivered=False)
 
     elapsed = time.time() - start_time
     llm_usage = store.get_llm_usage()

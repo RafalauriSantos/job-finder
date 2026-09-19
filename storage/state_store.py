@@ -26,6 +26,7 @@ class StateStore:
                         "seen_fingerprints": data.get("seen_fingerprints", []),
                         "last_heartbeat": data.get("last_heartbeat", ""),
                         "recent_decisions": data.get("recent_decisions", []),
+                        "deliveries": data.get("deliveries", {}),
                     }
                 else:
                     return default_state
@@ -60,6 +61,22 @@ class StateStore:
             sid_str = str(sid)
             if sid_str not in self.state["seen_ids"]:
                 self.state["seen_ids"].append(sid_str)
+
+    def record_delivery(self, fingerprint: str, source_ids: List[str], delivered: bool):
+        """Registra o resultado sem perder alertas cuja entrega falhou."""
+        deliveries = self.state.setdefault("deliveries", {})
+        previous = deliveries.get(fingerprint, {})
+        deliveries[fingerprint] = {
+            "status": "DELIVERED" if delivered else "DELIVERY_FAILED",
+            "attempts": previous.get("attempts", 0) + 1,
+            "source_ids": [str(source_id) for source_id in source_ids],
+        }
+        if delivered:
+            self.mark_seen(fingerprint, source_ids)
+
+    def get_delivery(self, fingerprint: str) -> Dict[str, Any]:
+        """Retorna o último estado de entrega da vaga, se houver."""
+        return self.state.get("deliveries", {}).get(fingerprint, {})
 
     def get_last_heartbeat(self) -> str:
         return self.state.get("last_heartbeat", "")

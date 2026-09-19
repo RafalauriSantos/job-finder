@@ -78,6 +78,27 @@ class TestStateStorePersistence:
             assert entry["identity_fingerprint"] == "fp-canonico"
             assert "timestamp" in entry
 
+    def test_failed_delivery_is_not_marked_as_seen(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            store = StateStore(os.path.join(tmpdir, "seen.json"))
+
+            store.record_delivery("fp-falha", ["job-101"], delivered=False)
+
+            assert store.is_seen("fp-falha", "job-101") is False
+            assert store.get_delivery("fp-falha")["status"] == "DELIVERY_FAILED"
+            assert store.get_delivery("fp-falha")["attempts"] == 1
+
+    def test_successful_delivery_is_marked_as_seen_and_is_idempotent(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            store = StateStore(os.path.join(tmpdir, "seen.json"))
+
+            store.record_delivery("fp-ok", ["job-202"], delivered=True)
+            store.record_delivery("fp-ok", ["job-202"], delivered=True)
+
+            assert store.is_seen("fp-ok", "job-202") is True
+            assert store.get_delivery("fp-ok")["status"] == "DELIVERED"
+            assert store.get_delivery("fp-ok")["attempts"] == 2
+
     def test_pruning_limits_retention(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = os.path.join(tmpdir, "seen.json")

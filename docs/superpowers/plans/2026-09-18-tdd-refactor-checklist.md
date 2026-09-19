@@ -48,7 +48,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] Suíte atual está verde.
 - [x] Teste de integração cobre um ciclo completo sem rede real.
 - [x] Teste de contrato cobre LinkedIn, Gupy, RSS, GitHub e Trampos.
-- [ ] Relatório do ciclo mostra recall aproximado, precisão, duplicatas e falhas por fonte.
+- [x] Relatório do ciclo mostra recall aproximado, precisão, duplicatas e falhas por fonte.
 - [x] Execução real dentro do limite operacional definido.
 - [x] Documentação de configuração e rollback atualizada.
 - [x] Estado operacional não é commitado junto com código.

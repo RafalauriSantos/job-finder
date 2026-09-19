@@ -21,6 +21,7 @@ from notify.telegram_notifier import TelegramNotifier
 from storage.state_store import StateStore
 from core.query_planner import plan_searches
 from core.delivery_workflow import finalize_delivery
+from core.eligibility import classify_score
 
 load_dotenv()
 
@@ -285,7 +286,8 @@ def run_check():
         job.match_score = score
         job.match_reasons = reasons
 
-        if score <= 0:
+        decision = classify_score(score, min_score)
+        if decision == "VETO":
             veto_reason = next((r for r in reasons if "LLM Judge" in r), None)
             label = "Vaga não-real (Veto LLM)" if veto_reason else "Senioridade/Relevância"
             print(f"✗ {label}: BLOQUEADA (Score <= 0)")
@@ -301,7 +303,7 @@ def run_check():
             store.mark_seen(fp, source_ids)
             continue
 
-        if score < min_score:
+        if decision == "LOW_SCORE":
             print(f"✗ Match Score: {score}/100 (Abaixo do mínimo {min_score})")
             for r in reasons:
                 print(f"   • {r}")

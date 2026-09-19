@@ -131,6 +131,7 @@ def run_check():
     gupy_status = "OK"
     linkedin_status = "OK"
     linkedin_query_stats = []
+    gupy_query_stats = []
     rss_status = "OK"
     github_status = "OK"
     trampos_status = "OK"
@@ -139,6 +140,7 @@ def run_check():
         try:
             gupy_col = GupyCollector(HTTP, gupy_queries)
             discovered_gupy = gupy_col.collect()
+            gupy_query_stats = gupy_col.query_stats
         except Exception as e:
             gupy_status = f"FALHA ({e})"
 
@@ -335,6 +337,11 @@ def run_check():
     print(" 📊 FUNIL DE EXECUÇÃO E SAÚDE DO SISTEMA")
     print("=" * 48)
     print(f"├─ Gupy:     {gupy_status:<8} | {len(discovered_gupy)} vaga(s)")
+    for query in gupy_query_stats:
+        print(
+            f"│  └─ parâmetros={list(query['parameters'].keys())} "
+            f"resultados={query['results']} status={query['status']}"
+        )
     print(f"├─ LinkedIn: {linkedin_status:<8} | {len(discovered_linkedin)} vaga(s)")
     for query in linkedin_query_stats:
         print(

@@ -24,6 +24,7 @@ class GupyCollector(BaseCollector):
     def __init__(self, http_session: requests.Session, queries: List[Dict[str, Any]]):
         self.http = http_session
         self.queries = queries
+        self.query_stats: List[Dict[str, Any]] = []
 
     def _query_api(self, args: Dict[str, Any]) -> List[Dict[str, Any]]:
         body = {
@@ -60,6 +61,11 @@ class GupyCollector(BaseCollector):
 
         for q_args in self.queries:
             raw_jobs = self._query_api(q_args)
+            self.query_stats.append({
+                "parameters": dict(q_args),
+                "results": len(raw_jobs),
+                "status": "OK" if raw_jobs or raw_jobs == [] else "UNKNOWN",
+            })
             for raw in raw_jobs:
                 job_id = str(raw.get("id"))
                 title = normalize_title(raw.get("name", ""))

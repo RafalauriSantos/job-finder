@@ -6,3 +6,4 @@ venv/
 *.zip
 seen_jobs.json
 seen_jobs.json.lock
+cycle_health.json

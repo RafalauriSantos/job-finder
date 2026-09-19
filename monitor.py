@@ -34,6 +34,7 @@ if sys.stdout and hasattr(sys.stdout, "reconfigure"):
 
 CONFIG_FILE = "config.json"
 STATE_FILE = "seen_jobs.json"
+HEALTH_REPORT_FILE = "cycle_health.json"
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
@@ -405,6 +406,35 @@ def run_check():
         {"pcd": discarded_pcd, "location": discarded_location, "seniority": discarded_senior, "score": discarded_score},
         {"gupy": gupy_status, "linkedin": linkedin_status, "rss": rss_status, "github": github_status, "trampos": trampos_status},
     )
+    health_report = {
+        "finished_at": datetime.now().isoformat(timespec="seconds"),
+        "status": "SUCCESS",
+        "duration_seconds": round(elapsed, 1),
+        "sources": {
+            "gupy": {"status": gupy_status, "discovered": len(discovered_gupy), "queries": gupy_query_stats},
+            "linkedin": {"status": linkedin_status, "discovered": len(discovered_linkedin), "queries": linkedin_query_stats},
+            "rss": {"status": rss_status, "discovered": len(discovered_rss)},
+            "github": {"status": github_status, "discovered": len(discovered_github)},
+            "trampos": {"status": trampos_status, "discovered": len(discovered_trampos)},
+        },
+        "funnel": {
+            "raw": len(discovered_jobs),
+            "unique": len(unique_jobs),
+            "seen": discarded_seen,
+            "discarded": {
+                "pcd": discarded_pcd,
+                "location": discarded_location,
+                "seniority": discarded_senior,
+                "score": discarded_score,
+            },
+            "notified": notified_count,
+        },
+        "metrics": cycle_metrics,
+        "llm_calls_today": today_llm_calls,
+        "llm_fallbacks": fallback_count,
+    }
+    with open(HEALTH_REPORT_FILE, "w", encoding="utf-8") as report_file:
+        json.dump(health_report, report_file, ensure_ascii=False, indent=2)
     print(f"├─ Duplicatas:           {cycle_metrics['duplicate_count']} ({cycle_metrics['duplicate_rate']:.1%})")
     print(f"├─ Precisão/Recall:      N/D ({cycle_metrics['precision_recall_note']})")
     print(f"├─ Falhas de fonte:      {', '.join(cycle_metrics['source_failures']) or 'nenhuma'}")

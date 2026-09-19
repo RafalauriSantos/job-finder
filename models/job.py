@@ -26,6 +26,7 @@ class Job:
     technologies: List[str] = field(default_factory=list)
     seniority: str = "junior"            # "intern", "junior", "mid", "senior", "unknown"
     match_score: int = 0                 # 0 a 100
+    learning_interest_score: int = 0     # Interesse de aprendizado, separado do match
     match_reasons: List[str] = field(default_factory=list)
     pcd_signal: str = ""               # "", "TITLE" — origem do sinal PCD detectado
     raw_url: str = ""                  # URL bruta original do feed / agregador
@@ -102,6 +103,7 @@ class Job:
             "technologies": self.technologies,
             "seniority": self.seniority,
             "match_score": self.match_score,
+            "learning_interest_score": self.learning_interest_score,
             "match_reasons": self.match_reasons,
             "pcd_signal": self.pcd_signal,
             "raw_url": self.raw_url,

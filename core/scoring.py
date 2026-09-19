@@ -138,6 +138,7 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
         reasons.append(f"Stack Core do perfil: {', '.join(core_matches)} (+{pts} pts)")
 
     target_matches = [t for t in techs if t.lower() in secondary_list]
+    job.learning_interest_score = min(100, len(target_matches) * 35)
     if target_matches:
         pts = min(15, len(target_matches) * 5)
         score += pts

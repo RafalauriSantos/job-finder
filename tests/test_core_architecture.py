@@ -139,3 +139,15 @@ class TestScoring:
         score, reasons = calculate_match_score(job)
         assert score == 0
         assert any("Senioridade alta" in r for r in reasons)
+
+    def test_learning_interest_is_separate_from_match_score(self):
+        job = Job(
+            title="Desenvolvedor Java Junior",
+            company="Empresa X",
+            workplace_type="remote",
+            description="Java, Spring e Git",
+        )
+        score, _ = calculate_match_score(job)
+        assert score > 0
+        assert job.learning_interest_score > 0
+        assert job.learning_interest_score <= 100

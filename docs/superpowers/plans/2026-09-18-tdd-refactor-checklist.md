@@ -41,7 +41,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] Senioridade explícita incompatível continua bloqueada.
 - [x] Veto, score baixo e aprovado estão centralizados.
 - [x] Localização e evidência são decisões testáveis e separadas do monitor.
-- [ ] Score, elegibilidade e interesse de aprendizado permanecem campos distintos.
+- [x] Score, elegibilidade e interesse de aprendizado permanecem campos distintos.
 
 ## Operação e qualidade
 

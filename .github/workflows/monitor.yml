@@ -20,23 +20,26 @@ jobs:
       - name: Checkout repositório
         uses: actions/checkout@v4
 
+      - name: Configurar Python
+        continue-on-error: true
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Verificar Python do runner
         run: |
-          $python = 'C:\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe'
-          & $python --version
-          & $python -m ensurepip --upgrade
-          & $python -m pip --version
+          python --version
+          python -m ensurepip --upgrade
+          python -m pip --version
 
       - name: Instalar dependências
         run: |
-          $python = 'C:\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe'
-          & $python -m pip install -r requirements.txt
+          python -m pip install -r requirements.txt
 
       - name: Rodar testes automatizados
         if: github.event_name == 'workflow_dispatch'
         run: |
-          $python = 'C:\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe'
-          & $python -m pytest -v
+          python -m pytest -v
 
       - name: Executar monitor
         env:
@@ -50,8 +53,7 @@ jobs:
           ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $python = 'C:\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe'
-          & $python monitor.py --once
+          python monitor.py --once
 
       - name: Persistir vagas já vistas
         run: |

@@ -31,7 +31,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] URLs RSS podem ser resolvidas e canonizadas.
 - [x] LinkedIn possui enriquecimento limitado de detalhes.
 - [x] Deduplicador preserva o registro mais rico.
-- [ ] Merge de campos conflitantes possui política completa e testes por campo.
+- [x] Merge de campos conflitantes possui política completa e testes por campo.
 - [x] Data de publicação e idade da vaga são normalizadas entre fontes.
 
 ## Decisão e ranking

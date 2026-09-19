@@ -47,12 +47,12 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - Modify: `models/job.py`
 - Modify: `core/metrics.py`
 - Modify: `tests/test_metrics.py`
-**Validation:** `pytest -q tests/test_metrics.py`
+**Validation:** `pytest -q tests/test_publication_dates.py tests/test_deduplicator_richness.py`
 
-- [ ] Escrever testes para data ISO, timestamp, data ausente e conflito entre fontes.
-- [ ] Executar os testes e confirmar a falha nos casos novos.
-- [ ] Implementar a classificação recente/antiga/desconhecida e a preferência pela melhor evidência.
-- [ ] Executar `pytest -q tests/test_metrics.py` e confirmar aprovação.
+- [x] Escrever testes para data ISO, timestamp, data ausente e conflito entre fontes.
+- [x] Executar os testes e confirmar a falha nos casos novos.
+- [x] Implementar a classificação recente/antiga/desconhecida e a preferência pela melhor evidência.
+- [x] Executar `pytest -q tests/test_publication_dates.py tests/test_deduplicator_richness.py` e confirmar aprovação.
 - [ ] Commitar a alteração.
 
 ### T4: Validar o ciclo completo de busca

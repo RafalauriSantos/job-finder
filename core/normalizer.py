@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timezone
 from typing import Tuple, List
 
 # Dicionários canônicos de normalização
@@ -53,6 +54,39 @@ ALLOWED_REGIONAL_CITIES = _load_allowed_cities()
 
 
 import unicodedata
+
+
+def normalize_published_at(value) -> str:
+    """Converte datas ISO ou epoch para ISO-8601 UTC; valores inválidos ficam desconhecidos."""
+    if value in (None, ""):
+        return ""
+    try:
+        if isinstance(value, (int, float)):
+            parsed = datetime.fromtimestamp(value, tz=timezone.utc)
+        else:
+            text = str(value).strip()
+            if text.endswith("Z"):
+                text = text[:-1] + "+00:00"
+            parsed = datetime.fromisoformat(text)
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            parsed = parsed.astimezone(timezone.utc)
+        return parsed.isoformat()
+    except (TypeError, ValueError, OverflowError, OSError):
+        return ""
+
+
+def publication_age_bucket(value: str, now: datetime = None) -> str:
+    """Classifica publicação em recente (até 72h), antiga ou desconhecida."""
+    normalized = normalize_published_at(value)
+    if not normalized:
+        return "unknown"
+    reference = now or datetime.now(timezone.utc)
+    if reference.tzinfo is None:
+        reference = reference.replace(tzinfo=timezone.utc)
+    published = datetime.fromisoformat(normalized)
+    age_hours = (reference.astimezone(timezone.utc) - published).total_seconds() / 3600
+    return "recent" if 0 <= age_hours <= 72 else "old"
 
 def normalize_title(raw_title: str) -> str:
     """Limpa ruídos, acentuação, emojis e caracteres especiais do título para evitar duplicidade entre plataformas."""

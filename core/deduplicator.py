@@ -1,5 +1,6 @@
 from typing import Dict, List
 from models.job import Job
+from core.normalizer import normalize_published_at
 
 
 class Deduplicator:
@@ -22,6 +23,8 @@ class Deduplicator:
                 existing_job = self.jobs_by_fingerprint[fp]
                 if self._richness(candidate) > self._richness(existing_job):
                     self._merge_richer_fields(existing_job, candidate)
+                else:
+                    self._merge_publication_date(existing_job, candidate)
                 for source_name, source_obj in candidate.sources.items():
                     existing_job.add_source(
                         source_name=source_name,
@@ -60,3 +63,11 @@ class Deduplicator:
             source.evidence_level == "MEDIUM_EVIDENCE" and target.evidence_level == "LOW_EVIDENCE"
         ):
             target.evidence_level = source.evidence_level
+        Deduplicator._merge_publication_date(target, source)
+
+    @staticmethod
+    def _merge_publication_date(target: Job, source: Job):
+        source_date = normalize_published_at(source.published_at)
+        target_date = normalize_published_at(target.published_at)
+        if source_date and (not target_date or source_date < target_date):
+            target.published_at = source_date

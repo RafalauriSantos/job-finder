@@ -7,7 +7,7 @@ class MockResponse:
     <rss version='2.0'><channel>
       <item>
         <guid>rss-1</guid>
-        <title>Vaga Desenvolvedor Java Júnior</title>
+        <title>Vaga Desenvolvedor Java Junior</title>
         <link>https://news.google.com/rss/articles/abc</link>
         <pubDate>Fri, 18 Sep 2026 12:00:00 GMT</pubDate>
       </item>

@@ -20,11 +20,10 @@ jobs:
       - name: Checkout repositório
         uses: actions/checkout@v4
 
-      - name: Configurar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: pip
+      - name: Verificar Python do runner
+        run: |
+          python --version
+          python -m pip --version
 
       - name: Instalar dependências
         run: |

@@ -41,6 +41,10 @@ JUNIOR_KEYWORDS = [
     "starter", "entry level", "entry-level", "software engineer i", "developer i",
     "desenvolvedor i"
 ]
+SENIOR_REQUIREMENT_SIGNALS = [
+    "liderança", "lideranca", "tech lead", "liderar time",
+    "5 anos", "6 anos", "7 anos", "8 anos", "experiência sênior", "experiencia senior",
+]
 
 
 import re
@@ -74,7 +78,7 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
 
     score = 0
     reasons = []
-    job.score_breakdown = {"seniority": 0, "freshness": 0}
+    job.score_breakdown = {"seniority": 0, "freshness": 0, "risk": 0}
     job.ranking_evidence = {}
 
     title_lower = job.title.lower()
@@ -110,6 +114,15 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
 
     if not job.ranking_evidence.get("seniority"):
         job.ranking_evidence["seniority"] = "unknown"
+        job.seniority = "unknown"
+
+    senior_risks = [signal for signal in SENIOR_REQUIREMENT_SIGNALS if signal in text_to_analyze]
+    if senior_risks and not has_senior:
+        risk_points = min(25, len(senior_risks) * 15)
+        score -= risk_points
+        job.score_breakdown["risk"] = -risk_points
+        job.ranking_evidence["risk"] = "senior_signals"
+        reasons.append(f"Risco de requisito sênior: {', '.join(senior_risks[:2])} (-{risk_points} pts)")
 
     # 2. Localidade & Modalidade
     if job.workplace_type == "remote":

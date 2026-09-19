@@ -33,10 +33,10 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - Modify: `tests/test_scoring.py`
 **Validation:** `pytest -q tests/test_scoring.py tests/test_eligibility.py`
 
-- [ ] Adicionar testes para Pleno compatível, Pleno incompatível, Sênior e senioridade ausente.
-- [ ] Executar os testes e confirmar as falhas dos casos novos.
-- [ ] Implementar regras e evidências sem eliminar oportunidades de aprendizado.
-- [ ] Executar os testes e confirmar aprovação.
+- [x] Adicionar testes para Pleno compatível, Pleno incompatível, Sênior e senioridade ausente.
+- [x] Executar os testes e confirmar as falhas dos casos novos.
+- [x] Implementar regras e evidências sem eliminar oportunidades de aprendizado.
+- [x] Executar os testes e confirmar aprovação.
 - [ ] Commitar a alteração.
 
 ### T3: Ordenar e explicar as categorias do alerta

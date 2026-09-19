@@ -14,6 +14,8 @@ O processo normal usa `check_interval_minutes` do `config.json`. O limite de uma
 - `profile.json`: formação, localização, stack e empresas prioritárias.
 - `.env`: credenciais locais, nunca commitadas.
 - `seen_jobs.json`: estado operacional local, ignorado pelo Git.
+- `cycle_health.json`: resumo da última rodada, com duração, saúde das fontes,
+  funil de descarte e entregas; é regenerado ao final de cada ciclo bem-sucedido.
 
 ### Fallback de entrega
 

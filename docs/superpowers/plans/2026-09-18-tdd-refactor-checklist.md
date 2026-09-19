@@ -15,7 +15,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] Entrega bem-sucedida marca vaga como vista.
 - [x] Resultado da entrega fica auditado.
 - [x] Retry persistente com limite e backoff implementado.
-- [ ] Alertas têm idempotência comprovada contra duplicação entre processos.
+- [x] Alertas têm idempotência comprovada contra duplicação entre processos.
 
 ## Coleta e consultas
 
@@ -51,7 +51,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [ ] Relatório do ciclo mostra recall aproximado, precisão, duplicatas e falhas por fonte.
 - [ ] Execução real dentro do limite operacional definido.
 - [ ] Documentação de configuração e rollback atualizada.
-- [ ] Estado operacional não é commitado junto com código.
+- [x] Estado operacional não é commitado junto com código.
 
 ## Critério final
 

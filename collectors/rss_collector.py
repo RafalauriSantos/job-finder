@@ -186,6 +186,7 @@ class RssCollector(BaseCollector):
                     resolved_url=resolved_link,
                     canonical_url=canonical_link,
                     evidence_level="LOW_EVIDENCE",  # RSS nativo tem metadado raso
+                    published_at=dt.isoformat() if dt else "",
                 )
                 job.add_source("rss", str(item["id"]), canonical_link or raw_link)
                 discovered.append(job)

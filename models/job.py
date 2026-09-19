@@ -32,6 +32,7 @@ class Job:
     resolved_url: str = ""             # URL final após resolução de redirecionamentos HTTP
     canonical_url: str = ""            # URL canônica limpa (sem parâmetros de tracking)
     evidence_level: str = "HIGH_EVIDENCE"  # "LOW_EVIDENCE", "MEDIUM_EVIDENCE", "HIGH_EVIDENCE"
+    published_at: str = ""                # Timestamp ISO-8601 quando fornecido pela fonte
     sources: Dict[str, JobSource] = field(default_factory=dict)
     first_seen: str = field(default_factory=lambda: datetime.now().isoformat())
 
@@ -107,6 +108,7 @@ class Job:
             "resolved_url": self.resolved_url,
             "canonical_url": self.canonical_url,
             "evidence_level": self.evidence_level,
+            "published_at": self.published_at,
             "primary_url": self.primary_url,
             "sources": {
                 name: {

@@ -24,7 +24,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] Famílias de termos são configuráveis.
 - [x] Erro de fonte é distinguido de resultado vazio.
 - [x] Cada coletor possui contrato de teste com resposta válida, vazia e erro.
-- [ ] Saúde das fontes é persistida para relatório histórico.
+- [x] Saúde das fontes é persistida para relatório histórico.
 
 ## Enriquecimento e dados
 
@@ -32,7 +32,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] LinkedIn possui enriquecimento limitado de detalhes.
 - [x] Deduplicador preserva o registro mais rico.
 - [ ] Merge de campos conflitantes possui política completa e testes por campo.
-- [ ] Data de publicação e idade da vaga são normalizadas entre fontes.
+- [x] Data de publicação e idade da vaga são normalizadas entre fontes.
 
 ## Decisão e ranking
 

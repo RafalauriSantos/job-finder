@@ -89,6 +89,7 @@ class TramposCollector(BaseCollector):
                         raw_url=opp_url,
                         resolved_url=opp_url,
                         canonical_url=opp_url,
+                        published_at=opp.get("published_at") or "",
                     )
                     from core.evidence import profile_job_evidence
                     profile = profile_job_evidence(job)

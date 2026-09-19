@@ -39,3 +39,4 @@ def test_rss_collector_keeps_raw_and_resolved_canonical_urls():
     assert jobs[0].raw_url.startswith("https://news.google.com")
     assert jobs[0].resolved_url.startswith("https://jobs.example.com")
     assert jobs[0].canonical_url == "https://jobs.example.com/java-junior"
+    assert jobs[0].published_at.endswith("+00:00")

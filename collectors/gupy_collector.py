@@ -103,6 +103,7 @@ class GupyCollector(BaseCollector):
                     job_type=job_type,
                     salary=salary_label,
                     technologies=techs,
+                    published_at=raw.get("publishedAt") or raw.get("createdAt") or "",
                 )
                 job.add_source("gupy", job_id, canonical_url)
                 discovered_jobs.append(job)

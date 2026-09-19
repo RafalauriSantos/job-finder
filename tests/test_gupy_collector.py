@@ -81,3 +81,25 @@ def test_gupy_collector_forwards_seniority_and_recent_window():
     assert arguments["seniority"] == "mid"
     assert arguments["published_within_hours"] == 24
     assert "query_id" not in arguments
+
+
+def test_gupy_collector_enriches_missing_description_with_job_detail():
+    class DetailSession(MockSession):
+        def post(self, *args, **kwargs):
+            self.calls.append(kwargs)
+            if kwargs["json"]["params"]["name"] == "get_job_by_id":
+                response = MockResponse()
+                response.text = "data: " + json.dumps({
+                    "result": {"content": [{"text": json.dumps({
+                        "data": {"job": {"description": "React, TypeScript e Node.js"}}
+                    })}]}
+                })
+                return response
+            response = MockResponse()
+            response.text = response.text.replace('Java e Spring', '')
+            return response
+
+    collector = GupyCollector(DetailSession(), [{"term": "React"}], detail_limit=1)
+    jobs = collector.collect()
+
+    assert jobs[0].description == "React, TypeScript e Node.js"

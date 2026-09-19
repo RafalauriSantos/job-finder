@@ -2,6 +2,7 @@
   "check_interval_minutes": 60,
   "max_cycle_seconds": 180,
   "resolve_rss_urls": true,
+  "gupy_detail_enrichment_limit": 5,
   "heartbeat": {
     "enabled": true,
     "frequency": "daily",

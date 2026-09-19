@@ -21,9 +21,11 @@ JOB_TYPE_TRANSLATIONS = {
 
 
 class GupyCollector(BaseCollector):
-    def __init__(self, http_session: requests.Session, queries: List[Dict[str, Any]]):
+    def __init__(self, http_session: requests.Session, queries: List[Dict[str, Any]], detail_limit: int = 5):
         self.http = http_session
         self.queries = queries
+        self.detail_limit = max(0, detail_limit)
+        self.detail_attempts = 0
         self.query_stats: List[Dict[str, Any]] = []
         self._last_query_status = "UNKNOWN"
 
@@ -62,6 +64,36 @@ class GupyCollector(BaseCollector):
         self._last_query_status = "EMPTY"
         return []
 
+    def _get_detail(self, job_id: str) -> Dict[str, Any]:
+        if not job_id or self.detail_attempts >= self.detail_limit:
+            return {}
+        self.detail_attempts += 1
+        body = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {"name": "get_job_by_id", "arguments": {"job_id": job_id}},
+        }
+        try:
+            response = self.http.post(
+                GUPY_MCP_URL,
+                json=body,
+                headers={"Content-Type": "application/json", "Accept": "application/json, text/event-stream"},
+                timeout=15,
+            )
+            if response.status_code != 200:
+                return {}
+            for line in response.text.splitlines():
+                if line.startswith("data:"):
+                    payload = json.loads(line[5:].strip())
+                    content = payload.get("result", {}).get("content", [{}])[0].get("text", "{}")
+                    parsed = json.loads(content)
+                    data = parsed.get("data", {})
+                    return data.get("job") or data.get("data") or {}
+        except (requests.RequestException, ValueError, TypeError, KeyError):
+            return {}
+        return {}
+
     def collect(self) -> List[Job]:
         discovered_jobs: List[Job] = []
 
@@ -74,6 +106,8 @@ class GupyCollector(BaseCollector):
             })
             for raw in raw_jobs:
                 job_id = str(raw.get("id"))
+                if not raw.get("description"):
+                    raw = {**raw, **self._get_detail(job_id)}
                 title = normalize_title(raw.get("name", ""))
                 company = raw.get("careerPageName", "").strip() or "Empresa Gupy"
                 city = raw.get("city", "")

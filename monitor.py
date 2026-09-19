@@ -156,7 +156,7 @@ def run_check():
 
     if gupy_queries:
         try:
-            gupy_col = GupyCollector(HTTP, gupy_queries)
+            gupy_col = GupyCollector(HTTP, gupy_queries, detail_limit=config.get("gupy_detail_enrichment_limit", 5))
             discovered_gupy = gupy_col.collect()
             gupy_query_stats = gupy_col.query_stats
         except Exception as e:

@@ -27,6 +27,9 @@ class Job:
     seniority: str = "junior"            # "intern", "junior", "mid", "senior", "unknown"
     match_score: int = 0                 # 0 a 100
     learning_interest_score: int = 0     # Interesse de aprendizado, separado do match
+    freshness_score: int = 0              # Frescor, separado da aderência profissional
+    score_breakdown: Dict[str, int] = field(default_factory=dict)
+    ranking_evidence: Dict[str, str] = field(default_factory=dict)
     match_reasons: List[str] = field(default_factory=list)
     pcd_signal: str = ""               # "", "TITLE" — origem do sinal PCD detectado
     raw_url: str = ""                  # URL bruta original do feed / agregador
@@ -104,6 +107,9 @@ class Job:
             "seniority": self.seniority,
             "match_score": self.match_score,
             "learning_interest_score": self.learning_interest_score,
+            "freshness_score": self.freshness_score,
+            "score_breakdown": self.score_breakdown,
+            "ranking_evidence": self.ranking_evidence,
             "match_reasons": self.match_reasons,
             "pcd_signal": self.pcd_signal,
             "raw_url": self.raw_url,

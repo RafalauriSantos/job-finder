@@ -18,10 +18,10 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - Create: `tests/test_ranking_explanations.py`
 **Validation:** `pytest -q tests/test_ranking_explanations.py`
 
-- [ ] Escrever testes para componentes separados, evidências e riscos.
-- [ ] Executar os testes e confirmar a falha por ausência do contrato.
-- [ ] Implementar os campos estruturados mantendo serialização compatível.
-- [ ] Executar os testes e confirmar aprovação.
+- [x] Escrever testes para componentes separados, evidências e riscos.
+- [x] Executar os testes e confirmar a falha por ausência do contrato.
+- [x] Implementar os campos estruturados mantendo serialização compatível.
+- [x] Executar os testes e confirmar aprovação.
 - [ ] Commitar a alteração.
 
 ### T2: Recalibrar senioridade e aderência
@@ -53,4 +53,3 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [ ] Implementar composição do ranking e texto curto de justificativa.
 - [ ] Executar os testes e confirmar aprovação.
 - [ ] Commitar a alteração.
-

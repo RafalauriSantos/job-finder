@@ -74,6 +74,8 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
 
     score = 0
     reasons = []
+    job.score_breakdown = {"seniority": 0, "freshness": 0}
+    job.ranking_evidence = {}
 
     title_lower = job.title.lower()
     text_to_analyze = f"{job.title} {job.description}".lower()
@@ -87,18 +89,27 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
 
     if has_senior:
         score -= 60
+        job.score_breakdown["seniority"] = -60
+        job.ranking_evidence["seniority"] = "senior"
         reasons.append("Senioridade alta detectada (-60 pts)")
         return max(0, score), reasons
 
     if has_mid:
         score += 10
+        job.score_breakdown["seniority"] = 10
+        job.ranking_evidence["seniority"] = "mid"
         job.seniority = "mid"
         reasons.append("Nível Pleno compatível; requisitos serão avaliados (+10 pts)")
 
     if has_junior:
         score += 35
+        job.score_breakdown["seniority"] = 35
+        job.ranking_evidence["seniority"] = "junior"
         reasons.append("Nível Júnior / Entrada identificado (+35 pts)")
         job.seniority = "junior"
+
+    if not job.ranking_evidence.get("seniority"):
+        job.ranking_evidence["seniority"] = "unknown"
 
     # 2. Localidade & Modalidade
     if job.workplace_type == "remote":

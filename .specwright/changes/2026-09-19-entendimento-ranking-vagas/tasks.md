@@ -37,7 +37,7 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [x] Executar os testes e confirmar as falhas dos casos novos.
 - [x] Implementar regras e evidências sem eliminar oportunidades de aprendizado.
 - [x] Executar os testes e confirmar aprovação.
-- [ ] Commitar a alteração.
+- [x] Commitar a alteração.
 
 ### T3: Ordenar e explicar as categorias do alerta
 

@@ -52,4 +52,4 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [x] Executar o teste e confirmar a falha da ordenação esperada.
 - [x] Implementar composição do ranking e texto curto de justificativa.
 - [x] Executar os testes e confirmar aprovação.
-- [ ] Commitar a alteração.
+- [x] Commitar a alteração.

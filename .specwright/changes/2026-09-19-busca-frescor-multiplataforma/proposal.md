@@ -1,7 +1,7 @@
 ---
 feature: busca-frescor-multiplataforma
 created: 2026-09-19
-status: pending
+status: in-progress
 shipped: null
 delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 ---
@@ -30,4 +30,3 @@ Vagas relevantes podem usar títulos diferentes de “desenvolvedor júnior”. 
 - [ ] **AC-5** Quando uma fonte falhar ou retornar vazio, o relatório diferencia esses casos e a execução continua nas demais fontes.
 
 ## Decisions and discoveries
-

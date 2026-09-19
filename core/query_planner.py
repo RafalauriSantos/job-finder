@@ -22,11 +22,21 @@ def plan_searches(monitors: List[Dict[str, Any]], source_type: str) -> List[Dict
         elif isinstance(variants, str):
             variants = [variants]
 
+        seniorities = monitor.get("seniority_variants") or [monitor.get("seniority")]
+        seniorities = [value for value in seniorities if value]
+        if not seniorities:
+            seniorities = [None]
+
         for variant_index, variant in enumerate(variants):
-            query = deepcopy(monitor)
-            query["query"] = str(variant).strip()
-            query["query_id"] = sha1(
-                f"{source_type}:{index}:{variant_index}:{query['query']}".encode("utf-8")
-            ).hexdigest()[:12]
-            planned.append(query)
+            for seniority_index, seniority in enumerate(seniorities):
+                query = deepcopy(monitor)
+                query["query"] = str(variant).strip()
+                if seniority is not None:
+                    query["seniority"] = seniority
+                if monitor.get("recent_window_hours") is not None:
+                    query["published_within_hours"] = monitor["recent_window_hours"]
+                query["query_id"] = sha1(
+                    f"{source_type}:{index}:{variant_index}:{seniority_index}:{query['query']}:{seniority}".encode("utf-8")
+                ).hexdigest()[:12]
+                planned.append(query)
     return planned

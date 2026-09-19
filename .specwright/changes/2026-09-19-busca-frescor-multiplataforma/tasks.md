@@ -19,10 +19,10 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - Create: `tests/test_query_planner_freshness.py`
 **Validation:** `pytest -q tests/test_query_planner_freshness.py`
 
-- [ ] Escrever testes para variantes de cargo, Júnior/Pleno e janela temporal.
-- [ ] Executar os testes e confirmar a falha por ausência dos novos campos.
-- [ ] Implementar o modelo normalizado de consulta sem remover compatibilidade com a configuração atual.
-- [ ] Executar `pytest -q tests/test_query_planner_freshness.py` e confirmar aprovação.
+- [x] Escrever testes para variantes de cargo, Júnior/Pleno e janela temporal.
+- [x] Executar os testes e confirmar a falha por ausência dos novos campos.
+- [x] Implementar o modelo normalizado de consulta sem remover compatibilidade com a configuração atual.
+- [x] Executar `pytest -q tests/test_query_planner_freshness.py` e confirmar aprovação.
 - [ ] Commitar a alteração.
 
 ### T2: Aplicar filtros temporais nos coletores
@@ -69,4 +69,3 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [ ] Integrar telemetria e regras sem ultrapassar o orçamento de ciclo.
 - [ ] Executar `pytest -q` e `python -m compileall -q core collectors models notify storage monitor.py`.
 - [ ] Commitar a alteração.
-

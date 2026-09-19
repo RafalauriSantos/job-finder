@@ -20,7 +20,17 @@ jobs:
       - name: Checkout repositório
         uses: actions/checkout@v4
 
-      - name: Preparar Python e dependências
+      - name: Preparar Python, dependências, testes e monitor
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
+          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $pythonDir = 'C:\actions-runner\python'
           $python = Join-Path $pythonDir 'python.exe'
@@ -36,25 +46,12 @@ jobs:
           & $python --version
           & $python -m pip --version
           & $python -m pip install -r requirements.txt
-
-      - name: Rodar testes automatizados
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          & $env:PYTHON_EXE -m pytest -v
-
-      - name: Executar monitor
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
-          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          & $env:PYTHON_EXE monitor.py --once
+          if ('${{ github.event_name }}' -eq 'workflow_dispatch') {
+            & $python -m pytest -v
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          & $python monitor.py --once
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Persistir vagas já vistas
         run: |

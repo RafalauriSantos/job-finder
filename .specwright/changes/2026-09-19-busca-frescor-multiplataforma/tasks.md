@@ -53,7 +53,7 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [x] Executar os testes e confirmar a falha nos casos novos.
 - [x] Implementar a classificação recente/antiga/desconhecida e a preferência pela melhor evidência.
 - [x] Executar `pytest -q tests/test_publication_dates.py tests/test_deduplicator_richness.py` e confirmar aprovação.
-- [ ] Commitar a alteração.
+- [x] Commitar a alteração.
 
 ### T4: Validar o ciclo completo de busca
 

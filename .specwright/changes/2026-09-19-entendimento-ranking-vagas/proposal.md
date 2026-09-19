@@ -1,8 +1,8 @@
 ---
 feature: entendimento-ranking-vagas
 created: 2026-09-19
-status: pending
-shipped: null
+status: shipped
+shipped: 2026-09-19
 delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 ---
 # Entendimento e Ranking de Vagas — Proposal
@@ -30,4 +30,3 @@ Uma vaga pode ser anunciada como Pleno e exigir competências compatíveis com u
 - [ ] **AC-5** A ordenação prioriza vagas recentes e aderentes, mas mantém uma categoria visível para oportunidades Pleno plausíveis e vagas de aprendizado.
 
 ## Decisions and discoveries
-

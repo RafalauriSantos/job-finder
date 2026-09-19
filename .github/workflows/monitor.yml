@@ -20,26 +20,28 @@ jobs:
       - name: Checkout repositório
         uses: actions/checkout@v4
 
-      - name: Configurar Python
-        continue-on-error: true
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Verificar Python do runner
+      - name: Preparar Python do runner
         run: |
-          python --version
-          python -m ensurepip --upgrade
-          python -m pip --version
+          $pythonDir = 'C:\actions-runner\python'
+          $python = Join-Path $pythonDir 'python.exe'
+          if (!(Test-Path $python)) {
+            $installer = 'C:\actions-runner\_work\_tool\Python\3.12.10\python-3.12.10-amd64.exe'
+            if (!(Test-Path $installer)) { throw "Python installer not found: $installer" }
+            & $installer /quiet InstallAllUsers=0 TargetDir=$pythonDir Include_pip=1 Include_test=0 Include_launcher=0
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          "$pythonDir" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          & $python --version
+          & $python -m pip --version
 
       - name: Instalar dependências
         run: |
-          python -m pip install -r requirements.txt
+          C:\actions-runner\python\python.exe -m pip install -r requirements.txt
 
       - name: Rodar testes automatizados
         if: github.event_name == 'workflow_dispatch'
         run: |
-          python -m pytest -v
+          C:\actions-runner\python\python.exe -m pytest -v
 
       - name: Executar monitor
         env:
@@ -53,7 +55,7 @@ jobs:
           ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python monitor.py --once
+          C:\actions-runner\python\python.exe monitor.py --once
 
       - name: Persistir vagas já vistas
         run: |

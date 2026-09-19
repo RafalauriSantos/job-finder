@@ -123,11 +123,11 @@
       "keywords_search": "Desenvolvedor Full Stack Junior",
       "enrich_details": true,
       "detail_enrichment_limit": 1,
-      "query_variants": ["Desenvolvedor Full Stack Junior", "developer full stack", "programador full stack"],
+      "query_variants": ["Desenvolvedor Full Stack Junior", "Desenvolvedor Full Stack Pleno", "developer full stack", "programador full stack"],
       "time_range": "r7200",
       "strict_location": true,
       "keywords": ["full stack", "fullstack", "desenvolvedor", "developer", "software"],
-      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto", "gerente"]
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente"]
     },
     {
       "type": "linkedin",
@@ -135,11 +135,11 @@
       "keywords_search": "Desenvolvedor React Junior",
       "enrich_details": true,
       "detail_enrichment_limit": 1,
-      "query_variants": ["Desenvolvedor React Junior", "developer React", "frontend React"],
+      "query_variants": ["Desenvolvedor React Junior", "Desenvolvedor React Pleno", "developer React", "frontend React"],
       "time_range": "r7200",
       "strict_location": true,
       "keywords": ["react", "frontend", "front-end", "typescript", "javascript", "web"],
-      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto"]
     },
     {
       "type": "linkedin",
@@ -147,11 +147,11 @@
       "keywords_search": "Desenvolvedor Node Junior",
       "enrich_details": true,
       "detail_enrichment_limit": 1,
-      "query_variants": ["Desenvolvedor Node Junior", "developer Node", "backend Node"],
+      "query_variants": ["Desenvolvedor Node Junior", "Desenvolvedor Node Pleno", "developer Node", "backend Node"],
       "time_range": "r7200",
       "strict_location": true,
       "keywords": ["node", "backend", "back-end", "typescript", "javascript", "api"],
-      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto"]
     },
     {
       "type": "linkedin",
@@ -159,11 +159,11 @@
       "keywords_search": "Desenvolvedor Java Junior",
       "enrich_details": true,
       "detail_enrichment_limit": 1,
-      "query_variants": ["Desenvolvedor Java Junior", "developer Java", "programador Java"],
+      "query_variants": ["Desenvolvedor Java Junior", "Desenvolvedor Java Pleno", "developer Java", "programador Java"],
       "time_range": "r7200",
       "strict_location": true,
       "keywords": ["java", "spring"],
-      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto"]
     },
     {
       "type": "linkedin",
@@ -171,11 +171,11 @@
       "keywords_search": "Desenvolvedor Python Junior",
       "enrich_details": true,
       "detail_enrichment_limit": 1,
-      "query_variants": ["Desenvolvedor Python Junior", "developer Python", "programador Python"],
+      "query_variants": ["Desenvolvedor Python Junior", "Desenvolvedor Python Pleno", "developer Python", "programador Python"],
       "time_range": "r7200",
       "strict_location": true,
       "keywords": ["python", "django", "fastapi", "flask"],
-      "exclude_keywords": ["senior", "sênior", "sr", "pleno", "lead", "especialista", "arquiteto"]
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto"]
     },
     {
       "type": "gupy",

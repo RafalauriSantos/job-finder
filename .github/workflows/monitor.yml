@@ -24,6 +24,7 @@ jobs:
         run: |
           $python = 'C:\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe'
           & $python --version
+          & $python -m ensurepip --upgrade
           & $python -m pip --version
 
       - name: Instalar dependências

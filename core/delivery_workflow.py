@@ -31,4 +31,6 @@ def finalize_delivery(
         evidence_level=job.evidence_level,
     )
     store.record_delivery(job.fingerprint, source_ids, delivered=sent)
+    if not sent:
+        store.release_delivery_claim(job.fingerprint)
     return status

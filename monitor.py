@@ -321,6 +321,9 @@ def run_check():
             continue
 
         # Aprovada em todos os critérios
+        if not store.claim_delivery(fp):
+            discarded_seen += 1
+            continue
         print(f"✓ Match Score: {score}/100 (Aprovado >= {min_score})")
         for r in reasons:
             print(f"   • {r}")

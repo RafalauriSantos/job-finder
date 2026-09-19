@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from typing import Dict, Any, List
 
 
@@ -15,6 +16,24 @@ class StateStore:
         default_state = {"seen_ids": [], "seen_fingerprints": [], "last_heartbeat": ""}
         if not os.path.exists(self.filepath):
             return default_state
+
+    def _acquire_lock(self):
+        lock_path = f"{self.filepath}.lock"
+        for _ in range(100):
+            try:
+                fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                return fd, lock_path
+            except FileExistsError:
+                time.sleep(0.01)
+        raise TimeoutError(f"Não foi possível bloquear o estado: {self.filepath}")
+
+    @staticmethod
+    def _release_lock(fd: int, lock_path: str):
+        os.close(fd)
+        try:
+            os.remove(lock_path)
+        except FileNotFoundError:
+            pass
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -28,6 +47,7 @@ class StateStore:
                         "recent_decisions": data.get("recent_decisions", []),
                         "deliveries": data.get("deliveries", {}),
                         "source_health": data.get("source_health", []),
+                        "delivery_claims": data.get("delivery_claims", {}),
                     }
                 else:
                     return default_state
@@ -85,6 +105,26 @@ class StateStore:
     def get_delivery(self, fingerprint: str) -> Dict[str, Any]:
         """Retorna o último estado de entrega da vaga, se houver."""
         return self.state.get("deliveries", {}).get(fingerprint, {})
+
+    def claim_delivery(self, fingerprint: str) -> bool:
+        """Reivindica uma vaga de forma exclusiva entre processos."""
+        fd, lock_path = self._acquire_lock()
+        try:
+            current = self._load()
+            claims = current.setdefault("delivery_claims", {})
+            if fingerprint in claims or fingerprint in current.get("seen_fingerprints", []):
+                self.state = current
+                return False
+            claims[fingerprint] = {"claimed_at": time.time()}
+            with open(self.filepath, "w", encoding="utf-8") as handle:
+                json.dump(current, handle, indent=2, ensure_ascii=False)
+            self.state = current
+            return True
+        finally:
+            self._release_lock(fd, lock_path)
+
+    def release_delivery_claim(self, fingerprint: str):
+        self.state.setdefault("delivery_claims", {}).pop(fingerprint, None)
 
     def record_source_health(self, source: str, status: str, discovered: int, details=None):
         """Guarda uma janela curta de saúde operacional por fonte."""

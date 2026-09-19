@@ -125,6 +125,15 @@ class TestStateStorePersistence:
             assert health["discovered"] == 12
             assert health["details"]["queries"] == 3
 
+    def test_delivery_claim_is_idempotent_for_same_fingerprint(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            store = StateStore(os.path.join(tmpdir, "seen.json"))
+
+            assert store.claim_delivery("claim-fp") is True
+            assert store.claim_delivery("claim-fp") is False
+            store.release_delivery_claim("claim-fp")
+            assert store.claim_delivery("claim-fp") is True
+
     def test_pruning_limits_retention(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = os.path.join(tmpdir, "seen.json")

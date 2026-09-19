@@ -22,7 +22,7 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [x] Executar os testes e confirmar a falha por ausência do contrato.
 - [x] Implementar os campos estruturados mantendo serialização compatível.
 - [x] Executar os testes e confirmar aprovação.
-- [ ] Commitar a alteração.
+- [x] Commitar a alteração.
 
 ### T2: Recalibrar senioridade e aderência
 

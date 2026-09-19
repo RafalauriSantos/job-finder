@@ -1,8 +1,8 @@
 ---
 feature: busca-frescor-multiplataforma
 created: 2026-09-19
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-09-19
 delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 ---
 # Busca com Frescor Multiplataforma — Proposal

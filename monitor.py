@@ -22,6 +22,7 @@ from storage.state_store import StateStore
 from core.query_planner import plan_searches
 from core.delivery_workflow import finalize_delivery
 from core.eligibility import classify_score, classify_evidence, classify_location
+from core.metrics import summarize_cycle
 
 load_dotenv()
 
@@ -370,6 +371,16 @@ def run_check():
     print(f"├─ Rejeitadas Nível:    {discarded_senior}")
     print(f"├─ Rejeitadas Score:    {discarded_score}")
     print(f"├─ 🎯 Notificadas:       {notified_count}")
+    cycle_metrics = summarize_cycle(
+        len(discovered_jobs),
+        len(unique_jobs),
+        notified_count,
+        {"pcd": discarded_pcd, "location": discarded_location, "seniority": discarded_senior, "score": discarded_score},
+        {"gupy": gupy_status, "linkedin": linkedin_status, "rss": rss_status, "github": github_status, "trampos": trampos_status},
+    )
+    print(f"├─ Duplicatas:           {cycle_metrics['duplicate_count']} ({cycle_metrics['duplicate_rate']:.1%})")
+    print(f"├─ Precisão/Recall:      N/D ({cycle_metrics['precision_recall_note']})")
+    print(f"├─ Falhas de fonte:      {', '.join(cycle_metrics['source_failures']) or 'nenhuma'}")
     print("├" + "─" * 46)
     print(f"├─ LLM Calls Hoje:     {today_llm_calls}/1000 (RPD)")
     fallback_str = f"{fallback_count} vaga(s)" if fallback_count > 0 else "0 (LLM 100% ativo)"

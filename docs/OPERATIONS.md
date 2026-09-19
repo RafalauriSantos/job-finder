@@ -15,6 +15,14 @@ O processo normal usa `check_interval_minutes` do `config.json`. O limite de uma
 - `.env`: credenciais locais, nunca commitadas.
 - `seen_jobs.json`: estado operacional local, ignorado pelo Git.
 
+### Fallback de entrega
+
+O Telegram é o canal primário. Quando o envio retorna falha, o monitor tenta
+enviar o mesmo alerta pela API do Resend usando `RESEND_API_KEY`,
+`ALERT_EMAIL_FROM` e `ALERT_EMAIL_TO`. Se os dois canais falharem, a vaga não é
+marcada como entregue e permanece disponível para retry com backoff. Sem as três
+variáveis de e-mail configuradas, o fallback fica desativado de forma segura.
+
 ### Consultas recentes
 
 Cada monitor pode declarar `query_variants`, `seniority_variants` e `recent_window_hours`.

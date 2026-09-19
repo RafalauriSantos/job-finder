@@ -43,6 +43,21 @@ class FakeNotifier:
         return False
 
 
+class FailedNotifier(FakeNotifier):
+    def send_job_alert(self, job):
+        self.alerts.append(job)
+        return False
+
+
+class FakeEmailNotifier:
+    def __init__(self, *args, **kwargs):
+        self.alerts = []
+
+    def send_job_alert(self, job):
+        self.alerts.append(job)
+        return True
+
+
 def test_run_check_processes_and_persists_one_job_without_network(monkeypatch, tmp_path):
     state_file = tmp_path / "seen.json"
     config = {
@@ -122,3 +137,28 @@ def test_run_check_plans_recent_seniority_queries_and_survives_source_failure(mo
     assert {query["seniority"] for query in calls["gupy"]} == {"junior", "mid"}
     assert {query["published_within_hours"] for query in calls["gupy"]} == {24}
     assert len(notifier.alerts) == 1
+
+
+def test_run_check_uses_email_when_telegram_delivery_fails(monkeypatch, tmp_path):
+    state_file = tmp_path / "seen.json"
+    config = {
+        "min_match_score": 50,
+        "heartbeat": {"enabled": False},
+        "monitors": [{"type": "gupy", "term": "React", "limit": 1}],
+    }
+    telegram = FailedNotifier()
+    email = FakeEmailNotifier()
+    monkeypatch.setattr(monitor, "load_config", lambda: config)
+    monkeypatch.setattr(monitor, "STATE_FILE", str(state_file))
+    monkeypatch.setattr(monitor, "GupyCollector", FakeGupyCollector)
+    monkeypatch.setattr(monitor, "LinkedInCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "RssCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "GithubIssuesCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TramposCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TelegramNotifier", lambda *args, **kwargs: telegram)
+    monkeypatch.setattr(monitor, "ResendEmailNotifier", lambda *args, **kwargs: email)
+
+    monitor.run_check()
+
+    assert len(telegram.alerts) == 1
+    assert len(email.alerts) == 1

@@ -18,6 +18,7 @@ from collectors.rss_collector import RssCollector
 from collectors.github_collector import GithubIssuesCollector
 from collectors.trampos_collector import TramposCollector
 from notify.telegram_notifier import TelegramNotifier
+from notify.email_notifier import ResendEmailNotifier
 from storage.state_store import StateStore
 from core.query_planner import plan_searches
 from core.delivery_workflow import finalize_delivery
@@ -36,6 +37,9 @@ STATE_FILE = "seen_jobs.json"
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+ALERT_EMAIL_FROM = os.getenv("ALERT_EMAIL_FROM")
+ALERT_EMAIL_TO = os.getenv("ALERT_EMAIL_TO")
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 
@@ -90,6 +94,9 @@ def run_check():
     config = load_config()
     store = StateStore(STATE_FILE)
     notifier = TelegramNotifier(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, HTTP)
+    email_notifier = ResendEmailNotifier(
+        RESEND_API_KEY, ALERT_EMAIL_FROM, ALERT_EMAIL_TO, HTTP
+    )
     deduplicator = Deduplicator()
     min_score = config.get("min_match_score", 50)  # Padrão: 50 pts mínimos para alertar
 
@@ -345,10 +352,16 @@ def run_check():
         print(f"🎯 DECISÃO: NOTIFICAR TELEGRAM")
 
         sent = notifier.send_job_alert(job)
+        delivery_channel = "telegram"
+        if not sent:
+            print("⚠️ Telegram falhou; tentando fallback por e-mail via Resend.")
+            sent = email_notifier.send_job_alert(job)
+            delivery_channel = "email" if sent else "none"
         if sent:
             notified_count += 1
+            print(f"✓ Alerta entregue pelo canal: {delivery_channel}")
         else:
-            print("⚠️ Entrega Telegram falhou; vaga ficará disponível para retry no próximo ciclo.")
+            print("⚠️ Telegram e Resend falharam; vaga ficará disponível para retry no próximo ciclo.")
         finalize_delivery(store, job, source_ids, sent, job.match_score, reasons[0] if reasons else "Aprovada")
 
     elapsed = time.time() - start_time

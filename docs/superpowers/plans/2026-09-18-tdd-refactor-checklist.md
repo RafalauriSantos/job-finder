@@ -6,8 +6,8 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 
 - [x] Suíte automatizada executa sem falhas.
 - [x] Ciclo TDD aplicado em novos módulos críticos.
-- [ ] Todos os módulos críticos possuem testes unitários isolados.
-- [ ] Cada mudança futura começa por um teste que falha.
+- [x] Todos os módulos críticos possuem testes unitários isolados.
+- [x] Cada mudança futura começa por um teste que falha.
 
 ## Entrega e persistência
 
@@ -55,7 +55,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 
 ## Critério final
 
-- [ ] Todos os itens obrigatórios acima estão marcados.
+- [x] Todos os itens obrigatórios acima estão marcados.
 - [x] `python -m pytest -q` passa integralmente.
 - [x] Um ciclo real do radar termina sem erro e com métricas interpretáveis.
-- [ ] Uma revisão final confirma que não houve regressão de comportamento.
+- [x] Uma revisão final confirma que não houve regressão de comportamento.

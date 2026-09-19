@@ -1,0 +1,72 @@
+---
+feature: busca-frescor-multiplataforma
+created: 2026-09-19
+scope: high
+branch: codex/busca-frescor-multiplataforma
+worktree: null
+delivery: .specwright/deliveries/2026-09-19-radar-inteligente
+---
+# Busca com Frescor Multiplataforma — Tasks
+
+## Tasks
+
+### T1: Planejar consultas com intenção, senioridade e frescor
+
+**AC:** AC-1, AC-2
+**Files:**
+- Modify: `core/query_planner.py`
+- Modify: `config.json`
+- Create: `tests/test_query_planner_freshness.py`
+**Validation:** `pytest -q tests/test_query_planner_freshness.py`
+
+- [ ] Escrever testes para variantes de cargo, Júnior/Pleno e janela temporal.
+- [ ] Executar os testes e confirmar a falha por ausência dos novos campos.
+- [ ] Implementar o modelo normalizado de consulta sem remover compatibilidade com a configuração atual.
+- [ ] Executar `pytest -q tests/test_query_planner_freshness.py` e confirmar aprovação.
+- [ ] Commitar a alteração.
+
+### T2: Aplicar filtros temporais nos coletores
+
+**AC:** AC-1, AC-3, AC-5
+**Files:**
+- Modify: `collectors/linkedin.py`
+- Modify: `collectors/gupy.py`
+- Modify: `tests/test_collectors.py`
+**Validation:** `pytest -q tests/test_collectors.py`
+
+- [ ] Escrever testes de payload com filtro recente, resultado vazio, erro HTTP e erro de transporte.
+- [ ] Executar os testes e confirmar a falha nos contratos temporais.
+- [ ] Implementar a propagação dos filtros e o registro por consulta.
+- [ ] Executar `pytest -q tests/test_collectors.py` e confirmar aprovação.
+- [ ] Commitar a alteração.
+
+### T3: Normalizar publicação e idade da descoberta
+
+**AC:** AC-3, AC-4
+**Files:**
+- Modify: `models/job.py`
+- Modify: `core/metrics.py`
+- Modify: `tests/test_metrics.py`
+**Validation:** `pytest -q tests/test_metrics.py`
+
+- [ ] Escrever testes para data ISO, timestamp, data ausente e conflito entre fontes.
+- [ ] Executar os testes e confirmar a falha nos casos novos.
+- [ ] Implementar a classificação recente/antiga/desconhecida e a preferência pela melhor evidência.
+- [ ] Executar `pytest -q tests/test_metrics.py` e confirmar aprovação.
+- [ ] Commitar a alteração.
+
+### T4: Validar o ciclo completo de busca
+
+**AC:** AC-1, AC-2, AC-4, AC-5
+**Files:**
+- Modify: `monitor.py`
+- Modify: `tests/test_monitor.py`
+- Modify: `docs/OPERATIONS.md`
+**Validation:** `pytest -q`
+
+- [ ] Adicionar teste de ciclo com múltiplas consultas, duplicata entre fontes e uma fonte indisponível.
+- [ ] Executar o teste isolado e confirmar a falha antes da integração.
+- [ ] Integrar telemetria e regras sem ultrapassar o orçamento de ciclo.
+- [ ] Executar `pytest -q` e `python -m compileall -q core collectors models notify storage monitor.py`.
+- [ ] Commitar a alteração.
+

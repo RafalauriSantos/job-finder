@@ -112,6 +112,19 @@ class TestStateStorePersistence:
             store.record_delivery("retry-fp", ["job-1"], delivered=False)
             assert store.delivery_retry_allowed("retry-fp", ignore_backoff=True) is False
 
+    def test_records_source_health_history(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            store = StateStore(os.path.join(tmpdir, "seen.json"))
+
+            store.record_source_health("linkedin", "OK", 12, {"queries": 3})
+            store.save()
+            reloaded = StateStore(os.path.join(tmpdir, "seen.json"))
+
+            health = reloaded.state["source_health"][-1]
+            assert health["source"] == "linkedin"
+            assert health["discovered"] == 12
+            assert health["details"]["queries"] == 3
+
     def test_pruning_limits_retention(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = os.path.join(tmpdir, "seen.json")

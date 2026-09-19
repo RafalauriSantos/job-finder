@@ -14,7 +14,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] Falha do Telegram não marca vaga como entregue.
 - [x] Entrega bem-sucedida marca vaga como vista.
 - [x] Resultado da entrega fica auditado.
-- [ ] Retry persistente com limite e backoff implementado.
+- [x] Retry persistente com limite e backoff implementado.
 - [ ] Alertas têm idempotência comprovada contra duplicação entre processos.
 
 ## Coleta e consultas
@@ -40,14 +40,14 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] Pleno compatível pode passar pelo funil.
 - [x] Senioridade explícita incompatível continua bloqueada.
 - [x] Veto, score baixo e aprovado estão centralizados.
-- [ ] Localização e evidência são decisões testáveis e separadas do monitor.
+- [x] Localização e evidência são decisões testáveis e separadas do monitor.
 - [ ] Score, elegibilidade e interesse de aprendizado permanecem campos distintos.
 
 ## Operação e qualidade
 
 - [x] Suíte atual está verde.
 - [x] Teste de integração cobre um ciclo completo sem rede real.
-- [ ] Teste de contrato cobre LinkedIn, Gupy, RSS, GitHub e Trampos.
+- [x] Teste de contrato cobre LinkedIn, Gupy, RSS, GitHub e Trampos.
 - [ ] Relatório do ciclo mostra recall aproximado, precisão, duplicatas e falhas por fonte.
 - [ ] Execução real dentro do limite operacional definido.
 - [ ] Documentação de configuração e rollback atualizada.
@@ -56,6 +56,6 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 ## Critério final
 
 - [ ] Todos os itens obrigatórios acima estão marcados.
-- [ ] `python -m pytest -q` passa integralmente.
-- [ ] Um ciclo real do radar termina sem erro e com métricas interpretáveis.
+- [x] `python -m pytest -q` passa integralmente.
+- [x] Um ciclo real do radar termina sem erro e com métricas interpretáveis.
 - [ ] Uma revisão final confirma que não houve regressão de comportamento.

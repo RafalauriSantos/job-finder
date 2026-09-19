@@ -378,6 +378,11 @@ def run_check():
         print(f"⚠️  ALERTA: O Fallback Heurístico foi acionado em {fallback_count} vaga(s) devido a indisponibilidade ou rate limit da IA!\n")
 
     # 5. Heartbeat e Persistência
+    store.record_source_health("gupy", gupy_status, len(discovered_gupy), gupy_query_stats)
+    store.record_source_health("linkedin", linkedin_status, len(discovered_linkedin), linkedin_query_stats)
+    store.record_source_health("rss", rss_status, len(discovered_rss))
+    store.record_source_health("github", github_status, len(discovered_github))
+    store.record_source_health("trampos", trampos_status, len(discovered_trampos))
     check_heartbeat(config, store, notifier)
     store.save()
 

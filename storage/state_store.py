@@ -27,6 +27,7 @@ class StateStore:
                         "last_heartbeat": data.get("last_heartbeat", ""),
                         "recent_decisions": data.get("recent_decisions", []),
                         "deliveries": data.get("deliveries", {}),
+                        "source_health": data.get("source_health", []),
                     }
                 else:
                     return default_state
@@ -84,6 +85,19 @@ class StateStore:
     def get_delivery(self, fingerprint: str) -> Dict[str, Any]:
         """Retorna o último estado de entrega da vaga, se houver."""
         return self.state.get("deliveries", {}).get(fingerprint, {})
+
+    def record_source_health(self, source: str, status: str, discovered: int, details=None):
+        """Guarda uma janela curta de saúde operacional por fonte."""
+        import datetime
+        history = self.state.setdefault("source_health", [])
+        history.append({
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "source": source,
+            "status": status,
+            "discovered": discovered,
+            "details": details or {},
+        })
+        self.state["source_health"] = history[-200:]
 
     def delivery_retry_allowed(
         self, fingerprint: str, max_attempts: int = 3, ignore_backoff: bool = False

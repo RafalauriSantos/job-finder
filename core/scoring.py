@@ -78,8 +78,9 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
         return max(0, score), reasons
 
     if has_mid:
-        score -= 30
-        reasons.append("Nível Pleno detectado (-30 pts)")
+        score += 10
+        job.seniority = "mid"
+        reasons.append("Nível Pleno compatível; requisitos serão avaliados (+10 pts)")
 
     if has_junior:
         score += 35

@@ -62,7 +62,7 @@ class TestOperationalMatrix10Cases:
         assert loc_ok is True
         assert score >= 65
 
-    def test_case_4_pleno_remote_rejected(self):
+    def test_case_4_pleno_remote_is_eligible_for_evaluation(self):
         job = Job(
             title="Desenvolvedor Pleno Full Stack",
             company="Delta Soft",
@@ -72,7 +72,9 @@ class TestOperationalMatrix10Cases:
         )
         job.add_source("linkedin", "404", "https://linkedin.com/jobs/view/404")
         score, reasons = calculate_match_score(job)
-        assert score < 50
+        assert score >= 50
+        assert job.seniority == "mid"
+        assert any("Pleno compatível" in reason for reason in reasons)
 
     def test_case_5_senior_remote_rejected(self):
         job = Job(

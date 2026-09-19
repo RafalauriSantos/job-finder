@@ -160,7 +160,11 @@ def run_check():
 
     if rss_configs:
         try:
-            rss_col = RssCollector(HTTP, rss_configs)
+            rss_col = RssCollector(
+                HTTP,
+                rss_configs,
+                resolve_urls=config.get("resolve_rss_urls", False),
+            )
             discovered_rss = rss_col.collect()
         except Exception as e:
             rss_status = f"FALHA ({e})"

@@ -11,6 +11,7 @@ class LinkedInCollector(BaseCollector):
     def __init__(self, http_session: requests.Session, searches: List[Dict[str, Any]]):
         self.http = http_session
         self.searches = searches
+        self.query_stats: List[Dict[str, Any]] = []
 
     def _query_search(self, search_cfg: Dict[str, Any]) -> List[Job]:
         keywords = search_cfg.get("keywords", "Desenvolvedor Junior")
@@ -35,18 +36,31 @@ class LinkedInCollector(BaseCollector):
 
         jobs = []
         seen_ids = set()
+        stats = {
+            "keywords": keywords,
+            "time_range": time_range,
+            "geo_id": geo_id,
+            "max_pages": max_pages,
+            "pages": 0,
+            "cards": 0,
+            "parsed_jobs": 0,
+            "status": "OK",
+        }
         try:
             for page in range(max_pages):
+                stats["pages"] += 1
                 params = {**base_params, "start": page * 25}
                 query_str = urllib.parse.urlencode(params)
                 target_url = f"{base_url}?{query_str}"
                 resp = self.http.get(target_url, headers=headers, timeout=15)
                 if resp.status_code != 200:
+                    stats["status"] = f"HTTP_{resp.status_code}"
                     print(f"[ALERTA LinkedInCollector] Requisição falhou para '{keywords}' com status {resp.status_code}.")
                     break
 
                 resp.encoding = "utf-8"
                 cards = re.findall(r'<li[^>]*>(.*?)</li>', resp.text, re.DOTALL)
+                stats["cards"] += len(cards)
                 if not cards:
                     break
 
@@ -88,8 +102,12 @@ class LinkedInCollector(BaseCollector):
                     break
 
         except Exception as e:
+            stats["status"] = "ERROR"
+            stats["error"] = str(e)
             print(f"[ERRO LinkedInCollector] {e}")
 
+        stats["parsed_jobs"] = len(jobs)
+        self.query_stats.append(stats)
         return jobs
 
     def collect(self) -> List[Job]:

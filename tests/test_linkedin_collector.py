@@ -132,3 +132,7 @@ def test_linkedin_collector_preserves_filters_and_paginates(monkeypatch):
     assert query["experience"] == ["2"]
     assert query["workplace_type"] == ["2"]
     assert parse_qs(urlparse(calls[1]).query)["start"] == ["25"]
+    assert collector.query_stats[0]["pages"] == 2
+    assert collector.query_stats[0]["cards"] == 3
+    assert collector.query_stats[0]["parsed_jobs"] == 2
+    assert collector.query_stats[0]["status"] == "OK"

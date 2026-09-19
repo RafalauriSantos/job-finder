@@ -130,6 +130,7 @@ def run_check():
     discovered_trampos = []
     gupy_status = "OK"
     linkedin_status = "OK"
+    linkedin_query_stats = []
     rss_status = "OK"
     github_status = "OK"
     trampos_status = "OK"
@@ -145,6 +146,7 @@ def run_check():
         try:
             li_col = LinkedInCollector(HTTP, linkedin_searches)
             discovered_linkedin = li_col.collect()
+            linkedin_query_stats = li_col.query_stats
         except Exception as e:
             linkedin_status = f"FALHA ({e})"
 
@@ -334,6 +336,12 @@ def run_check():
     print("=" * 48)
     print(f"├─ Gupy:     {gupy_status:<8} | {len(discovered_gupy)} vaga(s)")
     print(f"├─ LinkedIn: {linkedin_status:<8} | {len(discovered_linkedin)} vaga(s)")
+    for query in linkedin_query_stats:
+        print(
+            f"│  └─ busca='{query['keywords']}' janela={query['time_range']} "
+            f"páginas={query['pages']} cartões={query['cards']} "
+            f"válidas={query['parsed_jobs']} status={query['status']}"
+        )
     print(f"├─ RSS:      {rss_status:<8} | {len(discovered_rss)} vaga(s)")
     print(f"├─ GitHub:   {github_status:<8} | {len(discovered_github)} vaga(s)")
     print("├" + "─" * 46)

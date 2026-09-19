@@ -38,7 +38,7 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [x] Executar os testes e confirmar a falha nos contratos temporais.
 - [x] Implementar a propagação dos filtros e o registro por consulta.
 - [x] Executar `pytest -q tests/test_linkedin_collector.py tests/test_gupy_collector.py` e confirmar aprovação.
-- [ ] Commitar a alteração.
+- [x] Commitar a alteração.
 
 ### T3: Normalizar publicação e idade da descoberta
 

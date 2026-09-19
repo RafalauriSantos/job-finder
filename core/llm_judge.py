@@ -26,6 +26,7 @@ _HEURISTIC_FLOOR = 30  # abaixo disso, nem chama o LLM
 # Pacing preventivo: 15 RPM = 1 chamada a cada 4.0s. Usamos 4.5s + jitter para garantir folga
 PACING_SECONDS: float = 4.5
 _LAST_CALL_TIMESTAMP: float = 0.0
+_GEMINI_UNAVAILABLE = False
 
 _PROFILE_CACHE = None
 
@@ -87,6 +88,10 @@ def _call_gemini(api_key: str, prompt: str) -> Optional[Dict[str, Any]]:
     """
     Chama a API do Google Gemini com rate pacing (4.5s) e retry com backoff em caso de 429.
     """
+    global _GEMINI_UNAVAILABLE
+    if _GEMINI_UNAVAILABLE:
+        return None
+
     for model in ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]:
         url = f"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent?key={api_key}"
         payload = {
@@ -125,9 +130,10 @@ def _call_gemini(api_key: str, prompt: str) -> Optional[Dict[str, Any]]:
                 else:
                     logger.warning(f"Gemini API ({model}) retornou status {resp.status_code}: {resp.text[:100]}")
                     break
-            except requests.RequestException as e:
+            except (requests.RequestException, TimeoutError) as e:
                 logger.warning(f"Erro de conexão ao chamar Gemini ({model}, tentativa {attempt + 1}): {e}")
-                break
+                _GEMINI_UNAVAILABLE = True
+                return None
     return None
 
 

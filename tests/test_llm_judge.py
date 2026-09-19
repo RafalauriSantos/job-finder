@@ -11,6 +11,9 @@ from core.scoring import evaluate_job
 
 
 class TestLlmJudgeUnits:
+    def setup_method(self):
+        llm_judge._GEMINI_UNAVAILABLE = False
+
     def test_should_invoke_judge_threshold(self):
         assert llm_judge.should_invoke_judge(30) is True
         assert llm_judge.should_invoke_judge(29) is False
@@ -46,6 +49,13 @@ class TestLlmJudgeUnits:
             with patch("core.llm_judge._call_gemini", side_effect=Exception("API down")):
                 result = llm_judge.judge("Dev", "Corp", "Desc")
                 assert result is None
+
+    def test_timeout_opens_provider_circuit_breaker(self):
+        with patch("core.llm_judge._enforce_pacing"):
+            with patch("requests.post", side_effect=TimeoutError("read timeout")) as mock_post:
+                assert llm_judge._call_gemini("fake_key", "prompt") is None
+                assert llm_judge._call_gemini("fake_key", "prompt") is None
+                assert mock_post.call_count == 1
 
     def test_pacing_enforced(self):
         with patch("time.sleep") as mock_sleep:

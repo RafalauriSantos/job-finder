@@ -20,6 +20,7 @@ from collectors.trampos_collector import TramposCollector
 from notify.telegram_notifier import TelegramNotifier
 from storage.state_store import StateStore
 from core.query_planner import plan_searches
+from core.delivery_workflow import finalize_delivery
 
 load_dotenv()
 
@@ -323,20 +324,9 @@ def run_check():
         sent = notifier.send_job_alert(job)
         if sent:
             notified_count += 1
-            store.record_decision(
-                job_id, primary_source, job.identity_fingerprint, job.content_hash,
-                "DELIVERED", reasons[0] if reasons else "Aprovada", final_score=score,
-                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
-            )
-            store.record_delivery(fp, source_ids, delivered=True)
         else:
             print("⚠️ Entrega Telegram falhou; vaga ficará disponível para retry no próximo ciclo.")
-            store.record_decision(
-                job_id, primary_source, job.identity_fingerprint, job.content_hash,
-                "DELIVERY_FAILED", "Falha ao enviar alerta pelo Telegram", final_score=score,
-                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
-            )
-            store.record_delivery(fp, source_ids, delivered=False)
+        finalize_delivery(store, job, source_ids, sent, score, reasons[0] if reasons else "Aprovada")
 
     elapsed = time.time() - start_time
     llm_usage = store.get_llm_usage()

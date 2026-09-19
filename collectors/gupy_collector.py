@@ -25,6 +25,7 @@ class GupyCollector(BaseCollector):
         self.http = http_session
         self.queries = queries
         self.query_stats: List[Dict[str, Any]] = []
+        self._last_query_status = "UNKNOWN"
 
     def _query_api(self, args: Dict[str, Any]) -> List[Dict[str, Any]]:
         api_args = {key: value for key, value in args.items() if key != "query_id"}
@@ -44,6 +45,7 @@ class GupyCollector(BaseCollector):
         try:
             resp = self.http.post(GUPY_MCP_URL, json=body, headers=headers, timeout=15)
             if resp.status_code != 200:
+                self._last_query_status = f"HTTP_{resp.status_code}"
                 return []
 
             resp.encoding = "utf-8"
@@ -52,9 +54,12 @@ class GupyCollector(BaseCollector):
                     payload = json.loads(line[5:].strip())
                     content_text = payload.get("result", {}).get("content", [{}])[0].get("text", "{}")
                     parsed = json.loads(content_text)
+                    self._last_query_status = "OK"
                     return parsed.get("data", {}).get("data", [])
         except Exception as e:
+            self._last_query_status = "ERROR"
             print(f"[ERRO GupyCollector] {e}")
+        self._last_query_status = "EMPTY"
         return []
 
     def collect(self) -> List[Job]:
@@ -65,7 +70,7 @@ class GupyCollector(BaseCollector):
             self.query_stats.append({
                 "parameters": dict(q_args),
                 "results": len(raw_jobs),
-                "status": "OK" if raw_jobs or raw_jobs == [] else "UNKNOWN",
+                "status": self._last_query_status,
             })
             for raw in raw_jobs:
                 job_id = str(raw.get("id"))

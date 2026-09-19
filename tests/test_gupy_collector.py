@@ -47,3 +47,16 @@ def test_gupy_collector_records_query_parameters_and_result_count():
         "results": 1,
         "status": "OK",
     }]
+
+
+def test_gupy_collector_distinguishes_http_failure_from_empty_result():
+    class FailedSession:
+        def post(self, *args, **kwargs):
+            response = MockResponse()
+            response.status_code = 503
+            return response
+
+    collector = GupyCollector(FailedSession(), [{"term": "Java"}])
+
+    assert collector.collect() == []
+    assert collector.query_stats[0]["status"] == "HTTP_503"

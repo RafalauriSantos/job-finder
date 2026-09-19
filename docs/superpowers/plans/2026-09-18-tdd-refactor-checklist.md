@@ -23,7 +23,7 @@ Esta lista define quando a refatoração do Job Finder está concluída. Um item
 - [x] Gupy registra parâmetros e resultados por consulta.
 - [x] Famílias de termos são configuráveis.
 - [x] Erro de fonte é distinguido de resultado vazio.
-- [ ] Cada coletor possui contrato de teste com resposta válida, vazia e erro.
+- [x] Cada coletor possui contrato de teste com resposta válida, vazia e erro.
 - [ ] Saúde das fontes é persistida para relatório histórico.
 
 ## Enriquecimento e dados

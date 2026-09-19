@@ -32,7 +32,11 @@ class MockResponse:
 
 
 class MockSession:
+    def __init__(self):
+        self.calls = []
+
     def post(self, *args, **kwargs):
+        self.calls.append(kwargs)
         return MockResponse()
 
 
@@ -60,3 +64,20 @@ def test_gupy_collector_distinguishes_http_failure_from_empty_result():
 
     assert collector.collect() == []
     assert collector.query_stats[0]["status"] == "HTTP_503"
+
+
+def test_gupy_collector_forwards_seniority_and_recent_window():
+    session = MockSession()
+    collector = GupyCollector(session, [{
+        "term": "developer",
+        "seniority": "mid",
+        "published_within_hours": 24,
+        "query_id": "internal-id",
+    }])
+
+    collector.collect()
+
+    arguments = session.calls[0]["json"]["params"]["arguments"]
+    assert arguments["seniority"] == "mid"
+    assert arguments["published_within_hours"] == 24
+    assert "query_id" not in arguments

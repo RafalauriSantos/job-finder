@@ -160,3 +160,19 @@ def test_linkedin_collector_enriches_detail_description(monkeypatch):
     assert jobs[0].description.startswith("React, Node.js")
     assert collector.query_stats[0]["enrichment_attempts"] == 1
     assert collector.query_stats[0]["enrichment_successes"] == 1
+
+
+def test_linkedin_collector_records_planned_seniority_and_recent_window(monkeypatch):
+    session = requests.Session()
+    monkeypatch.setattr(session, "get", lambda *args, **kwargs: MockResponse("<ul></ul>", 200))
+
+    collector = LinkedInCollector(session, [{
+        "keywords": "developer",
+        "seniority": "mid",
+        "published_within_hours": 24,
+    }])
+
+    collector.collect()
+
+    assert collector.query_stats[0]["seniority"] == "mid"
+    assert collector.query_stats[0]["published_within_hours"] == 24

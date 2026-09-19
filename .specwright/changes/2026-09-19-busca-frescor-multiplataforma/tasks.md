@@ -32,12 +32,12 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - Modify: `collectors/linkedin.py`
 - Modify: `collectors/gupy.py`
 - Modify: `tests/test_collectors.py`
-**Validation:** `pytest -q tests/test_collectors.py`
+**Validation:** `pytest -q tests/test_linkedin_collector.py tests/test_gupy_collector.py`
 
-- [ ] Escrever testes de payload com filtro recente, resultado vazio, erro HTTP e erro de transporte.
-- [ ] Executar os testes e confirmar a falha nos contratos temporais.
-- [ ] Implementar a propagação dos filtros e o registro por consulta.
-- [ ] Executar `pytest -q tests/test_collectors.py` e confirmar aprovação.
+- [x] Escrever testes de payload com filtro recente, resultado vazio, erro HTTP e erro de transporte.
+- [x] Executar os testes e confirmar a falha nos contratos temporais.
+- [x] Implementar a propagação dos filtros e o registro por consulta.
+- [x] Executar `pytest -q tests/test_linkedin_collector.py tests/test_gupy_collector.py` e confirmar aprovação.
 - [ ] Commitar a alteração.
 
 ### T3: Normalizar publicação e idade da descoberta

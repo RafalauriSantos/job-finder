@@ -47,7 +47,11 @@ class LinkedInCollector(BaseCollector):
 
     def _query_search(self, search_cfg: Dict[str, Any]) -> List[Job]:
         keywords = search_cfg.get("keywords", "Desenvolvedor Junior")
-        time_range = search_cfg.get("time_range", "r3600")
+        recent_hours = search_cfg.get("published_within_hours")
+        time_range = search_cfg.get("time_range")
+        if not time_range and recent_hours is not None:
+            time_range = f"r{int(recent_hours) * 3600}"
+        time_range = time_range or "r3600"
         geo_id = search_cfg.get("geo_id", "106057199")
         max_pages = max(1, int(search_cfg.get("max_pages", 1)))
 
@@ -71,6 +75,8 @@ class LinkedInCollector(BaseCollector):
         stats = {
             "keywords": keywords,
             "time_range": time_range,
+            "seniority": search_cfg.get("seniority"),
+            "published_within_hours": recent_hours,
             "geo_id": geo_id,
             "max_pages": max_pages,
             "pages": 0,

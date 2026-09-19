@@ -48,3 +48,18 @@ def test_title_without_seniority_keeps_unknown_evidence():
 
     assert job.seniority == "unknown"
     assert job.ranking_evidence["seniority"] == "unknown"
+
+
+def test_recent_publication_gets_separate_freshness_score():
+    job = Job(
+        title="Desenvolvedor Java Pleno",
+        company="Empresa Tech",
+        workplace_type="remote",
+        description="Java e APIs REST.",
+        published_at="2026-09-19T10:00:00+00:00",
+    )
+
+    calculate_match_score(job, now="2026-09-19T12:00:00+00:00")
+
+    assert job.freshness_score > 0
+    assert job.score_breakdown["freshness"] == job.freshness_score

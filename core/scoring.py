@@ -1,5 +1,7 @@
+from datetime import datetime, timezone
 from typing import List, Tuple
 from models.job import Job
+from core.normalizer import publication_age_bucket
 
 import json
 from pathlib import Path
@@ -68,7 +70,7 @@ def classify_seniority(title: str) -> str:
         return "junior"
     return "unknown"
 
-def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
+def calculate_match_score(job: Job, now: datetime = None) -> Tuple[int, List[str]]:
     """
     Calcula o Match Score (0 a 100) da vaga contra o perfil técnico configurado em profile.json:
     - Base: Stack Core (React, TypeScript, Node.js, PostgreSQL, etc.)
@@ -80,6 +82,15 @@ def calculate_match_score(job: Job) -> Tuple[int, List[str]]:
     reasons = []
     job.score_breakdown = {"seniority": 0, "freshness": 0, "risk": 0}
     job.ranking_evidence = {}
+    reference_now = now
+    if isinstance(reference_now, str):
+        reference_now = datetime.fromisoformat(reference_now.replace("Z", "+00:00"))
+    if reference_now is None:
+        reference_now = datetime.now(timezone.utc)
+    age_bucket = publication_age_bucket(job.published_at, now=reference_now)
+    job.freshness_score = 30 if age_bucket == "recent" else 0
+    job.score_breakdown["freshness"] = job.freshness_score
+    job.ranking_evidence["freshness"] = age_bucket
 
     title_lower = job.title.lower()
     text_to_analyze = f"{job.title} {job.description}".lower()

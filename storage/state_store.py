@@ -125,6 +125,8 @@ class StateStore:
         fd, lock_path = self._acquire_lock()
         try:
             current = self._load()
+            if self.state.get("deliveries"):
+                current["deliveries"] = self.state["deliveries"]
             current.setdefault("delivery_claims", {}).pop(fingerprint, None)
             with open(self.filepath, "w", encoding="utf-8") as handle:
                 json.dump(current, handle, indent=2, ensure_ascii=False)

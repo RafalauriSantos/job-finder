@@ -1,4 +1,6 @@
 from core.eligibility import classify_score
+from core.eligibility import classify_evidence
+from models.job import Job
 
 
 def test_zero_score_is_veto():
@@ -11,3 +13,23 @@ def test_positive_score_below_threshold_is_low_score():
 
 def test_score_at_threshold_is_approved():
     assert classify_score(50, 50) == "APPROVED"
+
+
+def test_rss_low_evidence_is_rejected():
+    job = Job(title="Dev React", company="Indeed", workplace_type="unknown", evidence_level="LOW_EVIDENCE")
+    job.add_source("rss", "rss-1", "https://news.example/1")
+
+    assert classify_evidence(job) == "LOW_EVIDENCE"
+
+
+def test_structured_job_evidence_is_eligible():
+    job = Job(
+        title="Dev React",
+        company="Empresa",
+        workplace_type="remote",
+        description="React e Node.js para desenvolvimento de APIs.",
+        evidence_level="HIGH_EVIDENCE",
+    )
+    job.add_source("gupy", "gupy-1", "https://empresa.gupy.io/jobs/1")
+
+    assert classify_evidence(job) == "APPROVED"

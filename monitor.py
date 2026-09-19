@@ -21,7 +21,7 @@ from notify.telegram_notifier import TelegramNotifier
 from storage.state_store import StateStore
 from core.query_planner import plan_searches
 from core.delivery_workflow import finalize_delivery
-from core.eligibility import classify_score
+from core.eligibility import classify_score, classify_evidence
 
 load_dotenv()
 
@@ -262,7 +262,7 @@ def run_check():
         # Google News/RSS normalmente entrega apenas um título e um link de notícia.
         # Sem descrição ou metadados suficientes, não há evidência para transformar
         # o item em alerta de candidatura; isso evita ruído no Telegram.
-        if "rss" in job.sources and job.evidence_level == "LOW_EVIDENCE":
+        if classify_evidence(job) == "LOW_EVIDENCE":
             reason = "RSS sem evidência suficiente para confirmar uma vaga real"
             print(f"✗ Evidência: INSUFICIENTE ({reason})")
             print("DECISÃO: DESCARTADA (RSS raso)")

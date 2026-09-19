@@ -29,3 +29,34 @@ def test_deduplicator_prefers_richer_record_when_rss_arrives_first():
     assert merged.description == rich.description
     assert merged.evidence_level == "HIGH_EVIDENCE"
     assert set(merged.sources) == {"rss", "gupy"}
+
+
+def test_deduplicator_replaces_default_fields_with_structured_values():
+    basic = Job(
+        title="Desenvolvedor React",
+        company="Empresa Tech",
+        workplace_type="remote",
+        location="Brasil",
+        job_type="CLT",
+        salary="Não informado",
+    )
+    basic.add_source("linkedin", "li-1", "https://linkedin.com/jobs/1")
+
+    structured = Job(
+        title="Desenvolvedor React",
+        company="Empresa Tech",
+        workplace_type="remote",
+        location="Brasil",
+        job_type="PJ",
+        salary="R$ 4.000",
+        description="Descrição estruturada da vaga.",
+        canonical_url="https://empresa.example/jobs/1",
+        evidence_level="HIGH_EVIDENCE",
+    )
+    structured.add_source("gupy", "g-1", structured.canonical_url)
+
+    merged = Deduplicator().process([basic, structured])[0]
+
+    assert merged.salary == "R$ 4.000"
+    assert merged.job_type == "PJ"
+    assert merged.canonical_url == structured.canonical_url

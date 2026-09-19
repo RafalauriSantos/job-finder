@@ -49,7 +49,9 @@ class Deduplicator:
         """Atualiza conteúdo rico; as fontes são mescladas separadamente."""
         for field in ("description", "location", "job_type", "salary", "technologies", "canonical_url", "resolved_url"):
             value = getattr(source, field)
-            if value and (not getattr(target, field) or field in {"description", "technologies"}):
+            target_value = getattr(target, field)
+            target_is_default = target_value in {"", "Não informado", "Nao informado", "CLT"}
+            if value and (target_is_default or field in {"description", "technologies"}):
                 setattr(target, field, value)
         if source.evidence_level == "HIGH_EVIDENCE" or (
             source.evidence_level == "MEDIUM_EVIDENCE" and target.evidence_level == "LOW_EVIDENCE"

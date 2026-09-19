@@ -113,6 +113,7 @@ def run_check():
         elif m_type == "linkedin":
             search = dict(m)
             search["keywords"] = m.get("keywords_search") or m.get("description")
+            search["max_pages"] = m.get("max_pages", 3)
             linkedin_searches.append(search)
         elif m_type == "rss":
             rss_configs.append(m)

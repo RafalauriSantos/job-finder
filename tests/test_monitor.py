@@ -99,6 +99,19 @@ class TestStateStorePersistence:
             assert store.get_delivery("fp-ok")["status"] == "DELIVERED"
             assert store.get_delivery("fp-ok")["attempts"] == 2
 
+    def test_delivery_retry_uses_backoff_and_attempt_limit(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            store = StateStore(os.path.join(tmpdir, "seen.json"))
+
+            assert store.delivery_retry_allowed("new-fp") is True
+            store.record_delivery("retry-fp", ["job-1"], delivered=False)
+            assert store.delivery_retry_allowed("retry-fp") is False
+            assert store.delivery_retry_allowed("retry-fp", ignore_backoff=True) is True
+
+            store.record_delivery("retry-fp", ["job-1"], delivered=False)
+            store.record_delivery("retry-fp", ["job-1"], delivered=False)
+            assert store.delivery_retry_allowed("retry-fp", ignore_backoff=True) is False
+
     def test_pruning_limits_retention(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             test_file = os.path.join(tmpdir, "seen.json")

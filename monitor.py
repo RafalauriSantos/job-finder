@@ -219,6 +219,9 @@ def run_check():
         if store.is_seen(fp, source_ids[0] if source_ids else ""):
             discarded_seen += 1
             continue
+        if not store.delivery_retry_allowed(fp):
+            discarded_seen += 1
+            continue
 
         # Auditoria individual da decisão
         print(f"\n--- [Auditoria Vaga #{idx}] ---")

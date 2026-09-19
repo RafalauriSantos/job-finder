@@ -64,19 +64,49 @@ class StateStore:
 
     def record_delivery(self, fingerprint: str, source_ids: List[str], delivered: bool):
         """Registra o resultado sem perder alertas cuja entrega falhou."""
+        import datetime
         deliveries = self.state.setdefault("deliveries", {})
         previous = deliveries.get(fingerprint, {})
+        attempts = previous.get("attempts", 0) + 1
         deliveries[fingerprint] = {
             "status": "DELIVERED" if delivered else "DELIVERY_FAILED",
-            "attempts": previous.get("attempts", 0) + 1,
+            "attempts": attempts,
             "source_ids": [str(source_id) for source_id in source_ids],
         }
+        if not delivered:
+            next_retry = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+                minutes=2 ** attempts
+            )
+            deliveries[fingerprint]["next_retry_at"] = next_retry.isoformat()
         if delivered:
             self.mark_seen(fingerprint, source_ids)
 
     def get_delivery(self, fingerprint: str) -> Dict[str, Any]:
         """Retorna o último estado de entrega da vaga, se houver."""
         return self.state.get("deliveries", {}).get(fingerprint, {})
+
+    def delivery_retry_allowed(
+        self, fingerprint: str, max_attempts: int = 3, ignore_backoff: bool = False
+    ) -> bool:
+        """Decide se uma entrega falha pode ser tentada novamente."""
+        import datetime
+        delivery = self.get_delivery(fingerprint)
+        if not delivery:
+            return True
+        if delivery.get("status") == "DELIVERED":
+            return False
+        if delivery.get("attempts", 0) >= max_attempts:
+            return False
+        if ignore_backoff:
+            return True
+        next_retry_at = delivery.get("next_retry_at")
+        if not next_retry_at:
+            return True
+        try:
+            next_retry = datetime.datetime.fromisoformat(next_retry_at)
+            return datetime.datetime.now(datetime.timezone.utc) >= next_retry
+        except ValueError:
+            return True
 
     def get_last_heartbeat(self) -> str:
         return self.state.get("last_heartbeat", "")

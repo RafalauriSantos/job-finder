@@ -100,7 +100,10 @@ def _call_gemini(api_key: str, prompt: str) -> Optional[Dict[str, Any]]:
         for attempt in range(max_retries + 1):
             _enforce_pacing()
             try:
-                resp = requests.post(url, json=payload, timeout=15)
+                # A timeout should fall back quickly; retrying a dead provider can
+                # consume the whole monitoring window. Rate-limit responses still
+                # use the explicit backoff path below.
+                resp = requests.post(url, json=payload, timeout=10)
                 if resp.status_code == 200:
                     data = resp.json()
                     text = data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
@@ -124,8 +127,7 @@ def _call_gemini(api_key: str, prompt: str) -> Optional[Dict[str, Any]]:
                     break
             except requests.RequestException as e:
                 logger.warning(f"Erro de conexão ao chamar Gemini ({model}, tentativa {attempt + 1}): {e}")
-                if attempt < max_retries:
-                    time.sleep(3.0)
+                break
     return None
 
 

@@ -68,4 +68,4 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [x] Executar o teste isolado e confirmar a falha antes da integração.
 - [x] Integrar telemetria e regras sem ultrapassar o orçamento de ciclo.
 - [x] Executar `$env:PYTHONPATH='.'; pytest -q` e `python -m compileall -q core collectors models notify storage monitor.py`.
-- [ ] Commitar a alteração.
+- [x] Commitar a alteração.

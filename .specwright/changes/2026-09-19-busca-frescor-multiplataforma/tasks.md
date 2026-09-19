@@ -23,7 +23,7 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - [x] Executar os testes e confirmar a falha por ausência dos novos campos.
 - [x] Implementar o modelo normalizado de consulta sem remover compatibilidade com a configuração atual.
 - [x] Executar `pytest -q tests/test_query_planner_freshness.py` e confirmar aprovação.
-- [ ] Commitar a alteração.
+- [x] Commitar a alteração.
 
 ### T2: Aplicar filtros temporais nos coletores
 

@@ -73,3 +73,52 @@ def test_run_check_processes_and_persists_one_job_without_network(monkeypatch, t
     assert len(notifier.alerts) == 1
     assert saved.state["recent_decisions"][-1]["decision"] == "DELIVERED"
     assert saved.is_seen(notifier.alerts[0].fingerprint, "gupy-1") is True
+
+
+def test_run_check_plans_recent_seniority_queries_and_survives_source_failure(monkeypatch, tmp_path):
+    state_file = tmp_path / "seen.json"
+    calls = {}
+    config = {
+        "min_match_score": 50,
+        "heartbeat": {"enabled": False},
+        "monitors": [
+            {
+                "type": "gupy",
+                "term": "developer",
+                "query_variants": ["developer", "desenvolvedor"],
+                "seniority_variants": ["junior", "mid"],
+                "recent_window_hours": 24,
+            },
+            {"type": "linkedin", "keywords_search": "developer"},
+        ],
+    }
+
+    class RecordingGupy(FakeGupyCollector):
+        def __init__(self, *args, **kwargs):
+            calls["gupy"] = args[1]
+            super().__init__(*args, **kwargs)
+
+    class FailedLinkedIn:
+        def __init__(self, *args, **kwargs):
+            calls["linkedin"] = kwargs
+            self.query_stats = []
+
+        def collect(self):
+            raise RuntimeError("simulated LinkedIn outage")
+
+    notifier = FakeNotifier()
+    monkeypatch.setattr(monitor, "load_config", lambda: config)
+    monkeypatch.setattr(monitor, "STATE_FILE", str(state_file))
+    monkeypatch.setattr(monitor, "GupyCollector", RecordingGupy)
+    monkeypatch.setattr(monitor, "LinkedInCollector", FailedLinkedIn)
+    monkeypatch.setattr(monitor, "RssCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "GithubIssuesCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TramposCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TelegramNotifier", lambda *args, **kwargs: notifier)
+
+    monitor.run_check()
+
+    assert len(calls["gupy"]) == 4
+    assert {query["seniority"] for query in calls["gupy"]} == {"junior", "mid"}
+    assert {query["published_within_hours"] for query in calls["gupy"]} == {24}
+    assert len(notifier.alerts) == 1

@@ -62,10 +62,10 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - Modify: `monitor.py`
 - Modify: `tests/test_monitor.py`
 - Modify: `docs/OPERATIONS.md`
-**Validation:** `pytest -q`
+**Validation:** `$env:PYTHONPATH='.'; pytest -q`
 
-- [ ] Adicionar teste de ciclo com múltiplas consultas, duplicata entre fontes e uma fonte indisponível.
-- [ ] Executar o teste isolado e confirmar a falha antes da integração.
-- [ ] Integrar telemetria e regras sem ultrapassar o orçamento de ciclo.
-- [ ] Executar `pytest -q` e `python -m compileall -q core collectors models notify storage monitor.py`.
+- [x] Adicionar teste de ciclo com múltiplas consultas, duplicata entre fontes e uma fonte indisponível.
+- [x] Executar o teste isolado e confirmar a falha antes da integração.
+- [x] Integrar telemetria e regras sem ultrapassar o orçamento de ciclo.
+- [x] Executar `$env:PYTHONPATH='.'; pytest -q` e `python -m compileall -q core collectors models notify storage monitor.py`.
 - [ ] Commitar a alteração.

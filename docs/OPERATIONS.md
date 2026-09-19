@@ -15,6 +15,14 @@ O processo normal usa `check_interval_minutes` do `config.json`. O limite de uma
 - `.env`: credenciais locais, nunca commitadas.
 - `seen_jobs.json`: estado operacional local, ignorado pelo Git.
 
+### Consultas recentes
+
+Cada monitor pode declarar `query_variants`, `seniority_variants` e `recent_window_hours`.
+O planejador gera uma consulta para cada combinação e o ciclo registra o termo,
+a senioridade, a janela aplicada e o resultado por consulta. No LinkedIn, a janela
+é convertida para `f_TPR` em segundos; um `time_range` explícito tem prioridade.
+No Gupy, os parâmetros seguem para a busca sem o `query_id` interno.
+
 ## Rollback
 
 Cada alteração de código é publicada em commit separado. Para voltar a uma versão anterior, primeiro identifique o commit e use uma reversão explícita:

@@ -21,7 +21,7 @@ from notify.telegram_notifier import TelegramNotifier
 from storage.state_store import StateStore
 from core.query_planner import plan_searches
 from core.delivery_workflow import finalize_delivery
-from core.eligibility import classify_score, classify_evidence
+from core.eligibility import classify_score, classify_evidence, classify_location
 
 load_dotenv()
 
@@ -244,8 +244,8 @@ def run_check():
             continue
 
         # Validação de Localidade Estrita (Tatuí / Sorocaba / Remoto)
-        loc_allowed, loc_reason = is_location_allowed(job.workplace_type, job.location, job.title)
-        if not loc_allowed:
+        location_decision, loc_reason = classify_location(job)
+        if location_decision == "LOCATION_REJECTED":
             print(f"✗ Localização: REJEITADA ({loc_reason})")
             print(f"DECISÃO: DESCARTADA (Filtro Regional)")
             discarded_location += 1

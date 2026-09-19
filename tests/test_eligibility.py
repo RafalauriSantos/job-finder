@@ -1,6 +1,7 @@
 from core.eligibility import classify_score
-from core.eligibility import classify_evidence
+from core.eligibility import classify_evidence, classify_location
 from models.job import Job
+from core.normalizer import is_location_allowed
 
 
 def test_zero_score_is_veto():
@@ -33,3 +34,13 @@ def test_structured_job_evidence_is_eligible():
     job.add_source("gupy", "gupy-1", "https://empresa.gupy.io/jobs/1")
 
     assert classify_evidence(job) == "APPROVED"
+
+
+def test_location_decision_uses_regional_policy():
+    allowed, _ = is_location_allowed("hybrid", "Sorocaba, SP")
+    rejected, _ = is_location_allowed("hybrid", "São Paulo, SP")
+    assert allowed is True
+    assert rejected is False
+
+    job = Job(title="Dev", company="Empresa", workplace_type="hybrid", location="Sorocaba, SP")
+    assert classify_location(job)[0] == "APPROVED"

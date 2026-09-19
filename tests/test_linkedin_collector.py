@@ -2,6 +2,7 @@ import os
 import sys
 import pytest
 import requests
+from urllib.parse import urlparse, parse_qs
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -103,3 +104,31 @@ def test_linkedin_collector_handles_malformed_html(monkeypatch):
     jobs = collector.collect()
 
     assert jobs == []
+
+
+def test_linkedin_collector_preserves_filters_and_paginates(monkeypatch):
+    session = requests.Session()
+    calls = []
+
+    def fake_get(url, **kwargs):
+        calls.append(url)
+        return MockResponse(SAMPLE_LINKEDIN_HTML if len(calls) == 1 else "<ul></ul>", 200)
+
+    monkeypatch.setattr(session, "get", fake_get)
+    collector = LinkedInCollector(session, [{
+        "keywords": "desenvolvedor",
+        "time_range": "r3600",
+        "experience": "2",
+        "workplace_type": "2",
+        "max_pages": 3,
+    }])
+
+    jobs = collector.collect()
+
+    assert len(jobs) == 2
+    assert len(calls) == 2
+    query = parse_qs(urlparse(calls[0]).query)
+    assert query["f_TPR"] == ["r3600"]
+    assert query["experience"] == ["2"]
+    assert query["workplace_type"] == ["2"]
+    assert parse_qs(urlparse(calls[1]).query)["start"] == ["25"]

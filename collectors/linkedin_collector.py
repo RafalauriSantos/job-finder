@@ -16,60 +16,76 @@ class LinkedInCollector(BaseCollector):
         keywords = search_cfg.get("keywords", "Desenvolvedor Junior")
         time_range = search_cfg.get("time_range", "r3600")
         geo_id = search_cfg.get("geo_id", "106057199")
+        max_pages = max(1, int(search_cfg.get("max_pages", 1)))
 
         base_url = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
-        params = {
+        base_params = {
             "keywords": keywords,
             "f_TPR": time_range,
             "geoId": geo_id,
-            "start": 0,
         }
-        query_str = urllib.parse.urlencode(params)
-        target_url = f"{base_url}?{query_str}"
+        for key in ("experience", "workplace_type", "job_type", "function", "industry"):
+            value = search_cfg.get(key)
+            if value:
+                base_params[key] = value
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
         }
 
         jobs = []
+        seen_ids = set()
         try:
-            resp = self.http.get(target_url, headers=headers, timeout=15)
-            if resp.status_code != 200:
-                print(f"[ALERTA LinkedInCollector] Requisição falhou para '{keywords}' com status {resp.status_code}.")
-                return []
+            for page in range(max_pages):
+                params = {**base_params, "start": page * 25}
+                query_str = urllib.parse.urlencode(params)
+                target_url = f"{base_url}?{query_str}"
+                resp = self.http.get(target_url, headers=headers, timeout=15)
+                if resp.status_code != 200:
+                    print(f"[ALERTA LinkedInCollector] Requisição falhou para '{keywords}' com status {resp.status_code}.")
+                    break
 
-            resp.encoding = "utf-8"
-            cards = re.findall(r'<li[^>]*>(.*?)</li>', resp.text, re.DOTALL)
+                resp.encoding = "utf-8"
+                cards = re.findall(r'<li[^>]*>(.*?)</li>', resp.text, re.DOTALL)
+                if not cards:
+                    break
 
-            for card in cards:
-                urn_match = re.search(r'data-entity-urn=\"urn:li:jobPosting:(\d+)\"', card)
-                title_match = re.search(r'<h3[^>]*class=\"[^\"]*base-search-card__title[^\"]*\"[^>]*>\s*([^<]+)\s*</h3>', card)
-                company_match = re.search(r'<h4[^>]*class=\"[^\"]*base-search-card__subtitle[^\"]*\"[^>]*>.*?<a[^>]*>\s*([^<]+)\s*</a>', card, re.DOTALL)
-                link_match = re.search(r'<a[^>]*class=\"[^\"]*base-card__full-link[^\"]*\"[^>]*href=\"([^\"]+)\"', card)
-                loc_match = re.search(r'<span[^>]*class=\"[^\"]*job-search-card__location[^\"]*\"[^>]*>\s*([^<]+)\s*</span>', card)
+                page_new_jobs = 0
+                for card in cards:
+                    urn_match = re.search(r'data-entity-urn=\"urn:li:jobPosting:(\d+)\"', card)
+                    title_match = re.search(r'<h3[^>]*class=\"[^\"]*base-search-card__title[^\"]*\"[^>]*>\s*([^<]+)\s*</h3>', card)
+                    company_match = re.search(r'<h4[^>]*class=\"[^\"]*base-search-card__subtitle[^\"]*\"[^>]*>.*?<a[^>]*>\s*([^<]+)\s*</a>', card, re.DOTALL)
+                    link_match = re.search(r'<a[^>]*class=\"[^\"]*base-card__full-link[^\"]*\"[^>]*href=\"([^\"]+)\"', card)
+                    loc_match = re.search(r'<span[^>]*class=\"[^\"]*job-search-card__location[^\"]*\"[^>]*>\s*([^<]+)\s*</span>', card)
 
-                if not title_match or not link_match:
-                    continue
+                    if not title_match or not link_match:
+                        continue
 
-                raw_title = title_match.group(1).strip()
-                title = normalize_title(raw_title)
-                company = company_match.group(1).strip() if company_match else "LinkedIn"
-                raw_link = link_match.group(1).split("?")[0]
-                job_id = urn_match.group(1) if urn_match else raw_link.split("-")[-1]
-                location = loc_match.group(1).strip() if loc_match else "Brasil"
+                    raw_title = title_match.group(1).strip()
+                    title = normalize_title(raw_title)
+                    company = company_match.group(1).strip() if company_match else "LinkedIn"
+                    raw_link = link_match.group(1).split("?")[0]
+                    job_id = urn_match.group(1) if urn_match else raw_link.split("-")[-1]
+                    if job_id in seen_ids:
+                        continue
+                    seen_ids.add(job_id)
+                    page_new_jobs += 1
+                    location = loc_match.group(1).strip() if loc_match else "Brasil"
 
-                workplace = normalize_workplace("", location_text=location, title_text=title)
-                techs = extract_technologies(title)
+                    workplace = normalize_workplace("", location_text=location, title_text=title)
+                    techs = extract_technologies(title)
 
-                job = Job(
-                    title=title,
-                    company=company,
-                    workplace_type=workplace,
-                    location=location,
-                    technologies=techs,
-                )
-                job.add_source("linkedin", job_id, raw_link)
-                jobs.append(job)
+                    job = Job(
+                        title=title,
+                        company=company,
+                        workplace_type=workplace,
+                        location=location,
+                        technologies=techs,
+                    )
+                    job.add_source("linkedin", job_id, raw_link)
+                    jobs.append(job)
+                if page_new_jobs == 0:
+                    break
 
         except Exception as e:
             print(f"[ERRO LinkedInCollector] {e}")

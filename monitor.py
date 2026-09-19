@@ -111,11 +111,9 @@ def run_check():
                 query_args["limit"] = 20
             gupy_queries.append(query_args)
         elif m_type == "linkedin":
-            linkedin_searches.append({
-                "keywords": m.get("keywords_search") or m.get("description"),
-                "time_range": m.get("time_range", "r3600"),
-                "geo_id": m.get("geo_id", "106057199"),
-            })
+            search = dict(m)
+            search["keywords"] = m.get("keywords_search") or m.get("description")
+            linkedin_searches.append(search)
         elif m_type == "rss":
             rss_configs.append(m)
         elif m_type == "github_issues":

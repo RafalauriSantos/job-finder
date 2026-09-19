@@ -48,8 +48,8 @@ delivery: .specwright/deliveries/2026-09-19-radar-inteligente
 - Modify: `tests/test_monitor.py`
 **Validation:** `pytest -q tests/test_monitor.py`
 
-- [ ] Escrever teste de ordem com vaga recente aderente, Pleno plausível e aprendizado.
-- [ ] Executar o teste e confirmar a falha da ordenação esperada.
-- [ ] Implementar composição do ranking e texto curto de justificativa.
-- [ ] Executar os testes e confirmar aprovação.
+- [x] Escrever teste de ordem com vaga recente aderente, Pleno plausível e aprendizado.
+- [x] Executar o teste e confirmar a falha da ordenação esperada.
+- [x] Implementar composição do ranking e texto curto de justificativa.
+- [x] Executar os testes e confirmar aprovação.
 - [ ] Commitar a alteração.

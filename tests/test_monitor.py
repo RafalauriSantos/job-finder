@@ -169,6 +169,8 @@ class TestTelegramNotifier:
             match_score=95,
             match_reasons=["Nível Júnior", "Stack Core React"],
         )
+        job.seniority = "junior"
+        job.ranking_evidence = {"seniority": "junior", "risk": "senior_signals"}
         job.add_source("gupy", "101", "https://goomer.gupy.io/jobs/101")
         job.add_source("linkedin", "202", "https://linkedin.com/jobs/202")
 
@@ -179,6 +181,8 @@ class TestTelegramNotifier:
         call_json = mock_http.post.call_args[1]["json"]
         assert "MATCH COMPATÍVEL: 95/100" in call_json["text"]
         assert "Goomer" in call_json["text"]
+        assert "Senioridade:" in call_json["text"]
+        assert "requisitos podem estar acima" in call_json["text"]
         buttons = call_json["reply_markup"]["inline_keyboard"]
         # Deve ter botões para ambas as fontes (GUPY e LINKEDIN)
         assert len(buttons) == 2

@@ -36,6 +36,10 @@ class TelegramNotifier:
             f"💰 <b>Salário:</b> {job.salary}\n"
         )
 
+        msg += f"📈 <b>Senioridade:</b> {job.seniority}\n"
+        if job.ranking_evidence.get("risk"):
+            msg += "⚠️ <b>Atenção:</b> requisitos podem estar acima do nível declarado.\n"
+
         if job.match_reasons:
             msg += "\n💡 <b>Motivos do Match:</b>\n"
             for r in job.match_reasons[:3]:

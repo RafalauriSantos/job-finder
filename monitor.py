@@ -23,6 +23,7 @@ from core.query_planner import plan_searches
 from core.delivery_workflow import finalize_delivery
 from core.eligibility import classify_score, classify_evidence, classify_location
 from core.metrics import summarize_cycle
+from core.ranking import order_for_alerts
 
 load_dotenv()
 
@@ -211,6 +212,7 @@ def run_check():
     discarded_senior = 0
     discarded_score = 0
     fallback_count = 0
+    approved_jobs = []
 
     for idx, job in enumerate(unique_jobs, 1):
         fp = job.fingerprint
@@ -321,13 +323,25 @@ def run_check():
             store.mark_seen(fp, source_ids)
             continue
 
-        # Aprovada em todos os critérios
+        # Aprovada em todos os critérios; a entrega ocorre após ordenar o lote.
+        approved_jobs.append((job, source_ids, reasons))
+
+    for job, source_ids, reasons in sorted(
+        approved_jobs,
+        key=lambda item: (
+            item[0].freshness_score,
+            item[0].match_score,
+            item[0].learning_interest_score,
+        ),
+        reverse=True,
+    ):
+        fp = job.fingerprint
         if not store.claim_delivery(fp):
             discarded_seen += 1
             continue
-        print(f"✓ Match Score: {score}/100 (Aprovado >= {min_score})")
-        for r in reasons:
-            print(f"   • {r}")
+        print(f"✓ Match Score: {job.match_score}/100 (Aprovado >= {min_score})")
+        for reason in reasons:
+            print(f"   • {reason}")
         print(f"🎯 DECISÃO: NOTIFICAR TELEGRAM")
 
         sent = notifier.send_job_alert(job)
@@ -335,7 +349,7 @@ def run_check():
             notified_count += 1
         else:
             print("⚠️ Entrega Telegram falhou; vaga ficará disponível para retry no próximo ciclo.")
-        finalize_delivery(store, job, source_ids, sent, score, reasons[0] if reasons else "Aprovada")
+        finalize_delivery(store, job, source_ids, sent, job.match_score, reasons[0] if reasons else "Aprovada")
 
     elapsed = time.time() - start_time
     max_cycle_seconds = config.get("max_cycle_seconds", 180)

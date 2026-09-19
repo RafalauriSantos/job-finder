@@ -1,0 +1,526 @@
+{
+  "seen_ids": [
+    "5042362089"
+  ],
+  "seen_fingerprints": [
+    "1ba193cd6f10e2ed7b08f4b0617e91ce5d473dc6521e1fc3fa6beaf6ee24bf5f"
+  ],
+  "last_heartbeat": "2026-09-19",
+  "recent_decisions": [
+    {
+      "timestamp": "2026-09-19T13:26:39.548241",
+      "job_id": "5042362089",
+      "source": "github",
+      "raw_url": "",
+      "canonical_url": "",
+      "identity_fingerprint": "1ba193cd6f10e2ed7b08f4b0617e91ce5d473dc6521e1fc3fa6beaf6ee24bf5f",
+      "content_hash": "5235b6b3e6a4ff462efe2553982fd4e942ad4017c069828916be2bfe708885f3",
+      "evidence_level": "HIGH_EVIDENCE",
+      "decision": "DELIVERED",
+      "decision_reason": "Nível Pleno compatível; requisitos serão avaliados (+10 pts)",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 50
+    }
+  ],
+  "deliveries": {
+    "1ba193cd6f10e2ed7b08f4b0617e91ce5d473dc6521e1fc3fa6beaf6ee24bf5f": {
+      "status": "DELIVERED",
+      "attempts": 1,
+      "source_ids": [
+        "5042362089"
+      ]
+    }
+  },
+  "source_health": [
+    {
+      "timestamp": "2026-09-19T16:26:39.552241+00:00",
+      "source": "gupy",
+      "status": "OK",
+      "discovered": 20,
+      "details": [
+        {
+          "parameters": {
+            "companyId": 2245,
+            "query_id": "7a062856188b",
+            "term": "Goomer (Vagas de Tecnologia / Dev)",
+            "limit": 20
+          },
+          "results": 0,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Full Stack Junior",
+            "limit": 20,
+            "query_id": "03f015c5c09e"
+          },
+          "results": 3,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Full Stack Junior",
+            "limit": 20,
+            "query_id": "d9a02d514f54"
+          },
+          "results": 3,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Full Stack Junior",
+            "limit": 20,
+            "query_id": "f558a5e5e90d"
+          },
+          "results": 3,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Full Stack Junior",
+            "limit": 20,
+            "query_id": "dbb7fd9f5cc4"
+          },
+          "results": 3,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Java Junior",
+            "limit": 20,
+            "query_id": "0ef2fdd56a24"
+          },
+          "results": 2,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Java Junior",
+            "limit": 20,
+            "query_id": "a0b9b44eec90"
+          },
+          "results": 2,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Java Junior",
+            "limit": 20,
+            "query_id": "a7c8b4110454"
+          },
+          "results": 2,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Java Junior",
+            "limit": 20,
+            "query_id": "81b9bacf5523"
+          },
+          "results": 2,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Python Junior",
+            "limit": 20,
+            "query_id": "8fc062f41761"
+          },
+          "results": 0,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Python Junior",
+            "limit": 20,
+            "query_id": "82b45b3b41be"
+          },
+          "results": 0,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Python Junior",
+            "limit": 20,
+            "query_id": "f8de6fa7bd8a"
+          },
+          "results": 0,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Python Junior",
+            "limit": 20,
+            "query_id": "0ac323332c04"
+          },
+          "results": 0,
+          "status": "OK"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-09-19T16:26:39.552241+00:00",
+      "source": "linkedin",
+      "status": "OK",
+      "discovered": 173,
+      "details": [
+        {
+          "keywords": "Goomer desenvolvedor",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 19,
+          "parsed_jobs": 19,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "GFT Brasil desenvolvedor",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor Full Stack Junior",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 6,
+          "parsed_jobs": 6,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor Full Stack Pleno",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "developer full stack",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "programador full stack",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor React Junior",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 1,
+          "parsed_jobs": 1,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor React Pleno",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 4,
+          "parsed_jobs": 4,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "developer React",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 6,
+          "parsed_jobs": 6,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "frontend React",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 4,
+          "parsed_jobs": 4,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor Node Junior",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 2,
+          "parsed_jobs": 2,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor Node Pleno",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 5,
+          "parsed_jobs": 5,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "developer Node",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "backend Node",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 8,
+          "parsed_jobs": 8,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor Java Junior",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 4,
+          "parsed_jobs": 4,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor Java Pleno",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 5,
+          "parsed_jobs": 5,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "developer Java",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "programador Java",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 6,
+          "parsed_jobs": 6,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor Python Junior",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "Desenvolvedor Python Pleno",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "developer Python",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 12,
+          "parsed_jobs": 12,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        },
+        {
+          "keywords": "programador Python",
+          "time_range": "r7200",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 11,
+          "parsed_jobs": 11,
+          "status": "OK",
+          "enrichment_attempts": 1,
+          "enrichment_successes": 1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-09-19T16:26:39.552241+00:00",
+      "source": "rss",
+      "status": "OK",
+      "discovered": 112,
+      "details": {}
+    },
+    {
+      "timestamp": "2026-09-19T16:26:39.552241+00:00",
+      "source": "github",
+      "status": "OK",
+      "discovered": 44,
+      "details": {}
+    },
+    {
+      "timestamp": "2026-09-19T16:26:39.552241+00:00",
+      "source": "trampos",
+      "status": "OK",
+      "discovered": 6,
+      "details": {}
+    }
+  ],
+  "delivery_claims": {
+    "f0c6bea01cbf3932b7dc887e1923951601dcb3b6f489bca32e51c6800a6c914d": {
+      "claimed_at": 1789835195.1415553
+    },
+    "058d7228516afd67729f1fb47a42e4a034d902681a8f50e8ba30ddc1c5b78bb3": {
+      "claimed_at": 1789835196.8903208
+    },
+    "d2eeebc8f282c829830628e16f315efbeebd2f379ec2ecaaa8076cb2950d1169": {
+      "claimed_at": 1789835197.2469754
+    },
+    "63ba29b965a6255d3ca20be8a84fac2293dd9bf5162dacfd41d6e21238aeb82a": {
+      "claimed_at": 1789835197.6231706
+    },
+    "fa24c4cb17b81ccb47701928322134d52ddd1548dc55f44cc1c562b594546f4b": {
+      "claimed_at": 1789835197.9867852
+    },
+    "b53d0f7e4280add5c9428261f21a38fe61da894f35320fea10b026a28ec98dbf": {
+      "claimed_at": 1789835198.437952
+    },
+    "1f57082b787214d66f42cf268bdc786fa5e20f572fdd596b1a476937b4c590c2": {
+      "claimed_at": 1789835198.7993443
+    },
+    "1ba193cd6f10e2ed7b08f4b0617e91ce5d473dc6521e1fc3fa6beaf6ee24bf5f": {
+      "claimed_at": 1789835199.1876836
+    }
+  }
+}

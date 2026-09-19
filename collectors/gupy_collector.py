@@ -27,13 +27,14 @@ class GupyCollector(BaseCollector):
         self.query_stats: List[Dict[str, Any]] = []
 
     def _query_api(self, args: Dict[str, Any]) -> List[Dict[str, Any]]:
+        api_args = {key: value for key, value in args.items() if key != "query_id"}
         body = {
             "jsonrpc": "2.0",
             "id": 1,
             "method": "tools/call",
             "params": {
                 "name": "search_jobs",
-                "arguments": args,
+                "arguments": api_args,
             },
         }
         headers = {

@@ -19,6 +19,7 @@ from collectors.github_collector import GithubIssuesCollector
 from collectors.trampos_collector import TramposCollector
 from notify.telegram_notifier import TelegramNotifier
 from storage.state_store import StateStore
+from core.query_planner import plan_searches
 
 load_dotenv()
 
@@ -103,18 +104,23 @@ def run_check():
     for m in monitors:
         m_type = m.get("type", "")
         if m_type == "gupy":
-            query_args = {
-                k: v for k, v in m.items()
-                if k not in ["type", "description", "only_remote", "strict_location", "keywords", "exclude_keywords"]
-            }
-            if "limit" not in query_args:
-                query_args["limit"] = 20
-            gupy_queries.append(query_args)
+            for planned_query in plan_searches([m], "gupy"):
+                query_args = {
+                    k: v for k, v in planned_query.items()
+                    if k not in ["type", "description", "only_remote", "strict_location", "keywords", "exclude_keywords", "query", "query_variants"]
+                }
+                if "term" not in query_args:
+                    query_args["term"] = planned_query["query"]
+                if "limit" not in query_args:
+                    query_args["limit"] = 20
+                query_args["query_id"] = planned_query["query_id"]
+                gupy_queries.append(query_args)
         elif m_type == "linkedin":
-            search = dict(m)
-            search["keywords"] = m.get("keywords_search") or m.get("description")
-            search["max_pages"] = m.get("max_pages", 3)
-            linkedin_searches.append(search)
+            for planned_query in plan_searches([m], "linkedin"):
+                search = dict(planned_query)
+                search["keywords"] = planned_query["query"]
+                search["max_pages"] = m.get("max_pages", 3)
+                linkedin_searches.append(search)
         elif m_type == "rss":
             rss_configs.append(m)
         elif m_type == "github_issues":

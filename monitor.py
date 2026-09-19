@@ -356,8 +356,9 @@ def run_check():
     for query in linkedin_query_stats:
         print(
             f"│  └─ busca='{query['keywords']}' janela={query['time_range']} "
-            f"páginas={query['pages']} cartões={query['cards']} "
-            f"válidas={query['parsed_jobs']} status={query['status']}"
+                f"páginas={query['pages']} cartões={query['cards']} "
+            f"válidas={query['parsed_jobs']} enriquecidas={query.get('enrichment_successes', 0)}/"
+            f"{query.get('enrichment_attempts', 0)} status={query['status']}"
         )
     print(f"├─ RSS:      {rss_status:<8} | {len(discovered_rss)} vaga(s)")
     print(f"├─ GitHub:   {github_status:<8} | {len(discovered_github)} vaga(s)")

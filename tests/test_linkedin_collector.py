@@ -136,3 +136,27 @@ def test_linkedin_collector_preserves_filters_and_paginates(monkeypatch):
     assert collector.query_stats[0]["cards"] == 3
     assert collector.query_stats[0]["parsed_jobs"] == 2
     assert collector.query_stats[0]["status"] == "OK"
+
+
+def test_linkedin_collector_enriches_detail_description(monkeypatch):
+    session = requests.Session()
+    detail_html = '<div class="show-more-less-html__markup">React, Node.js e PostgreSQL para APIs, testes automatizados e integrações.</div>'
+
+    def fake_get(url, **kwargs):
+        if "seeMoreJobPostings" in url:
+            return MockResponse(SAMPLE_LINKEDIN_HTML, 200)
+        return MockResponse(detail_html, 200)
+
+    monkeypatch.setattr(session, "get", fake_get)
+    collector = LinkedInCollector(session, [{
+        "keywords": "desenvolvedor",
+        "max_pages": 1,
+        "enrich_details": True,
+        "detail_enrichment_limit": 1,
+    }])
+
+    jobs = collector.collect()
+
+    assert jobs[0].description.startswith("React, Node.js")
+    assert collector.query_stats[0]["enrichment_attempts"] == 1
+    assert collector.query_stats[0]["enrichment_successes"] == 1

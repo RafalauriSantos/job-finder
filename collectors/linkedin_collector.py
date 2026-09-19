@@ -1,5 +1,6 @@
 import re
 import urllib.parse
+from html import unescape
 from typing import List, Dict, Any
 import requests
 from collectors.base import BaseCollector
@@ -12,6 +13,37 @@ class LinkedInCollector(BaseCollector):
         self.http = http_session
         self.searches = searches
         self.query_stats: List[Dict[str, Any]] = []
+
+    def _enrich_job(self, job: Job, headers: Dict[str, str]) -> bool:
+        """Tenta obter descrição pública; falhas mantêm o cartão original."""
+        try:
+            response = self.http.get(job.sources["linkedin"].url, headers=headers, timeout=6)
+            if response.status_code != 200:
+                return False
+            html = response.text
+            description_match = re.search(
+                r'<div[^>]+class="[^"]*(?:show-more-less-html__markup|description__text)[^"]*"[^>]*>(.*?)</div>',
+                html,
+                re.DOTALL | re.IGNORECASE,
+            )
+            if not description_match:
+                description_match = re.search(
+                    r'<meta[^>]+name="description"[^>]+content="([^"]+)"',
+                    html,
+                    re.IGNORECASE,
+                )
+            if not description_match:
+                return False
+            description = re.sub(r"<[^>]+>", " ", description_match.group(1))
+            description = re.sub(r"\s+", " ", unescape(description)).strip()
+            if len(description) < 40:
+                return False
+            job.description = description
+            job.technologies = extract_technologies(f"{job.title} {description}")
+            job.evidence_level = "MEDIUM_EVIDENCE"
+            return True
+        except Exception:
+            return False
 
     def _query_search(self, search_cfg: Dict[str, Any]) -> List[Job]:
         keywords = search_cfg.get("keywords", "Desenvolvedor Junior")
@@ -45,6 +77,8 @@ class LinkedInCollector(BaseCollector):
             "cards": 0,
             "parsed_jobs": 0,
             "status": "OK",
+            "enrichment_attempts": 0,
+            "enrichment_successes": 0,
         }
         try:
             for page in range(max_pages):
@@ -100,6 +134,13 @@ class LinkedInCollector(BaseCollector):
                     jobs.append(job)
                 if page_new_jobs == 0:
                     break
+
+            enrichment_limit = max(0, int(search_cfg.get("detail_enrichment_limit", 0)))
+            if search_cfg.get("enrich_details", False):
+                for job in jobs[:enrichment_limit]:
+                    stats["enrichment_attempts"] += 1
+                    if self._enrich_job(job, headers):
+                        stats["enrichment_successes"] += 1
 
         except Exception as e:
             stats["status"] = "ERROR"

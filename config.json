@@ -3,6 +3,7 @@
   "max_cycle_seconds": 180,
   "resolve_rss_urls": true,
   "gupy_detail_enrichment_limit": 5,
+  "gupy_max_age_hours": 72,
   "linkedin_max_queries": 8,
   "progression_min_score": 45,
   "heartbeat": {

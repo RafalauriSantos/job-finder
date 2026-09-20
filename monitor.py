@@ -167,7 +167,12 @@ def run_check():
 
     if gupy_queries:
         try:
-            gupy_col = GupyCollector(HTTP, gupy_queries, detail_limit=config.get("gupy_detail_enrichment_limit", 5))
+            gupy_col = GupyCollector(
+                HTTP,
+                gupy_queries,
+                detail_limit=config.get("gupy_detail_enrichment_limit", 5),
+                max_age_hours=config.get("gupy_max_age_hours", 72),
+            )
             result = collect_result(gupy_col)
             discovered_gupy, gupy_status = result.jobs, result.status
             gupy_query_stats = gupy_col.query_stats

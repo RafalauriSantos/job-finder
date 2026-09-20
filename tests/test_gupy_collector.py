@@ -103,3 +103,23 @@ def test_gupy_collector_enriches_missing_description_with_job_detail():
     jobs = collector.collect()
 
     assert jobs[0].description == "React, TypeScript e Node.js"
+
+
+def test_gupy_collector_discards_jobs_outside_configured_recency_window():
+    class OldSession(MockSession):
+        def post(self, *args, **kwargs):
+            response = MockResponse()
+            response.text = response.text.replace('\\"description\\": \\"Java e Spring\\"', '\\"description\\": \\"Java e Spring\\", \\"publishedAt\\": \\"2020-01-01T00:00:00Z\\"')
+            return response
+
+    collector = GupyCollector(OldSession(), [{"term": "Java"}], max_age_hours=72)
+
+    assert collector.collect() == []
+
+
+def test_gupy_collector_profiles_real_evidence_level():
+    collector = GupyCollector(MockSession(), [{"term": "Java"}])
+
+    jobs = collector.collect()
+
+    assert jobs[0].evidence_level == "MEDIUM_EVIDENCE"

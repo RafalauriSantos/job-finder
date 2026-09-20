@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any
 import requests
 from collectors.base import BaseCollector
@@ -21,10 +22,11 @@ JOB_TYPE_TRANSLATIONS = {
 
 
 class GupyCollector(BaseCollector):
-    def __init__(self, http_session: requests.Session, queries: List[Dict[str, Any]], detail_limit: int = 5):
+    def __init__(self, http_session: requests.Session, queries: List[Dict[str, Any]], detail_limit: int = 5, max_age_hours: int = 0):
         self.http = http_session
         self.queries = queries
         self.detail_limit = max(0, detail_limit)
+        self.max_age_hours = max(0, int(max_age_hours or 0))
         self.detail_attempts = 0
         self.query_stats: List[Dict[str, Any]] = []
         self._last_query_status = "UNKNOWN"
@@ -56,12 +58,17 @@ class GupyCollector(BaseCollector):
                     payload = json.loads(line[5:].strip())
                     content_text = payload.get("result", {}).get("content", [{}])[0].get("text", "{}")
                     parsed = json.loads(content_text)
+                    jobs = parsed.get("data", {}).get("data")
+                    if not isinstance(jobs, list):
+                        self._last_query_status = 'INVALID_RESPONSE'
+                        return []
                     self._last_query_status = "OK"
-                    return parsed.get("data", {}).get("data", [])
+                    return jobs
         except Exception as e:
             self._last_query_status = "ERROR"
             print(f"[ERRO GupyCollector] {e}")
-        self._last_query_status = "EMPTY"
+            return []
+        self._last_query_status = "INVALID_RESPONSE"
         return []
 
     def _get_detail(self, job_id: str) -> Dict[str, Any]:
@@ -119,6 +126,17 @@ class GupyCollector(BaseCollector):
                 job_type = JOB_TYPE_TRANSLATIONS.get(raw_type, raw_type or "CLT")
                 salary_label = raw.get("salary", {}).get("label", "Não informado")
                 description = raw.get("description", "")
+
+                published_at = raw.get("publishedAt") or raw.get("createdAt") or ""
+                if self.max_age_hours and published_at:
+                    try:
+                        parsed = datetime.fromisoformat(str(published_at).replace("Z", "+00:00"))
+                        if parsed.tzinfo is None:
+                            parsed = parsed.replace(tzinfo=timezone.utc)
+                        if datetime.now(timezone.utc) - parsed.astimezone(timezone.utc) > timedelta(hours=self.max_age_hours):
+                            continue
+                    except ValueError:
+                        self.query_stats[-1].setdefault("warnings", []).append("INVALID_PUBLICATION_DATE")
                 
                 # URL canônica
                 career_page = raw.get("careerPageName", "").strip().lower()
@@ -137,8 +155,10 @@ class GupyCollector(BaseCollector):
                     job_type=job_type,
                     salary=salary_label,
                     technologies=techs,
-                    published_at=raw.get("publishedAt") or raw.get("createdAt") or "",
+                    published_at=published_at,
                 )
+                from core.evidence import profile_job_evidence
+                profile_job_evidence(job)
                 job.add_source("gupy", job_id, canonical_url)
                 discovered_jobs.append(job)
 

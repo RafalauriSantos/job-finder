@@ -93,12 +93,14 @@ class RssCollector(BaseCollector):
                     link_elem = entry.find("atom:link", ns)
                     link = link_elem.attrib.get("href", "") if link_elem is not None else ""
                     raw_date = entry.findtext("atom:updated", default="", namespaces=ns) or entry.findtext("atom:published", default="", namespaces=ns)
+                    description = entry.findtext("atom:summary", default="", namespaces=ns) or entry.findtext("atom:content", default="", namespaces=ns)
                     title_clean = re.sub(r"<[^>]+>", "", title).strip()
                     items.append({
                         "id": item_id or link,
                         "title": title_clean,
                         "link": link,
-                        "raw_date": raw_date
+                        "raw_date": raw_date,
+                        "description": description,
                     })
                 return items
 
@@ -110,12 +112,14 @@ class RssCollector(BaseCollector):
                     title = item.findtext("title", default="")
                     link = item.findtext("link", default="")
                     raw_date = item.findtext("pubDate", default="")
+                    description = item.findtext("description", default="")
                     title_clean = re.sub(r"<[^>]+>", "", title).strip()
                     items.append({
                         "id": guid or link,
                         "title": title_clean,
                         "link": link,
-                        "raw_date": raw_date
+                        "raw_date": raw_date,
+                        "description": description,
                     })
                 return items
 
@@ -213,18 +217,20 @@ class RssCollector(BaseCollector):
                     company=company,
                     workplace_type="unknown",
                     location="",
-                    description="",
+                    description=re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", " ", item.get("description", "")))).strip(),
                     job_type="Vaga Externa",
                     salary="Nao informado",
                     raw_url=raw_link,
                     resolved_url=resolved_link,
                     canonical_url=canonical_link,
-                    evidence_level="LOW_EVIDENCE",  # RSS nativo tem metadado raso
+                    evidence_level="MEDIUM_EVIDENCE" if len(item.get("description", "")) >= 80 else "LOW_EVIDENCE",
                     published_at=dt.isoformat() if dt else "",
                 )
                 job.add_source("rss", str(item["id"]), canonical_link or raw_link)
                 if self.resolve_urls and resolved_link != raw_link:
                     self._enrich_resolved_page(job)
+                if cfg.get("official") and len(job.description) >= 80:
+                    job.evidence_level = "HIGH_EVIDENCE"
                 discovered.append(job)
 
         return discovered

@@ -5,6 +5,7 @@
   "rss_min_description_chars": 120,
   "gupy_detail_enrichment_limit": 5,
   "gupy_max_age_hours": 72,
+  "gupy_require_publication_date": true,
   "linkedin_max_queries": 8,
   "progression_min_score": 45,
   "heartbeat": {

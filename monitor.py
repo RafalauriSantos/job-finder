@@ -172,6 +172,7 @@ def run_check():
                 gupy_queries,
                 detail_limit=config.get("gupy_detail_enrichment_limit", 5),
                 max_age_hours=config.get("gupy_max_age_hours", 72),
+                require_publication_date=config.get("gupy_require_publication_date", True),
             )
             result = collect_result(gupy_col)
             discovered_gupy, gupy_status = result.jobs, result.status

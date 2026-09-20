@@ -22,11 +22,12 @@ JOB_TYPE_TRANSLATIONS = {
 
 
 class GupyCollector(BaseCollector):
-    def __init__(self, http_session: requests.Session, queries: List[Dict[str, Any]], detail_limit: int = 5, max_age_hours: int = 0):
+    def __init__(self, http_session: requests.Session, queries: List[Dict[str, Any]], detail_limit: int = 5, max_age_hours: int = 0, require_publication_date: bool = False):
         self.http = http_session
         self.queries = queries
         self.detail_limit = max(0, detail_limit)
         self.max_age_hours = max(0, int(max_age_hours or 0))
+        self.require_publication_date = bool(require_publication_date)
         self.detail_attempts = 0
         self.query_stats: List[Dict[str, Any]] = []
         self._last_query_status = "UNKNOWN"
@@ -128,6 +129,9 @@ class GupyCollector(BaseCollector):
                 description = raw.get("description", "")
 
                 published_at = raw.get("publishedAt") or raw.get("createdAt") or ""
+                if self.max_age_hours and self.require_publication_date and not published_at:
+                    self.query_stats[-1].setdefault("warnings", []).append("MISSING_PUBLICATION_DATE")
+                    continue
                 if self.max_age_hours and published_at:
                     try:
                         parsed = datetime.fromisoformat(str(published_at).replace("Z", "+00:00"))
@@ -137,6 +141,8 @@ class GupyCollector(BaseCollector):
                             continue
                     except ValueError:
                         self.query_stats[-1].setdefault("warnings", []).append("INVALID_PUBLICATION_DATE")
+                        if self.require_publication_date:
+                            continue
                 
                 # URL canônica
                 career_page = raw.get("careerPageName", "").strip().lower()

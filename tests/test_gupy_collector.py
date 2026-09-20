@@ -123,3 +123,15 @@ def test_gupy_collector_profiles_real_evidence_level():
     jobs = collector.collect()
 
     assert jobs[0].evidence_level == "MEDIUM_EVIDENCE"
+
+
+def test_gupy_collector_can_require_publication_date():
+    collector = GupyCollector(
+        MockSession(),
+        [{"term": "Java"}],
+        max_age_hours=72,
+        require_publication_date=True,
+    )
+
+    assert collector.collect() == []
+    assert "MISSING_PUBLICATION_DATE" in collector.query_stats[0]["warnings"]

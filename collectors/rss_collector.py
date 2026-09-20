@@ -65,10 +65,11 @@ def classify_freshness(dt: Optional[datetime], max_age_hours: int = 72) -> Tuple
 class RssCollector(BaseCollector):
     """Coletor de vagas via feeds RSS 2.0 e Atom com suporte à SPEC-008."""
 
-    def __init__(self, http_session: requests.Session, configs: List[Dict[str, Any]], resolve_urls: bool = False):
+    def __init__(self, http_session: requests.Session, configs: List[Dict[str, Any]], resolve_urls: bool = False, min_description_chars: int = 0):
         self.http = http_session
         self.configs = configs
         self.resolve_urls = resolve_urls
+        self.min_description_chars = max(0, int(min_description_chars or 0))
 
     def _parse_feed(self, feed_url: str) -> List[Dict[str, Any]]:
         """Faz fetch e parse do XML do feed, retorna lista de {id, title, link, pub_date}."""
@@ -231,6 +232,12 @@ class RssCollector(BaseCollector):
                     self._enrich_resolved_page(job)
                 if cfg.get("official") and len(job.description) >= 80:
                     job.evidence_level = "HIGH_EVIDENCE"
+                if (
+                    self.min_description_chars
+                    and not cfg.get("official")
+                    and len(job.description.strip()) < self.min_description_chars
+                ):
+                    continue
                 discovered.append(job)
 
         return discovered

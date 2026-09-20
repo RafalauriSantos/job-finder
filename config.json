@@ -2,6 +2,7 @@
   "check_interval_minutes": 60,
   "max_cycle_seconds": 180,
   "resolve_rss_urls": true,
+  "rss_min_description_chars": 120,
   "gupy_detail_enrichment_limit": 5,
   "gupy_max_age_hours": 72,
   "linkedin_max_queries": 8,

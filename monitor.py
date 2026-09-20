@@ -215,6 +215,7 @@ def run_check():
                 HTTP,
                 rss_configs,
                 resolve_urls=config.get("resolve_rss_urls", False),
+                min_description_chars=config.get("rss_min_description_chars", 0),
             )
             result = collect_result(rss_col)
             discovered_rss, rss_status = result.jobs, result.status

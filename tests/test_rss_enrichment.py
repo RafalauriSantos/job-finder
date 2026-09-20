@@ -63,3 +63,14 @@ def test_rss_promotes_resolved_official_page_with_description():
 
     assert jobs[0].evidence_level == "MEDIUM_EVIDENCE"
     assert "Desenvolvedor Java Junior" in jobs[0].description
+
+
+def test_rss_evidence_gate_discards_shallow_non_official_items():
+    collector = RssCollector(
+        MockSession(),
+        [{"url": "https://feed.example/rss", "keywords": ["java"]}],
+        resolve_urls=True,
+        min_description_chars=120,
+    )
+
+    assert collector.collect() == []

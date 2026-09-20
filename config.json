@@ -146,6 +146,26 @@
     },
     {
       "type": "rss",
+      "description": "ATS oficial Lever — Desenvolvimento Júnior/Pleno",
+      "company": "Lever ATS",
+      "url": "https://news.google.com/rss/search?q=site%3Ajobs.lever.co+(developer+OR+desenvolvedor+OR+software)+(junior+OR+jr+OR+pleno+OR+mid)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["developer", "desenvolvedor", "software", "junior", "jr", "pleno", "mid", "backend", "frontend", "fullstack", "java", "python", "react", "node"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor"],
+      "max_age_hours": 72
+    },
+    {
+      "type": "rss",
+      "description": "ATS oficial Greenhouse — Desenvolvimento Júnior/Pleno",
+      "company": "Greenhouse ATS",
+      "url": "https://news.google.com/rss/search?q=site%3Aboards.greenhouse.io+(developer+OR+desenvolvedor+OR+software)+(junior+OR+jr+OR+pleno+OR+mid)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+      "strict_location": true,
+      "keywords": ["developer", "desenvolvedor", "software", "junior", "jr", "pleno", "mid", "backend", "frontend", "fullstack", "java", "python", "react", "node"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor"],
+      "max_age_hours": 72
+    },
+    {
+      "type": "rss",
       "description": "Indeed — React / Node / TS Júnior (Remoto)",
       "company": "Indeed",
       "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(react+OR+node+OR+typescript)+(junior+OR+jr+OR+estagio)&hl=pt-BR&gl=BR&ceid=BR:pt-419",

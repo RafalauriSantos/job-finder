@@ -112,6 +112,28 @@
     },
     {
       "type": "rss",
+      "description": "GFT Brasil — Feed oficial Júnior/Estágio (SuccessFactors)",
+      "company": "GFT Brasil",
+      "official": true,
+      "url": "https://jobs.gft.com/services/rss/job/?locale=en_US&keywords=(junior%20OR%20jr%20OR%20estagio%20OR%20trainee)%20AND%20locationSearch:(Brazil)",
+      "strict_location": true,
+      "keywords": ["junior", "jr", "estagio", "trainee", "desenvolvedor", "developer", "software", "java", "react", "python"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor", "coordenador"],
+      "max_age_hours": 72
+    },
+    {
+      "type": "rss",
+      "description": "GFT Brasil — Feed oficial Pleno (SuccessFactors)",
+      "company": "GFT Brasil",
+      "official": true,
+      "url": "https://jobs.gft.com/services/rss/job/?locale=en_US&keywords=(pleno%20OR%20mid%20OR%20intermediate)%20AND%20locationSearch:(Brazil)",
+      "strict_location": true,
+      "keywords": ["pleno", "mid", "intermediate", "desenvolvedor", "developer", "software", "java", "react", "python"],
+      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor", "coordenador"],
+      "max_age_hours": 72
+    },
+    {
+      "type": "rss",
       "description": "Indeed — Dev Júnior Remoto (Geral)",
       "company": "Indeed",
       "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador+OR+software)+(junior+OR+jr+OR+estagio)+remoto&hl=pt-BR&gl=BR&ceid=BR:pt-419",

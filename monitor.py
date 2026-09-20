@@ -357,7 +357,8 @@ def run_check():
                 raw_url=job.raw_url, canonical_url=job.canonical_url,
                 evidence_level=job.evidence_level
             )
-            store.mark_seen(fp, source_ids)
+            # Não marcar como visto: o detalhe público pode ficar disponível
+            # no próximo ciclo, e a vaga deve poder ser enriquecida novamente.
             continue
 
         # Cálculo do Score: Juiz Semântico com Fallback Heurístico

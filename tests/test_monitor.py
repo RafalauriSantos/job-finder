@@ -187,6 +187,20 @@ class TestTelegramNotifier:
         # Deve ter botões para ambas as fontes (GUPY e LINKEDIN)
         assert len(buttons) == 2
 
+    def test_telegram_exposes_external_final_destination(self):
+        mock_http = MagicMock()
+        mock_http.post.return_value.status_code = 200
+        notifier = TelegramNotifier("fake_token", "fake_chat", mock_http)
+        job = Job(title="Dev Júnior", company="Empresa", workplace_type="remote")
+        job.add_source("linkedin", "202", "https://linkedin.com/jobs/view/202")
+        job.resolved_url = "https://candidatos.jobbol.com.br/vaga/202"
+        job.canonical_url = job.resolved_url
+
+        assert notifier.send_job_alert(job) is True
+        payload = mock_http.post.call_args[1]["json"]
+        assert "Destino final detectado" in payload["text"]
+        assert payload["reply_markup"]["inline_keyboard"][-1][0]["url"] == job.canonical_url
+
 
 class TestCollectorsLiveSmoke:
     def test_live_gupy_collector_structure(self):

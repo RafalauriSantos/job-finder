@@ -142,6 +142,7 @@ class LinkedInCollector(BaseCollector):
                         company=company,
                         workplace_type=workplace,
                         location=location,
+                        raw_url=raw_link,
                         technologies=techs,
                     )
                     job.add_source("linkedin", job_id, raw_link)

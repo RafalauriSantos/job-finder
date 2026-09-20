@@ -6,6 +6,7 @@ import requests
 from collectors.base import BaseCollector
 from models.job import Job
 from core.normalizer import normalize_title, normalize_workplace, extract_technologies
+from core.url_resolver import sanitize_canonical_url
 
 
 class LinkedInCollector(BaseCollector):
@@ -41,12 +42,19 @@ class LinkedInCollector(BaseCollector):
             job.description = description
             job.technologies = extract_technologies(f"{job.title} {description}")
             job.evidence_level = "MEDIUM_EVIDENCE"
+            final_url = getattr(response, "url", "") or ""
+            if final_url and final_url != job.sources["linkedin"].url:
+                job.resolved_url = final_url
+                job.canonical_url = sanitize_canonical_url(final_url)
             return True
         except Exception:
             return False
 
     def _query_search(self, search_cfg: Dict[str, Any]) -> List[Job]:
-        keywords = search_cfg.get("keywords", "Desenvolvedor Junior")
+        keywords = search_cfg.get("query") or search_cfg.get("keywords", "Desenvolvedor Junior")
+        if isinstance(keywords, (list, tuple)):
+            keywords = " OR ".join(str(value) for value in keywords if value)
+        keywords = str(keywords).strip() or "Desenvolvedor Junior"
         recent_hours = search_cfg.get("published_within_hours")
         time_range = search_cfg.get("time_range")
         if not time_range and recent_hours is not None:
@@ -141,7 +149,9 @@ class LinkedInCollector(BaseCollector):
                 if page_new_jobs == 0:
                     break
 
-            enrichment_limit = max(0, int(search_cfg.get("detail_enrichment_limit", 0)))
+            # Enrich all cards up to a bounded per-query budget. A limit of one
+            # allowed shallow LinkedIn cards to reach scoring without evidence.
+            enrichment_limit = max(0, int(search_cfg.get("detail_enrichment_limit", 8)))
             if search_cfg.get("enrich_details", False):
                 for job in jobs[:enrichment_limit]:
                     stats["enrichment_attempts"] += 1

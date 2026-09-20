@@ -23,10 +23,13 @@ from storage.state_store import StateStore
 from core.query_planner import plan_searches
 from core.delivery_workflow import finalize_delivery
 from core.eligibility import classify_score, classify_evidence, classify_location
+from core.scope_analyzer import analyze_scope
 from core.metrics import summarize_cycle
 from core.ranking import order_for_alerts
+from collectors.base import collect_result
 
-load_dotenv()
+if os.getenv('JOB_FINDER_LOCAL_RUNTIME') != '1':
+    load_dotenv()
 
 # Garante suporte a UTF-8 no console do Windows
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
@@ -98,8 +101,16 @@ def run_check():
     email_notifier = ResendEmailNotifier(
         RESEND_API_KEY, ALERT_EMAIL_FROM, ALERT_EMAIL_TO, HTTP
     )
+    durable = hasattr(store, 'pending_jobs')
+    recovered_deliveries = 0
+    if durable:
+        from core.durable_delivery import deliver
+        for pending in store.pending_jobs():
+            ids = [f'{name}:{item.source_job_id}' for name, item in pending.sources.items()]
+            recovered_deliveries += int(deliver(store, pending, ids, notifier, email_notifier))
     deduplicator = Deduplicator()
     min_score = config.get("min_match_score", 50)  # Padrão: 50 pts mínimos para alertar
+    progression_min_score = config.get("progression_min_score", 35)
 
     monitors = config.get("monitors", [])
     start_time = time.time()
@@ -157,16 +168,39 @@ def run_check():
     if gupy_queries:
         try:
             gupy_col = GupyCollector(HTTP, gupy_queries, detail_limit=config.get("gupy_detail_enrichment_limit", 5))
-            discovered_gupy = gupy_col.collect()
+            result = collect_result(gupy_col)
+            discovered_gupy, gupy_status = result.jobs, result.status
             gupy_query_stats = gupy_col.query_stats
         except Exception as e:
             gupy_status = f"FALHA ({e})"
 
     if linkedin_searches:
         try:
+            max_linkedin_queries = int(config.get("linkedin_max_queries", 8))
+            unique_searches = []
+            seen_search_keys = set()
+            for search in linkedin_searches:
+                key = (
+                    search.get("description") or search.get("query") or search.get("keywords"),
+                    search.get("time_range") or search.get("published_within_hours"),
+                    search.get("geo_id"),
+                )
+                if key in seen_search_keys:
+                    continue
+                seen_search_keys.add(key)
+                unique_searches.append(search)
+            linkedin_searches = unique_searches[:max_linkedin_queries]
             li_col = LinkedInCollector(HTTP, linkedin_searches)
-            discovered_linkedin = li_col.collect()
+            result = collect_result(li_col)
+            discovered_linkedin, linkedin_status = result.jobs, result.status
             linkedin_query_stats = li_col.query_stats
+            failed_queries = [
+                item.get("status", "UNKNOWN")
+                for item in linkedin_query_stats
+                if item.get("status") not in {"OK", "UNKNOWN"}
+            ]
+            if failed_queries and not discovered_linkedin:
+                linkedin_status = f"FALHA ({', '.join(failed_queries)})"
         except Exception as e:
             linkedin_status = f"FALHA ({e})"
 
@@ -177,7 +211,8 @@ def run_check():
                 rss_configs,
                 resolve_urls=config.get("resolve_rss_urls", False),
             )
-            discovered_rss = rss_col.collect()
+            result = collect_result(rss_col)
+            discovered_rss, rss_status = result.jobs, result.status
         except Exception as e:
             rss_status = f"FALHA ({e})"
 
@@ -188,9 +223,16 @@ def run_check():
                     HTTP,
                     repos=cfg.get("repos"),
                     keywords=cfg.get("keywords"),
-                    exclude_keywords=cfg.get("exclude_keywords")
+                    exclude_keywords=cfg.get("exclude_keywords"),
+                    max_pages=cfg.get("max_pages", 3),
+                    lookback_days=cfg.get("lookback_days", 1),
+                    fallback_lookback_days=cfg.get("fallback_lookback_days", 3),
+                    strict_freshness=cfg.get("strict_freshness", True),
                 )
-                discovered_github.extend(gh_col.collect())
+                result = collect_result(gh_col)
+                discovered_github.extend(result.jobs)
+                if result.status != 'OK':
+                    github_status = result.status
         except Exception as e:
             github_status = f"FALHA ({e})"
 
@@ -203,7 +245,10 @@ def run_check():
                     exclude_keywords=cfg.get("exclude_keywords"),
                     max_pages=cfg.get("max_pages", 1)
                 )
-                discovered_trampos.extend(t_col.collect())
+                result = collect_result(t_col)
+                discovered_trampos.extend(result.jobs)
+                if result.status != 'OK':
+                    trampos_status = result.status
         except Exception as e:
             trampos_status = f"FALHA ({e})"
 
@@ -213,7 +258,7 @@ def run_check():
     unique_jobs = deduplicator.process(discovered_jobs)
 
     # 4. Decisão e Classificação (Scoring + Localidade Estrita + Filtro PCD)
-    notified_count = 0
+    notified_count = recovered_deliveries
     discarded_seen = 0
     discarded_pcd = 0
     discarded_location = 0
@@ -225,6 +270,9 @@ def run_check():
     for idx, job in enumerate(unique_jobs, 1):
         fp = job.fingerprint
         source_ids = [s.source_job_id for s in job.sources.values()]
+        if durable:
+            store.remember_job(job)
+            source_ids = [f'{name}:{item.source_job_id}' for name, item in job.sources.items()]
 
         # Se já foi notificada anteriormente, ignora
         if store.is_seen(fp, source_ids[0] if source_ids else ""):
@@ -290,7 +338,33 @@ def run_check():
             store.mark_seen(fp, source_ids)
             continue
 
+        # A LinkedIn card without its public detail is only a lead, not enough
+        # evidence for an alert. Keep it audited as seen and wait for a later
+        # enriched observation instead of sending a misleading recommendation.
+        if "linkedin" in job.sources and not (job.description or "").strip():
+            reason = "LinkedIn sem descrição pública enriquecida; destino e requisitos não confirmados"
+            print(f"✗ Evidência: INSUFICIENTE ({reason})")
+            discarded_score += 1
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DISCARD_LOW_EVIDENCE", reason,
+                raw_url=job.raw_url, canonical_url=job.canonical_url,
+                evidence_level=job.evidence_level
+            )
+            store.mark_seen(fp, source_ids)
+            continue
+
         # Cálculo do Score: Juiz Semântico com Fallback Heurístico
+        # A análise de escopo acontece antes da decisão final: o título anunciado
+        # pode ser pleno, mas a rotina diária ainda ser compatível com júnior.
+        scope = analyze_scope(job)
+        job.analysis = scope
+        job.compatibility_category = scope["category"]
+        job.potential_score = scope["potential_score"]
+        job.operational_seniority = scope["operational_level"]
+        job.ranking_evidence["declared_seniority"] = scope["declared_level"]
+        job.ranking_evidence["operational_seniority"] = scope["operational_level"]
+
         score, reasons = evaluate_job(job, is_rss=("rss" in job.sources))
         if any("LLM Judge" in r for r in reasons):
             store.record_llm_call()
@@ -298,7 +372,18 @@ def run_check():
             fallback_count += 1
 
         job.match_score = score
-        job.match_reasons = reasons
+        job.match_reasons = reasons + [f"Categoria: {scope['category']}", f"Leitura do escopo: {scope['reasoning']}"]
+
+        # O canal de progressão permite disputar vagas de pleno cujo escopo
+        # seja acessível, sem misturá-las às vagas diretamente compatíveis.
+        progression = (
+            scope["category"] == "POTENCIALMENTE_COMPATIVEL"
+            and scope["potential_score"] >= max(45, progression_min_score)
+            and scope["declared_level"] == "mid"
+            and scope["operational_level"] in {"junior", "junior_to_mid"}
+            and len((job.description or "").strip()) >= 180
+            and not scope["hard_barriers"]
+        )
 
         decision = classify_score(score, min_score)
         if decision == "VETO":
@@ -318,6 +403,10 @@ def run_check():
             continue
 
         if decision == "LOW_SCORE":
+            if progression:
+                print(f"~ Oportunidade de progressao: {scope['category']} (potencial {scope['potential_score']}/100)")
+                approved_jobs.append((job, source_ids, job.match_reasons))
+                continue
             print(f"✗ Match Score: {score}/100 (Abaixo do mínimo {min_score})")
             for r in reasons:
                 print(f"   • {r}")
@@ -344,6 +433,9 @@ def run_check():
         reverse=True,
     ):
         fp = job.fingerprint
+        if durable:
+            notified_count += int(deliver(store, job, source_ids, notifier, email_notifier))
+            continue
         if not store.claim_delivery(fp):
             discarded_seen += 1
             continue
@@ -408,7 +500,7 @@ def run_check():
     )
     health_report = {
         "finished_at": datetime.now().isoformat(timespec="seconds"),
-        "status": "SUCCESS",
+        "status": "DEGRADED" if cycle_metrics['source_failures'] else "SUCCESS",
         "duration_seconds": round(elapsed, 1),
         "sources": {
             "gupy": {"status": gupy_status, "discovered": len(discovered_gupy), "queries": gupy_query_stats},
@@ -445,7 +537,7 @@ def run_check():
     print(f"├─ Duração:             {elapsed:.1f}s")
     if elapsed > max_cycle_seconds:
         print(f"⚠️ Limite operacional excedido: {elapsed:.1f}s > {max_cycle_seconds}s")
-    print(f"└─ Status do Ciclo:     SUCCESS")
+    print(f"└─ Status do Ciclo:     {health_report['status']}")
     print("=" * 48 + "\n")
 
     if fallback_count > 0:
@@ -457,11 +549,24 @@ def run_check():
     store.record_source_health("rss", rss_status, len(discovered_rss))
     store.record_source_health("github", github_status, len(discovered_github))
     store.record_source_health("trampos", trampos_status, len(discovered_trampos))
+    if durable:
+        from core.operational_alerts import update_source_alerts, send_operational
+        update_source_alerts(store, {
+            'gupy': gupy_status if gupy_queries else 'NOT_CONFIGURED',
+            'linkedin': linkedin_status if linkedin_searches else 'NOT_CONFIGURED',
+            'rss': rss_status if rss_configs else 'NOT_CONFIGURED',
+            'github': github_status if github_configs else 'NOT_CONFIGURED',
+            'trampos': trampos_status if trampos_configs else 'NOT_CONFIGURED',
+        }, lambda message: send_operational(HTTP, message))
     check_heartbeat(config, store, notifier)
     store.save()
 
 
 def main():
+    if any(flag in sys.argv for flag in ('--due', '--diagnose', '--migrate', '--dry-run')) or ('--once' in sys.argv and os.getenv('JOB_FINDER_LOCAL_RUNTIME') == '1'):
+        from core.local_runtime import main as local_main
+        local_main(sys.modules[__name__], sys.argv[1:])
+        return
     config = load_config()
     interval = config.get("check_interval_minutes", 60) * 60
 

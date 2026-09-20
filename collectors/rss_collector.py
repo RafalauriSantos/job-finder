@@ -4,6 +4,7 @@ from datetime import datetime, timezone, timedelta
 import xml.etree.ElementTree as ET
 from typing import List, Dict, Any, Optional, Tuple
 import requests
+from html import unescape
 from collectors.base import BaseCollector
 from models.job import Job
 from core.normalizer import normalize_title
@@ -75,6 +76,7 @@ class RssCollector(BaseCollector):
         try:
             resp = self.http.get(feed_url, headers=headers, timeout=15)
             if resp.status_code != 200:
+                self.report_issue(f'HTTP_{resp.status_code}')
                 print(f"[ALERTA RssCollector] Feed retornou status {resp.status_code}: {feed_url[:80]}")
                 return []
 
@@ -118,6 +120,7 @@ class RssCollector(BaseCollector):
                 return items
 
         except Exception as e:
+            self.report_issue(type(e).__name__)
             print(f"[ERRO RssCollector] {e}")
         return []
 
@@ -135,6 +138,37 @@ class RssCollector(BaseCollector):
                 return False
 
         return True
+
+    def _enrich_resolved_page(self, job: Job) -> bool:
+        """Promove RSS resolvido somente quando a página final traz evidência."""
+        if not job.resolved_url or "news.google.com" in job.resolved_url:
+            return False
+        try:
+            response = self.http.get(
+                job.resolved_url,
+                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
+                timeout=8,
+            )
+            if response.status_code != 200:
+                return False
+            html = response.text
+            match = re.search(
+                r'<meta[^>]+(?:name|property)=["\'](?:description|og:description)["\'][^>]+content=["\']([^"\']+)',
+                html,
+                re.IGNORECASE,
+            )
+            if match:
+                description = re.sub(r"\s+", " ", unescape(match.group(1))).strip()
+            else:
+                description = re.sub(r"<[^>]+>", " ", html)
+                description = re.sub(r"\s+", " ", unescape(description)).strip()
+            if len(description) < 80:
+                return False
+            job.description = description[:12000]
+            job.evidence_level = "MEDIUM_EVIDENCE"
+            return True
+        except Exception:
+            return False
 
     def collect(self) -> List[Job]:
         discovered: List[Job] = []
@@ -189,6 +223,8 @@ class RssCollector(BaseCollector):
                     published_at=dt.isoformat() if dt else "",
                 )
                 job.add_source("rss", str(item["id"]), canonical_link or raw_link)
+                if self.resolve_urls and resolved_link != raw_link:
+                    self._enrich_resolved_page(job)
                 discovered.append(job)
 
         return discovered

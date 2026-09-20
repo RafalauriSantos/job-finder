@@ -40,3 +40,26 @@ def test_rss_collector_keeps_raw_and_resolved_canonical_urls():
     assert jobs[0].resolved_url.startswith("https://jobs.example.com")
     assert jobs[0].canonical_url == "https://jobs.example.com/java-junior"
     assert jobs[0].published_at.endswith("+00:00")
+
+
+class OfficialPageSession(MockSession):
+    def get(self, url, *args, **kwargs):
+        if url.startswith("https://jobs.example.com"):
+            page = type("Response", (), {})()
+            page.status_code = 200
+            page.text = "<html><meta name='description' content='Desenvolvedor Java Junior para atuar em APIs, testes, banco de dados e integrações em equipe de tecnologia.'></html>"
+            return page
+        return MockResponse()
+
+
+def test_rss_promotes_resolved_official_page_with_description():
+    collector = RssCollector(
+        OfficialPageSession(),
+        [{"url": "https://feed.example/rss", "keywords": ["java"]}],
+        resolve_urls=True,
+    )
+
+    jobs = collector.collect()
+
+    assert jobs[0].evidence_level == "MEDIUM_EVIDENCE"
+    assert "Desenvolvedor Java Junior" in jobs[0].description

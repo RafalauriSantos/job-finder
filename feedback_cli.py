@@ -25,8 +25,32 @@ def main() -> int:
     parser.add_argument("--feedback", choices=["applied", "not_applied", "interview", "rejected", "irrelevant", "hired"])
     parser.add_argument("--note", default="")
     parser.add_argument("--report", action="store_true")
+    parser.add_argument("--recent", action="store_true", help="lista vagas recentes para feedback")
     args = parser.parse_args()
     store = SQLiteStore(args.state) if str(args.state).lower().endswith(".db") else StateStore(args.state)
+    if args.recent:
+        entries = []
+        if isinstance(store, SQLiteStore):
+            import sqlite3
+            with sqlite3.connect(store.filepath) as connection:
+                rows = connection.execute(
+                    "SELECT fingerprint,payload,status FROM outbox ORDER BY rowid DESC LIMIT 20"
+                ).fetchall()
+            for fingerprint, payload, status in rows:
+                data = json.loads(payload)
+                entries.append({
+                    "fingerprint": fingerprint,
+                    "status": status,
+                    "title": data.get("title", ""),
+                    "company": data.get("company", ""),
+                    "source": next(iter(data.get("sources", {})), "unknown"),
+                    "score": data.get("match_score", 0),
+                })
+        else:
+            for delivery in reversed(store.state.get("deliveries", [])[-20:]):
+                entries.append(delivery)
+        print(json.dumps(entries, ensure_ascii=False, indent=2))
+        return 0
     if args.report:
         print(json.dumps(build_recalibration_report(store.state), ensure_ascii=False, indent=2))
         return 0

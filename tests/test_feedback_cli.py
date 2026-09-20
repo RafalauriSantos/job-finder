@@ -29,3 +29,15 @@ def test_feedback_cli_defaults_to_production_sqlite(monkeypatch, tmp_path, capsy
     with sqlite3.connect(db) as connection:
         state = json.loads(connection.execute("select value from metadata where key='state'").fetchone()[0])
     assert state["feedback"][0]["fingerprint"] == "fp-1"
+
+
+def test_feedback_cli_lists_recent_sqlite_jobs(monkeypatch, tmp_path, capsys):
+    from storage.sqlite_store import SQLiteStore
+    db = tmp_path / "state.db"
+    store = SQLiteStore(db)
+    store.enqueue(__import__("models.job", fromlist=["Job"]).Job(title="Dev Java", company="Empresa", workplace_type="remote", match_score=80))
+    monkeypatch.setattr("feedback_cli.default_state_path", lambda: str(db))
+    monkeypatch.setattr("sys.argv", ["feedback_cli.py", "--recent"])
+
+    assert main() == 0
+    assert "Dev Java" in capsys.readouterr().out

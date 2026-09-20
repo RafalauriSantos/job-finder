@@ -39,3 +39,16 @@ def test_resend_notifier_sends_job_email_with_links_and_reasons():
     assert "Desenvolvedor Java Pleno" in payload["html"]
     assert "https://empresa.gupy.io/jobs/42" in payload["html"]
     assert "Pleno compatível" in payload["html"]
+
+
+def test_resend_notifier_exposes_external_final_destination():
+    session = Session()
+    notifier = ResendEmailNotifier("re_test", "radar@example.com", "rafael@example.com", session)
+    job = Job(title="Dev Júnior", company="Empresa", workplace_type="remote")
+    job.add_source("linkedin", "42", "https://linkedin.com/jobs/view/42")
+    job.canonical_url = "https://candidatos.jobbol.com.br/vaga/42"
+
+    assert notifier.send_job_alert(job) is True
+    body = session.calls[0][1]["json"]["html"]
+    assert "DESTINO FINAL DETECTADO" in body
+    assert job.canonical_url in body

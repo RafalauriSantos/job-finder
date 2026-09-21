@@ -2,6 +2,7 @@ import os
 import sys
 from unittest.mock import patch, MagicMock
 import pytest
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -11,7 +12,7 @@ from collectors.github_collector import GithubIssuesCollector
 class TestGithubIssuesCollector:
     @pytest.fixture
     def sample_issues(self):
-        return [
+        issues = [
             {
                 "id": 101,
                 "title": "[Remoto] Desenvolvedor Front-end React Jr na Goomer",
@@ -42,6 +43,11 @@ class TestGithubIssuesCollector:
                 "body": "Trabalho presencial em Curitiba."
             }
         ]
+        created = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        for issue in issues:
+            issue["created_at"] = created
+            issue["updated_at"] = created
+        return issues
 
     def test_collect_and_parsing(self, sample_issues):
         mock_http = MagicMock()
@@ -83,3 +89,33 @@ class TestGithubIssuesCollector:
             collector = GithubIssuesCollector(mock_http, repos=["frontendbr/vagas"])
             headers = collector._get_headers()
             assert "Authorization" not in headers
+
+    def test_old_issue_is_not_resurrected_by_recent_update(self):
+        mock_http = MagicMock()
+        response = MagicMock(status_code=200)
+        response.json.return_value = [{
+            "id": 501,
+            "title": "[Remoto] Desenvolvedor React Junior",
+            "html_url": "https://github.com/frontendbr/vagas/issues/501",
+            "labels": [{"name": "Remoto"}],
+            "body": "Vaga antiga editada recentemente.",
+            "created_at": "2025-01-01T00:00:00Z",
+            "updated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        }]
+        mock_http.get.return_value = response
+        collector = GithubIssuesCollector(mock_http, repos=["frontendbr/vagas"], lookback_days=1)
+        assert collector.collect() == []
+
+    def test_issue_without_creation_date_is_not_treated_as_recent(self):
+        mock_http = MagicMock()
+        response = MagicMock(status_code=200)
+        response.json.return_value = [{
+            "id": 502,
+            "title": "[Remoto] Desenvolvedor React Junior",
+            "html_url": "https://github.com/frontendbr/vagas/issues/502",
+            "labels": [{"name": "Remoto"}],
+            "body": "Sem data de criação.",
+        }]
+        mock_http.get.return_value = response
+        collector = GithubIssuesCollector(mock_http, repos=["frontendbr/vagas"], lookback_days=1)
+        assert collector.collect() == []

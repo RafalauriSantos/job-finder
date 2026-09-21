@@ -45,6 +45,7 @@ class TramposCollector(BaseCollector):
             try:
                 resp = self.http.get(url, headers=headers, timeout=12)
                 if resp.status_code != 200:
+                    self.report_issue(f'HTTP_{resp.status_code}')
                     print(f"[ALERTA TramposCollector] Status {resp.status_code} na página {page}")
                     continue
 
@@ -99,6 +100,7 @@ class TramposCollector(BaseCollector):
                     discovered.append(job)
 
             except Exception as e:
+                self.report_issue(type(e).__name__)
                 print(f"[ERRO TramposCollector] Falha ao coletar página {page}: {e}")
 
         return discovered

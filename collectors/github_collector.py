@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any, Optional
 import requests
 from collectors.base import BaseCollector
@@ -27,11 +28,30 @@ class GithubIssuesCollector(BaseCollector):
         repos: Optional[List[str]] = None,
         keywords: Optional[List[str]] = None,
         exclude_keywords: Optional[List[str]] = None,
+        max_pages: int = 3,
+        lookback_days: int = 1,
+        fallback_lookback_days: int = 3,
+        strict_freshness: bool = True,
     ):
         self.http = http_session
         self.repos = repos or DEFAULT_GITHUB_REPOS
         self.keywords = [k.lower() for k in (keywords or [])]
         self.exclude_keywords = [k.lower() for k in (exclude_keywords or [])]
+        self.max_pages = max(1, max_pages)
+        self.lookback_days = max(0, lookback_days)
+        self.fallback_lookback_days = max(self.lookback_days, fallback_lookback_days)
+        self.strict_freshness = strict_freshness
+        self.stats: Dict[str, Any] = {
+            "repos": {},
+            "pages": 0,
+            "issues_seen": 0,
+            "pull_requests_skipped": 0,
+            "stale_skipped": 0,
+            "filtered_skipped": 0,
+            "jobs": 0,
+            "primary_jobs": 0,
+            "fallback_used": False,
+        }
 
     def _get_headers(self) -> Dict[str, str]:
         headers = {
@@ -98,53 +118,111 @@ class GithubIssuesCollector(BaseCollector):
     def collect(self) -> List[Job]:
         discovered: List[Job] = []
         headers = self._get_headers()
+        now = datetime.now(timezone.utc)
+        primary_cutoff = now - timedelta(days=self.lookback_days)
+        fallback_cutoff = now - timedelta(days=self.fallback_lookback_days)
+        fallback_jobs: List[Job] = []
+        primary_jobs: List[Job] = []
 
         for repo in self.repos:
-            url = f"https://api.github.com/repos/{repo}/issues?state=open&per_page=30"
+            repo_stats = {"pages": 0, "issues_seen": 0, "jobs": 0, "stale": 0, "filtered": 0}
+            self.stats["repos"][repo] = repo_stats
             try:
-                resp = self.http.get(url, headers=headers, timeout=15)
-                if resp.status_code != 200:
-                    print(f"[ALERTA GithubCollector] Repo {repo} retornou status {resp.status_code}")
-                    continue
-
-                issues = resp.json()
-                if not isinstance(issues, list):
-                    continue
-
-                for issue in issues:
-                    if "pull_request" in issue:
-                        continue
-
-                    raw_title = issue.get("title", "")
-                    labels = [
-                        l.get("name", "") for l in issue.get("labels", [])
-                        if isinstance(l, dict) and "name" in l
-                    ]
-                    body = issue.get("body", "") or ""
-
-                    search_context = f"{raw_title} {' '.join(labels)}"
-                    if not self._matches_filters(search_context):
-                        continue
-
-                    title_clean = normalize_title(raw_title)
-                    company = self._extract_company_from_title(title_clean, repo)
-                    workplace_type = self._determine_workplace_type(labels, title_clean)
-                    seniority = self._determine_seniority(labels, title_clean)
-
-                    job = Job(
-                        title=title_clean,
-                        company=company,
-                        workplace_type=workplace_type,
-                        location="Remoto" if workplace_type == "remote" else "Brasil",
-                        description=body[:4000],
-                        seniority=seniority,
-                        job_type="Vaga GitHub",
-                        salary="Não informado",
+                for page in range(1, self.max_pages + 1):
+                    url = f"https://api.github.com/repos/{repo}/issues"
+                    resp = self.http.get(
+                        url,
+                        headers=headers,
+                        params={"state": "open", "sort": "updated", "direction": "desc", "per_page": 30, "page": page},
+                        timeout=15,
                     )
-                    job.add_source("github", str(issue.get("id")), issue.get("html_url", ""))
-                    discovered.append(job)
+                    self.stats["pages"] += 1
+                    repo_stats["pages"] += 1
+                    if resp.status_code != 200:
+                        self.report_issue(f'HTTP_{resp.status_code}')
+                        print(f"[ALERTA GithubCollector] Repo {repo} retornou status {resp.status_code}")
+                        break
+
+                    issues = resp.json()
+                    if not isinstance(issues, list):
+                        self.report_issue('INVALID_RESPONSE')
+                        break
+                    if not issues:
+                        break
+
+                    for issue in issues:
+                        self.stats["issues_seen"] += 1
+                        repo_stats["issues_seen"] += 1
+                        if "pull_request" in issue:
+                            self.stats["pull_requests_skipped"] += 1
+                            continue
+
+                        created_at = issue.get("created_at")
+                        updated_at = issue.get("updated_at") or created_at
+                        created = updated = None
+                        try:
+                            if created_at:
+                                created = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+                            if updated_at:
+                                updated = datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
+                        except ValueError:
+                            created = None
+                        # GitHub sorts issues by update time, but update time is
+                        # not publication time. Never resurrect an old vacancy
+                        # because someone edited or commented on its issue.
+                        if self.strict_freshness and created is None:
+                            self.stats["stale_skipped"] += 1
+                            repo_stats["stale"] += 1
+                            continue
+                        if created is None:
+                            created = fallback_cutoff
+                        if created < primary_cutoff:
+                            self.stats["stale_skipped"] += 1
+                            repo_stats["stale"] += 1
+                            continue
+
+                        raw_title = issue.get("title", "")
+                        labels = [
+                            l.get("name", "") for l in issue.get("labels", [])
+                            if isinstance(l, dict) and "name" in l
+                        ]
+                        body = issue.get("body", "") or ""
+
+                        search_context = f"{raw_title} {' '.join(labels)} {body[:12000]}"
+                        if not self._matches_filters(search_context):
+                            self.stats["filtered_skipped"] += 1
+                            repo_stats["filtered"] += 1
+                            continue
+
+                        title_clean = normalize_title(raw_title)
+                        company = self._extract_company_from_title(title_clean, repo)
+                        workplace_type = self._determine_workplace_type(labels, f"{title_clean} {body[:4000]}")
+                        seniority = self._determine_seniority(labels, f"{title_clean} {body[:12000]}")
+
+                        job = Job(
+                            title=title_clean,
+                            company=company,
+                            workplace_type=workplace_type,
+                            location="Remoto" if workplace_type == "remote" else "Brasil",
+                            description=body[:4000],
+                            seniority=seniority,
+                            job_type="Vaga GitHub",
+                            salary="Não informado",
+                        )
+                        job.add_source("github", str(issue.get("id")), issue.get("html_url", ""))
+                        job.published_at = created.isoformat() if created else ""
+                        primary_jobs.append(job)
+                        self.stats["jobs"] += 1
+                        repo_stats["jobs"] += 1
+
+                    if len(issues) < 30:
+                        break
 
             except Exception as e:
+                self.report_issue(type(e).__name__)
                 print(f"[ERRO GithubCollector] Falha ao coletar de {repo}: {e}")
 
+        discovered = primary_jobs
+        self.stats["primary_jobs"] = len(primary_jobs)
+        self.stats["jobs"] = len(discovered)
         return discovered

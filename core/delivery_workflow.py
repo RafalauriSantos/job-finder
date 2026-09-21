@@ -29,6 +29,9 @@ def finalize_delivery(
         raw_url=job.raw_url,
         canonical_url=job.canonical_url,
         evidence_level=job.evidence_level,
+        category=job.compatibility_category,
+        potential_score=job.potential_score,
+        operational_seniority=job.operational_seniority,
     )
     store.record_delivery(job.fingerprint, source_ids, delivered=sent)
     if not sent:

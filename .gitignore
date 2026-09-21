@@ -3,6 +3,11 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+.tools/
+Lib/
+Scripts/
+.vscode/
+ebook_extract.txt
 *.zip
 seen_jobs.json
 seen_jobs.json.lock

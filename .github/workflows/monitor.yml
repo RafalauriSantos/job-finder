@@ -1,10 +1,7 @@
 name: Job Monitor
 
 on:
-  schedule:
-    - cron: '0 * * * 0,6' # Fins de semana: executa a cada hora
-    - cron: '0 */3 * * 1-5' # Segunda a sexta: executa a cada 3 horas
-  workflow_dispatch:        # Permite disparar manualmente pelo GitHub
+  workflow_dispatch:        # Apenas diagnóstico manual; produção roda localmente.
 
 concurrency:
   group: job-monitor
@@ -12,6 +9,7 @@ concurrency:
 
 jobs:
   check-jobs:
+    if: ${{ false }} # Produção migrada para deployment/run_local.py no notebook.
     runs-on: self-hosted
     timeout-minutes: 10
     permissions:

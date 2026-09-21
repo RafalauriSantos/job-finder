@@ -58,10 +58,33 @@ Regras de julgamento:
 - Se exigir graduação completa OBRIGATÓRIA (não apenas preferencial), marque cv_compatibility_score <= 20.
 - Se for vaga PCD exclusiva/afirmativa, marque is_real_job_opportunity=false.
 - Se for sênior/lead/gerente/especialista, marque cv_compatibility_score <= 10.
-- Se for Pleno, marque cv_compatibility_score <= 40 a menos que a stack seja fortemente alinhada ao perfil (React/TypeScript/Node/Postgres/Supabase).
+- Não trate o título como prova suficiente: estime também o nível operacional pelo escopo das responsabilidades.
+- Separe requisitos obrigatórios de diferenciais e identifique lacunas treináveis.
+- Uma vaga Pleno com acompanhamento, correções simples e tarefas de entrada pode ser uma oportunidade de progressão.
 
 Responda APENAS com o JSON abaixo, sem markdown, sem texto extra:
-{{"is_real_job_opportunity": bool, "cv_compatibility_score": int, "reasoning": "string curta", "recommendation": "APPLY_NOW|MAYBE|SKIP"}}"""
+{{"is_real_job_opportunity": bool, "cv_compatibility_score": int, "potential_score": int, "declared_level": "junior|mid|senior|unknown", "operational_level": "junior|junior_to_mid|mid|senior|unknown", "mandatory_requirements": ["string"], "desirable_requirements": ["string"], "hard_barriers": ["string"], "matched_evidence": ["string"], "trainable_gaps": ["string"], "category": "COMPATIVEL|POTENCIALMENTE_COMPATIVEL|DESAFIADORA_VALIDA|INCOMPATIVEL", "reasoning": "string curta", "recommendation": "APPLY_NOW|MAYBE|SKIP"}}"""
+
+
+def normalize_result(result: Dict[str, Any]) -> Dict[str, Any]:
+    """Preenche o contrato novo sem quebrar respostas antigas do provedor."""
+    normalized = dict(result or {})
+    normalized.setdefault("potential_score", normalized.get("cv_compatibility_score", 0))
+    normalized.setdefault("declared_level", "unknown")
+    normalized.setdefault("operational_level", normalized.get("declared_level", "unknown"))
+    for key in ("mandatory_requirements", "desirable_requirements", "hard_barriers", "matched_evidence", "trainable_gaps"):
+        if not isinstance(normalized.get(key), list):
+            normalized[key] = []
+    score = int(normalized.get("cv_compatibility_score", 0))
+    potential = int(normalized.get("potential_score", score))
+    if normalized.get("hard_barriers"):
+        normalized["category"] = "INCOMPATIVEL"
+    else:
+        normalized.setdefault(
+            "category",
+            "COMPATIVEL" if score >= 60 else "POTENCIALMENTE_COMPATIVEL" if potential >= 45 else "DESAFIADORA_VALIDA" if potential >= 35 else "INCOMPATIVEL",
+        )
+    return normalized
 
 
 def should_invoke_judge(heuristic_score: int) -> bool:
@@ -178,7 +201,7 @@ def judge(title: str, company: str, description: str) -> Optional[Dict[str, Any]
         if result:
             assert isinstance(result.get("is_real_job_opportunity"), bool)
             assert isinstance(result.get("cv_compatibility_score"), int)
-            return result
+            return normalize_result(result)
     except Exception as e:
         logger.warning(f"LLM judge falhou ({type(e).__name__}: {e}) — fallback heurístico")
 

@@ -162,3 +162,40 @@ def test_run_check_uses_email_when_telegram_delivery_fails(monkeypatch, tmp_path
 
     assert len(telegram.alerts) == 1
     assert len(email.alerts) == 1
+
+
+def test_run_check_rejects_weak_progression_opportunity_below_legacy_score(monkeypatch, tmp_path):
+    state_file = tmp_path / "seen.json"
+    config = {
+        "min_match_score": 50,
+        "progression_min_score": 35,
+        "heartbeat": {"enabled": False},
+        "monitors": [{"type": "gupy", "term": "pleno", "limit": 1}],
+    }
+
+    class ProgressionGupy(FakeGupyCollector):
+        def collect(self):
+            job = Job(
+                title="Desenvolvedor Pleno",
+                company="Startup",
+                workplace_type="remote",
+                description="Apoiar o desenvolvimento, fazer correcoes simples e testes basicos sob orientacao. Desejavel conhecer Java.",
+                evidence_level="HIGH_EVIDENCE",
+            )
+            job.add_source("gupy", "progression-1", "https://startup.gupy.io/jobs/1")
+            return [job]
+
+    notifier = FakeNotifier()
+    monkeypatch.setattr(monitor, "load_config", lambda: config)
+    monkeypatch.setattr(monitor, "STATE_FILE", str(state_file))
+    monkeypatch.setattr(monitor, "GupyCollector", ProgressionGupy)
+    monkeypatch.setattr(monitor, "LinkedInCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "RssCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "GithubIssuesCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TramposCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TelegramNotifier", lambda *args, **kwargs: notifier)
+    monkeypatch.setattr(monitor, "evaluate_job", lambda job, is_rss=False: (40, ["heuristica controlada no teste"]))
+
+    monitor.run_check()
+
+    assert len(notifier.alerts) == 0

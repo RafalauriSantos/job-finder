@@ -29,7 +29,7 @@ class MockSession:
 def test_rss_collector_keeps_raw_and_resolved_canonical_urls():
     collector = RssCollector(
         MockSession(),
-        [{"url": "https://feed.example/rss", "keywords": ["java"]}],
+        [{"url": "https://feed.example/rss", "keywords": ["java"], "max_age_hours": 1000}],
         resolve_urls=True,
     )
 
@@ -55,7 +55,7 @@ class OfficialPageSession(MockSession):
 def test_rss_promotes_resolved_official_page_with_description():
     collector = RssCollector(
         OfficialPageSession(),
-        [{"url": "https://feed.example/rss", "keywords": ["java"]}],
+        [{"url": "https://feed.example/rss", "keywords": ["java"], "max_age_hours": 1000}],
         resolve_urls=True,
     )
 

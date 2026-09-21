@@ -20,7 +20,7 @@ def summarize_cycle(
         "discarded_counts": dict(discarded_counts),
         "source_failures": [
             source for source, status in source_statuses.items()
-            if str(status).startswith("FALHA")
+            if str(status).startswith("FALHA") or status in {'FAILED', 'PARTIAL'}
         ],
         "precision_estimate": None,
         "recall_estimate": None,

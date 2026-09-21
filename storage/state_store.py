@@ -31,6 +31,7 @@ class StateStore:
                         "deliveries": data.get("deliveries", {}),
                         "source_health": data.get("source_health", []),
                         "delivery_claims": data.get("delivery_claims", {}),
+                        "feedback": data.get("feedback", []),
                     }
                 else:
                     return default_state
@@ -221,6 +222,9 @@ class StateStore:
         raw_url: str = "",
         canonical_url: str = "",
         evidence_level: str = "",
+        category: str = "",
+        potential_score: int = 0,
+        operational_seniority: str = "",
         max_history: int = 150,
     ):
         """Registra a trilha de auditoria para responder por que cada vaga foi aceita ou rejeitada (SPEC-008)."""
@@ -239,12 +243,40 @@ class StateStore:
             "heuristic_score": heuristic_score,
             "llm_score": llm_score,
             "final_score": final_score,
+            "category": category,
+            "potential_score": potential_score,
+            "operational_seniority": operational_seniority,
         }
         if "recent_decisions" not in self.state:
             self.state["recent_decisions"] = []
         self.state["recent_decisions"].append(entry)
         if len(self.state["recent_decisions"]) > max_history:
             self.state["recent_decisions"] = self.state["recent_decisions"][-max_history:]
+
+    def record_feedback(self, fingerprint: str, feedback: str, note: str = "", source: str = "human"):
+        """Registra o retorno humano usado na recalibracao posterior."""
+        import datetime
+        allowed = {"applied", "not_applied", "interview", "rejected", "irrelevant", "hired"}
+        if feedback not in allowed:
+            raise ValueError(f"feedback invalido: {feedback}")
+        entries = self.state.setdefault("feedback", [])
+        entries.append({
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "fingerprint": fingerprint,
+            "feedback": feedback,
+            "note": note,
+            "source": source,
+        })
+        self.state["feedback"] = entries[-500:]
+
+    def feedback_summary(self) -> Dict[str, Any]:
+        """Resume sinais humanos sem alterar pesos automaticamente."""
+        entries = self.state.get("feedback", [])
+        counts: Dict[str, int] = {}
+        for entry in entries:
+            key = entry.get("feedback", "unknown")
+            counts[key] = counts.get(key, 0) + 1
+        return {"total": len(entries), "by_feedback": counts}
 
     def prune(self, max_seen_ids: int = 2000, max_fingerprints: int = 2000, max_decisions: int = 100):
         """

@@ -4,6 +4,7 @@ from logging.handlers import RotatingFileHandler
 import os
 from pathlib import Path
 import re
+import subprocess
 import sys
 import time
 
@@ -79,7 +80,7 @@ def main():
         else:
             run(monitor, arguments)
     except Exception as exc:
-        logger.error('Cycle failed: %s (use local diagnostic; secrets omitted)', type(exc).__name__)
+        logger.exception('Cycle failed: %s (use local diagnostic; secrets omitted)', type(exc).__name__)
         import sqlite3
         if isinstance(exc, (sqlite3.DatabaseError, OSError)):
             import requests

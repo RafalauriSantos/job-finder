@@ -1,5 +1,7 @@
 import json
 import sqlite3
+import subprocess
+import sys
 from datetime import datetime, timezone
 
 import pytest
@@ -207,3 +209,16 @@ def test_collection_distinguishes_empty_and_partial():
     result = collect_result(Partial())
     assert result.status == 'PARTIAL'
     assert result.jobs == ['valid job']
+
+
+def test_runner_diagnose_is_printed_to_terminal(tmp_path):
+    env = dict(__import__('os').environ, JOB_FINDER_DATA_DIR=str(tmp_path))
+    SQLiteStore(tmp_path / 'state.db')
+    result = subprocess.run(
+        [sys.executable, 'deployment/run_local.py', '--diagnose'],
+        capture_output=True, text=True, env=env, cwd=__import__('pathlib').Path(__file__).parents[1],
+        check=True,
+    )
+    payload = json.loads(result.stdout)
+    assert payload['database'].endswith('state.db')
+    assert 'pending_deliveries' in payload

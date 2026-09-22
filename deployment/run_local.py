@@ -41,7 +41,11 @@ def main():
         def flush(self):
             handler.flush()
 
-    sys.stdout = sys.stderr = LogStream()
+    # Keep diagnostics visible to the caller. The windowless runner redirects
+    # cycle output to the private log, but swallowing --diagnose output makes
+    # recovery impossible from an interactive terminal.
+    if '--diagnose' not in sys.argv:
+        sys.stdout = sys.stderr = LogStream()
     os.chdir(ROOT)
     os.environ['JOB_FINDER_LOCAL_RUNTIME'] = '1'
     try:

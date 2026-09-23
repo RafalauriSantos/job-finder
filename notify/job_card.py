@@ -35,6 +35,14 @@ def build_card(job):
     if location and _clean(location) not in {_clean(workplace), "remote", "remoto", "unknown", "nao informado"}:
         workplace += f" · {location}"
     lines = [f"<b>{escape(title)}</b>", escape(f"{company} · {workplace}")]
+    source_labels = {
+        "linkedin": "LinkedIn", "gupy": "Gupy", "github": "GitHub",
+        "github_issues": "GitHub", "rss": "RSS", "google_news": "Google Notícias",
+        "trampos": "Trampos.co", "career_page": "Página de carreiras",
+    }
+    origins = list(dict.fromkeys(source_labels.get(name.lower(), clean(name, 40)) for name in job.sources))
+    origin = ", ".join(origins) if origins else "Não registrada"
+    lines.append(escape(f"Fonte: {origin}"))
     technologies = list(dict.fromkeys(clean(t, 30) for t in job.technologies if t))[:4]
     if technologies:
         lines.extend(["", escape(" · ".join(technologies))])

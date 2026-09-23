@@ -38,7 +38,8 @@ def test_resend_notifier_sends_job_email_with_links_and_reasons():
     assert payload["to"] == ["rafael@example.com"]
     assert "Desenvolvedor Java Pleno" in payload["html"]
     assert "https://empresa.gupy.io/jobs/42" in payload["html"]
-    assert "Pleno compatível" in payload["html"]
+    assert "78/100" not in payload["html"]
+    assert "Ver vaga" in payload["html"]
 
 
 def test_resend_notifier_exposes_external_final_destination():
@@ -50,5 +51,6 @@ def test_resend_notifier_exposes_external_final_destination():
 
     assert notifier.send_job_alert(job) is True
     body = session.calls[0][1]["json"]["html"]
-    assert "DESTINO FINAL DETECTADO" in body
+    assert "DESTINO FINAL DETECTADO" not in body
+    assert body.count("<a ") == 1
     assert job.canonical_url in body

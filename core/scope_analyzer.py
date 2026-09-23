@@ -6,6 +6,7 @@ auditado e para que o aprendizado do bot nao dependa apenas do LLM.
 """
 
 import re
+import html
 import unicodedata
 from typing import Dict, List
 
@@ -26,7 +27,7 @@ def _clean(value: str) -> str:
 
 
 def _hits(text: str, signals: List[str]) -> List[str]:
-    return [signal for signal in signals if signal in text]
+    return [signal for signal in signals if re.search(r"(?<!\w)" + re.escape(signal) + r"(?!\w)", text)]
 
 
 def _declared_level(title: str) -> str:
@@ -35,7 +36,7 @@ def _declared_level(title: str) -> str:
         return "senior"
     if re.search(r"\b(pleno|pl)\b", text):
         return "mid"
-    if re.search(r"\b(junior|jr|estagio|trainee|entry level|developer i)\b", text):
+    if re.search(r"\b(junior|jr|estagio|estagiario|estagiaria|intern|internship|trainee|entry level|developer i)\b", text):
         return "junior"
     return "unknown"
 
@@ -45,16 +46,24 @@ def _requirements(text: str) -> Dict[str, List[str]]:
     mandatory: List[str] = []
     desirable: List[str] = []
     mode = "mandatory"
-    for raw_line in (text or "").splitlines():
+    text = re.sub(r"<[^>]+>", "\n", html.unescape(text or ""))
+    # Collectors can flatten whole descriptions into one line. Split sentences
+    # and bullets before detecting section headers, so a final 'nice to have'
+    # section cannot turn all earlier mandatory requirements into desirables.
+    for raw_line in re.split(r"\n+|\s+-\s+|(?<=[.!?])\s+", text):
         line = raw_line.strip(" -*•\t")
         if not line:
             continue
         normalized = _clean(line)
         if any(marker in normalized for marker in ("desejavel", "diferencial", "diferenciais", "sera um plus", "nice to have")):
             mode = "desirable"
+            if re.sub(r"[^a-z ]", "", normalized).strip() not in {"desejavel", "diferencial", "diferenciais", "nice to have"}:
+                desirable.append(line)
             continue
         if any(marker in normalized for marker in ("requisitos obrigatorios", "requisitos necessarios", "obrigatorio", "necessario", "o que buscamos")):
             mode = "mandatory"
+            if normalized.rstrip(":") not in {"requisitos obrigatorios", "requisitos necessarios", "obrigatorio", "necessario", "o que buscamos"}:
+                mandatory.append(line)
             continue
         if len(line) >= 3 and (line.startswith(("-", "•")) or mode in ("mandatory", "desirable")):
             (desirable if mode == "desirable" else mandatory).append(line)
@@ -118,8 +127,8 @@ def analyze_scope(job: Job, profile: Dict = None) -> Dict:
     core = {_clean(x) for x in profile.get("stack_core", [])}
     secondary = {_clean(x) for x in profile.get("stack_secundaria", [])}
     skills_text = f"{title} {description}"
-    core_matches = sorted(x for x in core if x and x in skills_text)
-    secondary_matches = sorted(x for x in secondary if x and x in skills_text)
+    core_matches = sorted(_hits(skills_text, [x for x in core if x]))
+    secondary_matches = sorted(_hits(skills_text, [x for x in secondary if x]))
     reqs = _requirements(job.description)
 
     evidence = min(100, 20 + len(core_matches) * 15 + len(secondary_matches) * 8 + len(support) * 5)
@@ -144,7 +153,7 @@ def analyze_scope(job: Job, profile: Dict = None) -> Dict:
     else:
         category = "INCOMPATIVEL"
 
-    gaps = [item for item in reqs["mandatory"] if not any(match in _clean(item) for match in core_matches + secondary_matches)]
+    gaps = [item for item in reqs["mandatory"] if not _hits(_clean(item), core_matches + secondary_matches)]
     reasons = []
     if declared != operational and operational != "unknown":
         reasons.append(f"titulo indica {declared}, mas o escopo operacional parece {operational}")

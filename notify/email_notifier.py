@@ -4,6 +4,7 @@ from typing import Optional
 import requests
 
 from models.job import Job
+from notify.job_card import build_card, clean
 
 
 class ResendEmailNotifier:
@@ -28,38 +29,14 @@ class ResendEmailNotifier:
         if not self.api_key or not self.sender or not self.recipient:
             return False
 
-        links = "".join(
-            f'<li><a href="{html.escape(source.url, quote=True)}">'
-            f'{html.escape(name.upper())}</a></li>'
-            for name, source in job.sources.items()
-        )
-        source_urls = [source.url for source in job.sources.values()]
-        if job.canonical_url and job.canonical_url not in source_urls:
-            links += (
-                f'<li><a href="{html.escape(job.canonical_url, quote=True)}">'
-                "DESTINO FINAL DETECTADO</a></li>"
-            )
-        reasons = "".join(f"<li>{html.escape(reason)}</li>" for reason in job.match_reasons[:5])
-        risk = "<p><strong>Atenção:</strong> requisitos podem estar acima do nível declarado.</p>" if job.ranking_evidence.get("risk") else ""
-        final_url_html = (
-            f"<p><strong>URL final:</strong> {html.escape(job.canonical_url)}</p>"
-            if job.canonical_url and job.canonical_url not in source_urls else ""
-        )
-        body = (
-            f"<h2>Match compatível: {job.match_score}/100</h2>"
-            f"<p><strong>Cargo:</strong> {html.escape(job.title)}</p>"
-            f"<p><strong>Empresa:</strong> {html.escape(job.company)}</p>"
-            f"<p><strong>Senioridade:</strong> {html.escape(job.seniority)}</p>"
-            f"<p><strong>Modelo:</strong> {html.escape(job.workplace_type)}"
-            f" ({html.escape(job.location or 'Não informado')})</p>"
-            + final_url_html
-            + f"{risk}<h3>Motivos</h3><ul>{reasons}</ul>"
-            + f"<h3>Links</h3><ul>{links}</ul>"
-        )
+        card, url = build_card(job)
+        body = "<p>" + card.replace("\n", "<br>") + "</p>"
+        if url:
+            body += f'<p><a href="{html.escape(url, quote=True)}">Ver vaga</a></p>'
         payload = {
             "from": self.sender,
             "to": [self.recipient],
-            "subject": f"Job Finder: {job.title} na {job.company}",
+            "subject": f"Job Finder: {clean(job.title)} na {clean(job.company)}",
             "html": body,
         }
         try:

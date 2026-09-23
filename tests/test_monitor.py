@@ -157,7 +157,7 @@ class TestStateStorePersistence:
 
 
 class TestTelegramNotifier:
-    def test_telegram_sends_formatted_alert_with_score_and_buttons(self):
+    def test_telegram_sends_compact_alert_with_one_button(self):
         mock_http = MagicMock()
         mock_http.post.return_value.status_code = 200
 
@@ -179,13 +179,13 @@ class TestTelegramNotifier:
         assert mock_http.post.called
 
         call_json = mock_http.post.call_args[1]["json"]
-        assert "MATCH COMPATÍVEL: 95/100" in call_json["text"]
+        assert "95/100" not in call_json["text"]
         assert "Goomer" in call_json["text"]
-        assert "Senioridade:" in call_json["text"]
+        assert "Senioridade:" not in call_json["text"]
         assert "requisitos podem estar acima" in call_json["text"]
         buttons = call_json["reply_markup"]["inline_keyboard"]
-        # Deve ter botões para ambas as fontes (GUPY e LINKEDIN)
-        assert len(buttons) == 2
+        # Uma ação principal, mesmo quando existem várias fontes.
+        assert len(buttons) == 1
 
     def test_telegram_exposes_external_final_destination(self):
         mock_http = MagicMock()
@@ -198,7 +198,7 @@ class TestTelegramNotifier:
 
         assert notifier.send_job_alert(job) is True
         payload = mock_http.post.call_args[1]["json"]
-        assert "Destino final detectado" in payload["text"]
+        assert "Destino final detectado" not in payload["text"]
         assert payload["reply_markup"]["inline_keyboard"][-1][0]["url"] == job.canonical_url
 
 

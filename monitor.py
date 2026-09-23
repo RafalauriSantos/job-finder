@@ -73,7 +73,7 @@ def load_config() -> dict:
 
 
 def check_heartbeat(config: dict, store: StateStore, notifier: TelegramNotifier):
-    """Verifica se deve enviar o heartbeat diário ao Telegram."""
+    """Respeita a frequência configurada sem repetir mensagens de status."""
     hb_cfg = config.get("heartbeat", {})
     if not hb_cfg.get("enabled", False):
         return
@@ -82,14 +82,21 @@ def check_heartbeat(config: dict, store: StateStore, notifier: TelegramNotifier)
     today_str = now.strftime("%Y-%m-%d")
     target_hour = hb_cfg.get("hour_start", 9)
 
-    if store.get_last_heartbeat() == today_str:
+    last_heartbeat = store.get_last_heartbeat()
+    if last_heartbeat == today_str:
         return
+    if hb_cfg.get("frequency") == "weekly" and last_heartbeat:
+        try:
+            if (now.date() - datetime.fromisoformat(last_heartbeat).date()).days < 7:
+                return
+        except ValueError:
+            pass
 
     if now.hour >= target_hour:
         monitors_count = len(config.get("monitors", []))
         total_tracked = len(store.state.get("seen_fingerprints", []))
         if notifier.send_heartbeat(monitors_count, total_tracked):
-            print(f"[{now.strftime('%H:%M:%S')}] 💚 Heartbeat diário enviado ao Telegram.")
+            print(f"[{now.strftime('%H:%M:%S')}] Status do radar enviado ao Telegram.")
             store.set_last_heartbeat(today_str)
             store.save()
 

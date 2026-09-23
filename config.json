@@ -10,7 +10,7 @@
   "progression_min_score": 45,
   "heartbeat": {
     "enabled": true,
-    "frequency": "daily",
+    "frequency": "weekly",
     "hour_start": 9
   },
   "monitors": [

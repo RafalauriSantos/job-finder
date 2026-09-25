@@ -30,7 +30,7 @@
 - [x] Confirmed source gaps: Gupy returned 20 candidates without usable publication dates; LinkedIn queries use `r7200` and do not persist an independently parsed publication timestamp; Trampos has no age filter; RSS can retain unknown-date entries.
 - [ ] Reconcile one historical `UNKNOWN` notification from 2026-09-20; do not retry it blindly.
 - [ ] Observe the next scheduled cycle and confirm the restarted loop continues checking.
-- [ ] Diagnose why the old runner stayed alive without observable progress; restart alone is not a root-cause fix.
+- [x] Diagnose why the old runner stayed alive without observable progress: on 2026-09-25 its actual log showed repeated missing-state failures due to different AppData views. See `docs/engineering/local-reliability.md` for the shared-directory correction and migration evidence.
 
 ### Files likely to change
 
@@ -51,7 +51,7 @@
 
 ### Task A1: Reconcile the uncertain historical delivery
 
-**Files:** Read `%LOCALAPPDATA%/JobFinder/state.db` and the private runtime logs; modify delivery state only through an audited store operation.
+**Files:** Read `%USERPROFILE%/.job-finder/state.db` and the private runtime logs; modify delivery state only through an audited store operation. This replaces the AppData default as of 2026-09-25.
 
 - [ ] Inspect the `UNKNOWN` outbox payload and identify its vacancy and Telegram attempt time without exposing credentials.
 - [ ] Compare that attempt with Telegram's conversation history or another authoritative delivery receipt.
@@ -228,7 +228,7 @@
 - [ ] Run the full suite: `.tools/python312/python.exe -m pytest -q`.
 - [ ] Run `.tools/python312/python.exe -m compileall core collectors deployment monitor.py`.
 - [ ] Run `git diff --check` and inspect the complete diff for unrelated changes and secret leakage.
-- [ ] Confirm ordinary tests and simulations cannot send Telegram/Resend messages or modify `%LOCALAPPDATA%/JobFinder/state.db`.
+- [ ] Confirm ordinary tests and simulations cannot send Telegram/Resend messages or modify `%USERPROFILE%/.job-finder/state.db`.
 
 ### Gate 2: Isolated end-to-end simulation
 

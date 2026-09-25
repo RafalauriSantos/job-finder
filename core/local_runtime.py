@@ -38,8 +38,9 @@ def exclusive_process(path):
 
 
 def data_directory():
-    base = os.environ.get('LOCALAPPDATA') or str(Path.home() / '.local' / 'share')
-    return Path(os.environ.get('JOB_FINDER_DATA_DIR', str(Path(base) / 'JobFinder')))
+    # MSIX parents (such as Codex) can redirect AppData into a private overlay.
+    # A Startup-launched process must see the same database, credentials and lock.
+    return Path(os.environ.get('JOB_FINDER_DATA_DIR', str(Path.home() / '.job-finder')))
 
 
 def diagnostic(store):

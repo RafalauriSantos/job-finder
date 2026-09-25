@@ -11,6 +11,26 @@ from core.local_schedule import is_due
 from core.local_runtime import exclusive_process
 
 
+def test_default_state_is_shared_across_packaged_and_startup_launches(tmp_path, monkeypatch):
+    from pathlib import Path
+    from core.local_runtime import data_directory
+    monkeypatch.delenv('JOB_FINDER_DATA_DIR', raising=False)
+    monkeypatch.setattr(Path, 'home', classmethod(lambda cls: tmp_path))
+    # AppData may resolve to a private MSIX overlay in a packaged parent process.
+    monkeypatch.setenv('LOCALAPPDATA', str(tmp_path / 'AppData' / 'Local'))
+    packaged = data_directory()
+    monkeypatch.setenv('LOCALAPPDATA', str(tmp_path / 'Packages' / 'LocalCache'))
+    startup = data_directory()
+    assert packaged == startup == tmp_path / '.job-finder'
+
+
+def test_explicit_data_directory_is_preserved(tmp_path, monkeypatch):
+    from core.local_runtime import data_directory
+    configured = tmp_path / 'custom-state'
+    monkeypatch.setenv('JOB_FINDER_DATA_DIR', str(configured))
+    assert data_directory() == configured
+
+
 def test_corrupt_database_fails_closed(tmp_path):
     path = tmp_path / 'state.db'
     path.write_bytes(b'not a database')

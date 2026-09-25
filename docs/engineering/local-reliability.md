@@ -58,7 +58,8 @@ timestamped backup folder by the installer rather than deleted.
 
 Use a dedicated Python environment with requirements installed beforehand.
 The windowless entry point is `deployment/run_local.py` (use python.exe for interactive diagnosis).
-Data defaults to `%LOCALAPPDATA%/JobFinder`; JOB_FINDER_DATA_DIR overrides it.
+Data defaults to `~/.job-finder` (`%USERPROFILE%\.job-finder` on Windows);
+`JOB_FINDER_DATA_DIR` overrides it. Keep this directory outside the repository.
 Keep `secrets.env` in that private directory, never in Git. Restrict directory permissions
 to the owner and SYSTEM before importing real state.
 
@@ -94,3 +95,33 @@ then enable the old scheduler. Never simply restore an old JSON: that can resend
 - Operational source-failure alerts tested offline; critical-persistence/channel receipt requires live validation.
 - Real controlled cycle and channel receipt confirmed, GitHub producer retired.
 - Seven-day observation completed. No current claim of full production readiness.
+
+## Startup state visibility fix (2026-09-25)
+
+The Startup runner was alive and retrying every five minutes, but every child failed
+with `State not initialized`. The AppData path seen from the maintenance environment
+resolved to Codex's private MSIX storage under
+`%LOCALAPPDATA%/Packages/<Codex-package-family>/LocalCache/Local/JobFinder`.
+The Windows Startup process saw a different file at the same apparent log path and
+could not see the initialized database. Reading its open log by file ID confirmed
+the repeated failures. Restarting from the maintenance environment only hid the problem.
+
+The default is now the user-home `.job-finder` directory, shared by both launch paths.
+An explicit `JOB_FINDER_DATA_DIR` remains supported. No automatic fallback or import
+is performed: silently importing stale state could resend notifications.
+
+For an existing installation, stop all runners, identify the authoritative database,
+and copy it with SQLite's backup API to the new private directory. Verify integrity
+and all records before copying `secrets.env`. Retain the original database and logs.
+Restrict Windows permissions to the user and SYSTEM. Start the existing Windows
+Startup shortcut and compare its database identity with the diagnostic environment;
+testing only a child process launched by Codex does not establish Startup visibility.
+
+On this installation, migration preserved every table and record, both launch paths
+reported the same database file ID, and the full offline suite passed: 195 tests.
+Launching the existing Startup shortcut through Windows Shell completed a real cycle
+at 18:01 Sao Paulo time: 88 raw records, 56 unique jobs, no source failures, no new
+qualifying alerts, and zero pending/uncertain deliveries. The actual open log and
+the diagnostic log now resolve to the same file. A future login remains an observation
+check; no reboot or logout was performed during this validation.
+The notebook must still be powered on, awake, and logged in for the Startup fallback.

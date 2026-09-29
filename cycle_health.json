@@ -1,7 +1,7 @@
 {
-  "finished_at": "2026-09-29T19:29:22",
+  "finished_at": "2026-09-29T20:05:21",
   "status": "SUCCESS",
-  "duration_seconds": 218.3,
+  "duration_seconds": 214.7,
   "sources": {
     "gupy": {
       "status": "OK",
@@ -246,24 +246,10 @@
     },
     "linkedin": {
       "status": "OK",
-      "discovered": 226,
+      "discovered": 221,
       "queries": [
         {
-          "keywords": "Desenvolvedor Java Junior",
-          "time_range": "r21600",
-          "seniority": null,
-          "published_within_hours": null,
-          "geo_id": "106057199",
-          "max_pages": 3,
-          "pages": 3,
-          "cards": 16,
-          "parsed_jobs": 16,
-          "status": "OK",
-          "enrichment_attempts": 8,
-          "enrichment_successes": 8
-        },
-        {
-          "keywords": "Desenvolvedor Java Pleno",
+          "keywords": "Goomer desenvolvedor",
           "time_range": "r21600",
           "seniority": null,
           "published_within_hours": null,
@@ -277,7 +263,7 @@
           "enrichment_successes": 8
         },
         {
-          "keywords": "developer Java",
+          "keywords": "GFT Brasil desenvolvedor",
           "time_range": "r21600",
           "seniority": null,
           "published_within_hours": null,
@@ -291,7 +277,7 @@
           "enrichment_successes": 8
         },
         {
-          "keywords": "programador Java",
+          "keywords": "Desenvolvedor Full Stack Junior",
           "time_range": "r21600",
           "seniority": null,
           "published_within_hours": null,
@@ -305,7 +291,7 @@
           "enrichment_successes": 8
         },
         {
-          "keywords": "Desenvolvedor Python Junior",
+          "keywords": "Desenvolvedor Full Stack Pleno",
           "time_range": "r21600",
           "seniority": null,
           "published_within_hours": null,
@@ -319,7 +305,7 @@
           "enrichment_successes": 8
         },
         {
-          "keywords": "Desenvolvedor Python Pleno",
+          "keywords": "developer full stack",
           "time_range": "r21600",
           "seniority": null,
           "published_within_hours": null,
@@ -333,7 +319,7 @@
           "enrichment_successes": 8
         },
         {
-          "keywords": "developer Python",
+          "keywords": "programador full stack",
           "time_range": "r21600",
           "seniority": null,
           "published_within_hours": null,
@@ -347,15 +333,29 @@
           "enrichment_successes": 8
         },
         {
-          "keywords": "programador Python",
+          "keywords": "Desenvolvedor React Junior",
           "time_range": "r21600",
           "seniority": null,
           "published_within_hours": null,
           "geo_id": "106057199",
           "max_pages": 3,
           "pages": 3,
-          "cards": 30,
-          "parsed_jobs": 30,
+          "cards": 12,
+          "parsed_jobs": 12,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "Desenvolvedor React Pleno",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 29,
+          "parsed_jobs": 29,
           "status": "OK",
           "enrichment_attempts": 8,
           "enrichment_successes": 8
@@ -376,29 +376,29 @@
     }
   },
   "funnel": {
-    "raw": 234,
+    "raw": 229,
     "unique": 124,
-    "seen": 6,
+    "seen": 8,
     "discarded": {
-      "pcd": 2,
-      "location": 66,
+      "pcd": 1,
+      "location": 60,
       "seniority": 0,
-      "score": 30
+      "score": 40
     },
-    "notified": 3
+    "notified": 2
   },
   "metrics": {
-    "raw_count": 234,
+    "raw_count": 229,
     "unique_count": 124,
-    "duplicate_count": 110,
-    "duplicate_rate": 0.4700854700854701,
-    "notified_count": 3,
+    "duplicate_count": 105,
+    "duplicate_rate": 0.4585152838427948,
+    "notified_count": 2,
     "discarded_counts": {
-      "pcd": 2,
-      "location": 66,
+      "pcd": 1,
+      "location": 60,
       "seniority": 0,
-      "score": 30,
-      "scope": 17
+      "score": 40,
+      "scope": 13
     },
     "source_failures": [],
     "precision_estimate": null,

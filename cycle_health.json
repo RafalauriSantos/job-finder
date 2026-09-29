@@ -1,0 +1,410 @@
+{
+  "finished_at": "2026-09-29T19:29:22",
+  "status": "SUCCESS",
+  "duration_seconds": 218.3,
+  "sources": {
+    "gupy": {
+      "status": "OK",
+      "discovered": 0,
+      "queries": [
+        {
+          "parameters": {
+            "companyId": 2245,
+            "query_id": "7a062856188b",
+            "term": "Goomer (Vagas de Tecnologia / Dev)",
+            "limit": 20
+          },
+          "results": 0,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Full Stack Junior",
+            "limit": 20,
+            "query_id": "03f015c5c09e"
+          },
+          "results": 4,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "desenvolvedor full stack",
+            "limit": 20,
+            "query_id": "d9a02d514f54"
+          },
+          "results": 20,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "developer full stack",
+            "limit": 20,
+            "query_id": "f558a5e5e90d"
+          },
+          "results": 3,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "fullstack",
+            "limit": 20,
+            "query_id": "dbb7fd9f5cc4"
+          },
+          "results": 20,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "Java Junior",
+            "limit": 20,
+            "query_id": "0ef2fdd56a24"
+          },
+          "results": 4,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "desenvolvedor Java",
+            "limit": 20,
+            "query_id": "a0b9b44eec90"
+          },
+          "results": 20,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "developer Java",
+            "limit": 20,
+            "query_id": "a7c8b4110454"
+          },
+          "results": 8,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "programador Java",
+            "limit": 20,
+            "query_id": "81b9bacf5523"
+          },
+          "results": 1,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "Python Junior",
+            "limit": 20,
+            "query_id": "8fc062f41761"
+          },
+          "results": 1,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "desenvolvedor Python",
+            "limit": 20,
+            "query_id": "82b45b3b41be"
+          },
+          "results": 13,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "developer Python",
+            "limit": 20,
+            "query_id": "f8de6fa7bd8a"
+          },
+          "results": 0,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "programador Python",
+            "limit": 20,
+            "query_id": "0ac323332c04"
+          },
+          "results": 1,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE"
+          ]
+        }
+      ]
+    },
+    "linkedin": {
+      "status": "OK",
+      "discovered": 226,
+      "queries": [
+        {
+          "keywords": "Desenvolvedor Java Junior",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 16,
+          "parsed_jobs": 16,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "Desenvolvedor Java Pleno",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "developer Java",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "programador Java",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "Desenvolvedor Python Junior",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "Desenvolvedor Python Pleno",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "developer Python",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "programador Python",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        }
+      ]
+    },
+    "rss": {
+      "status": "OK",
+      "discovered": 5
+    },
+    "github": {
+      "status": "OK",
+      "discovered": 0
+    },
+    "trampos": {
+      "status": "OK",
+      "discovered": 3
+    }
+  },
+  "funnel": {
+    "raw": 234,
+    "unique": 124,
+    "seen": 6,
+    "discarded": {
+      "pcd": 2,
+      "location": 66,
+      "seniority": 0,
+      "score": 30
+    },
+    "notified": 3
+  },
+  "metrics": {
+    "raw_count": 234,
+    "unique_count": 124,
+    "duplicate_count": 110,
+    "duplicate_rate": 0.4700854700854701,
+    "notified_count": 3,
+    "discarded_counts": {
+      "pcd": 2,
+      "location": 66,
+      "seniority": 0,
+      "score": 30,
+      "scope": 17
+    },
+    "source_failures": [],
+    "precision_estimate": null,
+    "recall_estimate": null,
+    "precision_recall_note": "Feedback humano ainda não registrado"
+  },
+  "llm_calls_today": 0,
+  "llm_fallbacks": 1
+}

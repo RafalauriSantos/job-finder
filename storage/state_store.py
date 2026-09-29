@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import uuid
 from typing import Dict, Any, List
 
 
@@ -32,6 +33,7 @@ class StateStore:
                         "source_health": data.get("source_health", []),
                         "delivery_claims": data.get("delivery_claims", {}),
                         "feedback": data.get("feedback", []),
+                        "delivery_audit": data.get("delivery_audit", []),
                     }
                 else:
                     return default_state
@@ -100,6 +102,33 @@ class StateStore:
             deliveries[fingerprint]["next_retry_at"] = next_retry.isoformat()
         if delivered:
             self.mark_seen(fingerprint, source_ids)
+
+    def begin_delivery_attempt(self, fingerprint: str, source_ids: List[str],
+                               channel: str = "telegram", cycle_id: str = "") -> str:
+        """Persist an attempt before the external side effect."""
+        attempt_id = uuid.uuid4().hex
+        audit = self.state.setdefault("delivery_audit", [])
+        audit.append({"attempt_id": attempt_id, "cycle_id": cycle_id,
+                      "fingerprint": fingerprint, "source_ids": [str(x) for x in source_ids],
+                      "channel": channel, "status": "SENDING",
+                      "timestamp": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()})
+        self.state["delivery_audit"] = audit[-1000:]
+        self.save()
+        return attempt_id
+
+    def finish_delivery_attempt(self, attempt_id: str, status: str, cycle_id: str = ""):
+        audit = self.state.setdefault("delivery_audit", [])
+        for entry in reversed(audit):
+            if entry.get("attempt_id") == attempt_id:
+                entry["status"] = status
+                entry["finished_at"] = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
+                break
+        self.state["delivery_audit"] = audit[-1000:]
+        self.save()
+
+    def delivered_count_for_cycle(self, cycle_id: str) -> int:
+        return sum(1 for item in self.state.get("delivery_audit", [])
+                   if item.get("cycle_id") == cycle_id and item.get("status") == "DELIVERED")
 
     def get_delivery(self, fingerprint: str) -> Dict[str, Any]:
         """Retorna o último estado de entrega da vaga, se houver."""

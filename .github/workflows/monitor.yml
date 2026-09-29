@@ -35,6 +35,19 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: python -m pytest -q
 
+      - name: Validar credenciais de entrega
+        shell: bash
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TELEGRAM_BOT_TOKEN:-}" ] || [ -z "${TELEGRAM_CHAT_ID:-}" ]; then
+            echo "::error::TELEGRAM_BOT_TOKEN ou TELEGRAM_CHAT_ID não configurado."
+            exit 1
+          fi
+          echo "Credenciais mínimas do Telegram presentes (valores ocultos)."
+
       - name: Executar coleta
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -54,8 +67,15 @@ jobs:
         run: |
           if [ -f cycle_health.json ]; then
             cat cycle_health.json
+            {
+              echo '### Saúde do ciclo'
+              echo '```json'
+              cat cycle_health.json
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "cycle_health.json não foi produzido nesta execução."
+            echo "::error::cycle_health.json não foi produzido nesta execução."
+            exit 1
           fi
 
       - name: Persistir estado e telemetria

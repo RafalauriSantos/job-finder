@@ -2,8 +2,11 @@ name: Job Monitor
 
 on:
   schedule:
-    # Avoid minute 00, which is a high-load period for GitHub Actions schedules.
+    # Duas tentativas por hora, fora do minuto 00. A deduplicação em
+    # seen_jobs.json torna uma segunda tentativa segura quando a primeira
+    # foi atrasada ou perdida pelo agendador do GitHub.
     - cron: '17 * * * *'
+    - cron: '47 * * * *'
   workflow_dispatch:
 
 concurrency:

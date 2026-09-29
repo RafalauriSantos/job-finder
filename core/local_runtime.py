@@ -43,7 +43,8 @@ def data_directory():
     return Path(os.environ.get('JOB_FINDER_DATA_DIR', str(Path.home() / '.job-finder')))
 
 
-def diagnostic(store):
+def diagnostic(store, config=None):
+    interval_minutes = (config or {}).get('check_interval_minutes', 60)
     now = datetime.now(timezone.utc)
     with store.connect() as db:
         cycle = db.execute('SELECT id,started,finished,status,revision FROM cycles ORDER BY id DESC LIMIT 1').fetchone()
@@ -51,14 +52,16 @@ def diagnostic(store):
         pending = db.execute("SELECT status,COUNT(*) FROM outbox WHERE status!='DELIVERED' GROUP BY status").fetchall()
     last = datetime.fromisoformat(cycle[1]) if cycle else None
     return {'database': store.filepath, 'last_cycle': cycle,
-            'due': is_due(now, last),
-            'next_check_due': (last + interval_at(now)).isoformat() if last else now.isoformat(),
+            'due': is_due(now, last, interval_minutes),
+            'next_check_due': (last + interval_at(now, interval_minutes)).isoformat() if last else now.isoformat(),
             'pending_deliveries': dict(pending),
             'uncertain_attempts': uncertain}
 
 
 def execute_cycle(monitor, store, due_only=False):
     now = datetime.now(timezone.utc)
+    config_loader = getattr(monitor, 'load_config', lambda: {})
+    interval_minutes = config_loader().get('check_interval_minutes', 60)
     with store.connect() as db:
         timeout_seconds = int(os.environ.get('JOB_FINDER_CYCLE_TIMEOUT_SECONDS', '240'))
         active = db.execute(
@@ -73,7 +76,7 @@ def execute_cycle(monitor, store, due_only=False):
         previous = db.execute(
             "SELECT started FROM cycles WHERE status != 'RUNNING' ORDER BY id DESC LIMIT 1"
         ).fetchone()
-        if due_only and not is_due(now, datetime.fromisoformat(previous[0]) if previous else None):
+        if due_only and not is_due(now, datetime.fromisoformat(previous[0]) if previous else None, interval_minutes):
             return 'NOT_DUE'
         revision = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True, check=True).stdout.strip()
         if subprocess.run(['git', 'status', '--porcelain', '--untracked-files=no'],
@@ -121,7 +124,7 @@ def main(monitor, argv):
             store.backup(directory / 'backups')
             return
         if args.diagnose:
-            print(json.dumps(diagnostic(store), indent=2))
+            print(json.dumps(diagnostic(store, monitor.load_config()), indent=2))
             return
         monitor.StateStore = SQLiteStore
         monitor.STATE_FILE = str(database)

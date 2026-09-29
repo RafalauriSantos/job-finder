@@ -16,6 +16,26 @@ KNOWN_TECHNOLOGIES = [
     ("supabase", ["supabase"]),
     ("docker", ["docker", "containers"]),
     ("git", ["git", "github", "gitlab"]),
+    ("angular", ["angular"]),
+    ("vue", ["vue", "vue.js", "vuejs"]),
+    ("next.js", ["next.js", "nextjs"]),
+    ("figma", ["figma"]),
+    ("aws", ["aws", "amazon web services"]),
+    ("azure", ["azure"]),
+    ("laravel", ["laravel"]),
+    ("n8n", ["n8n"]),
+    ("langchain", ["langchain"]),
+    ("langgraph", ["langgraph"]),
+    ("rag", ["rag", "retrieval-augmented generation"]),
+    ("pandas", ["pandas"]),
+    ("numpy", ["numpy"]),
+    ("scikit-learn", ["scikit-learn", "sklearn"]),
+    ("oracle", ["oracle"]),
+    ("sql server", ["sql server", "mssql"]),
+    ("google tag manager", ["google tag manager", "gtm"]),
+    ("ga4", ["ga4", "google analytics 4"]),
+    ("crm", ["crm"]),
+    ("function calling", ["function calling", "tool use"]),
 ]
 
 import json
@@ -105,13 +125,15 @@ def normalize_workplace(raw_workplace: str, location_text: str = "", title_text:
     """
     Classifica a modalidade em: 'remote', 'hybrid', 'on-site' ou 'unknown'.
     """
+    # A title such as "Home office" can coexist with an explicit hybrid
+    # requirement in the body. Prefer the more restrictive stated arrangement.
     combined = f"{raw_workplace} {location_text} {title_text}".lower()
-    if any(k in combined for k in ["remoto", "remote", "home office", "home-office", "teletrabalho"]):
-        return "remote"
-    if any(k in combined for k in ["híbrido", "hibrido", "hybrid"]):
+    if any(k in combined for k in ["híbrido", "hibrido", "híbrida", "hibrida", "semi-presencial", "semi presencial", "hybrid"]):
         return "hybrid"
     if any(k in combined for k in ["presencial", "on-site", "onsite"]):
         return "on-site"
+    if any(k in combined for k in ["remoto", "remote", "home office", "home-office", "teletrabalho"]):
+        return "remote"
     return "unknown"
 
 

@@ -66,6 +66,21 @@ def build_card(job):
     if job.compatibility_category in {"POTENCIALMENTE_COMPATIVEL", "DESAFIADORA_VALIDA"}:
         reason = "Possibilidade de progressão. " + reason
     lines.extend(["", escape(reason)])
+    gaps = [clean(item, 100) for item in analysis.get("trainable_gaps", []) if item]
+    if gaps:
+        lines.append(escape("Requisitos sem evidência no perfil: " + "; ".join(gaps[:3])))
+
+    alternatives = analysis.get("duplicate_listings", [])
+    if alternatives:
+        links = []
+        for listing in alternatives[:5]:
+            url = (listing.get("url") or "").strip()
+            parsed = urlsplit(url)
+            if parsed.scheme in {"http", "https"} and parsed.netloc:
+                label = clean(listing.get("title") or listing.get("location") or "Anúncio alternativo", 70)
+                links.append(f'<a href="{escape(url)}">{escape(label)}</a>')
+        if links:
+            lines.append("Anúncios muito semelhantes: " + " · ".join(links))
 
     # Select cautions independently of score explanations (which can hide
     # requirements after the first three reasons).

@@ -25,9 +25,12 @@ def classify_evidence(job: Job) -> str:
 def classify_location(job: Job):
     """Aplica a política regional existente e preserva o motivo."""
     description = job.description or ""
-    effective_workplace = job.workplace_type
-    if effective_workplace == "unknown":
-        effective_workplace = normalize_workplace("", description, job.title)
+    # Always reconcile the card's workplace with the full description. LinkedIn
+    # cards can say "Home office" while the body requires regular travel onsite.
+    effective_workplace = normalize_workplace(
+        job.workplace_type, description, f"{job.title} {job.location}"
+    )
+    job.workplace_type = effective_workplace
     combined = f"{job.location} {job.title} {description}".lower()
     known_location = bool(job.location and job.location.lower() not in {"brasil", "brazil", "remoto", "a confirmar"})
     regional = any(city in combined for city in ALLOWED_REGIONAL_CITIES)

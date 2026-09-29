@@ -50,6 +50,25 @@ class LinkedInCollector(BaseCollector):
         except Exception:
             return False
 
+    @staticmethod
+    def _enrichment_priority(job: Job) -> int:
+        """Use scarce detail requests on cards closest to the candidate's stack."""
+        from core.llm_judge import get_profile
+
+        profile = get_profile()
+        title = job.title.lower()
+        core = {item.lower() for item in profile.get("stack_core", [])}
+        secondary = {item.lower() for item in profile.get("stack_secundaria", [])}
+        score = 5 * sum(1 for technology in job.technologies if technology.lower() in core)
+        score += 2 * sum(1 for technology in job.technologies if technology.lower() in secondary)
+        if any(word in title for word in ("junior", "júnior", "jr", "entry", "trainee")):
+            score += 4
+        elif any(word in title for word in ("pleno", "mid-level", "mid level")):
+            score += 3
+        elif any(word in title for word in ("senior", "sênior", "lead", "especialista")):
+            score -= 8
+        return score
+
     def _query_search(self, search_cfg: Dict[str, Any]) -> List[Job]:
         keywords = search_cfg.get("query") or search_cfg.get("keywords", "Desenvolvedor Junior")
         if isinstance(keywords, (list, tuple)):
@@ -154,7 +173,10 @@ class LinkedInCollector(BaseCollector):
             # allowed shallow LinkedIn cards to reach scoring without evidence.
             enrichment_limit = max(0, int(search_cfg.get("detail_enrichment_limit", 8)))
             if search_cfg.get("enrich_details", False):
-                for job in jobs[:enrichment_limit]:
+                enrichment_candidates = sorted(
+                    jobs, key=self._enrichment_priority, reverse=True
+                )[:enrichment_limit]
+                for job in enrichment_candidates:
                     stats["enrichment_attempts"] += 1
                     if self._enrich_job(job, headers):
                         stats["enrichment_successes"] += 1

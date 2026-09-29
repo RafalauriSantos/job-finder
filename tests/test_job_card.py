@@ -35,6 +35,22 @@ def test_card_uses_safe_single_destination_and_progression_without_false_match()
     assert "progressão" in body and "compatível" not in body
 
 
+def test_card_shows_profile_gaps_and_semantically_duplicate_postings():
+    job = Job(
+        title="AI Developer", company="Empresa", workplace_type="remote",
+        compatibility_category="POTENCIALMENTE_COMPATIVEL",
+        analysis={
+            "trainable_gaps": ["angular"],
+            "duplicate_listings": [{"title": "AI Developer - Goiânia", "url": "https://jobs.example/2"}],
+        },
+    )
+
+    body, _ = build_card(job)
+
+    assert "angular" in body
+    assert '<a href="https://jobs.example/2">AI Developer - Goiânia</a>' in body
+
+
 def test_card_does_not_turn_desirable_english_into_required_caution():
     job = Job(title="Dev", company="Empresa", workplace_type="remote",
               description="Requisitos obrigatórios\nJava\nDiferenciais\nInglês avançado")

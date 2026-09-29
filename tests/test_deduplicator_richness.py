@@ -1,4 +1,4 @@
-from core.deduplicator import Deduplicator
+from core.deduplicator import Deduplicator, semantic_fingerprint
 from models.job import Job
 
 
@@ -84,3 +84,28 @@ def test_deduplicator_preserves_earliest_publication_date_from_duplicate_sources
     merged = Deduplicator().process([newer, older])[0]
 
     assert merged.published_at == "2026-09-18T10:00:00+00:00"
+
+
+def test_deduplicator_collapses_near_identical_reposts_but_keeps_alternative_urls():
+    description = (
+        "Vaga para construir integrações com APIs, automações e aplicações web. "
+        "Requisitos obrigatórios: experiência prática com Node.js e Git. "
+        "A equipe trabalha com revisões de código, testes automatizados e entregas frequentes. "
+        "A pessoa vai colaborar com desenvolvimento, produto e operações em projetos digitais. "
+    ) * 5
+    first = Job(
+        title="AI Developer (Remote, Florianópolis)", company="Blacksmith Agency",
+        workplace_type="remote", location="Brasil", description=description,
+    )
+    first.add_source("linkedin", "job-1", "https://linkedin.example/jobs/1")
+    second = Job(
+        title="AI Automation Engineer (Remote, Goiânia)", company="Blacksmith Agency",
+        workplace_type="remote", location="Brasil", description=description,
+    )
+    second.add_source("linkedin", "job-2", "https://linkedin.example/jobs/2")
+
+    merged = Deduplicator().process([first, second])
+
+    assert len(merged) == 1
+    assert merged[0].analysis["duplicate_listings"][0]["url"] == "https://linkedin.example/jobs/2"
+    assert semantic_fingerprint(first) == semantic_fingerprint(second)

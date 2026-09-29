@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from models.job import Job
 from core.normalizer import is_location_allowed, is_pcd_exclusive
 from core.scoring import evaluate_job
-from core.deduplicator import Deduplicator
+from core.deduplicator import Deduplicator, delivery_fingerprint
 from collectors.gupy_collector import GupyCollector
 from collectors.linkedin_collector import LinkedInCollector
 from collectors.rss_collector import RssCollector
@@ -20,7 +20,7 @@ from collectors.trampos_collector import TramposCollector
 from notify.telegram_notifier import TelegramNotifier
 from notify.email_notifier import ResendEmailNotifier
 from storage.state_store import StateStore
-from core.query_planner import plan_searches
+from core.query_planner import plan_searches, unique_searches, rotate_searches
 from core.delivery_workflow import finalize_delivery
 from core.eligibility import classify_score, classify_evidence, classify_location
 from core.scope_analyzer import analyze_scope
@@ -139,7 +139,9 @@ def run_check():
                     k: v for k, v in planned_query.items()
                     if k not in ["type", "description", "only_remote", "strict_location", "keywords", "exclude_keywords", "query", "query_variants"]
                 }
-                if "term" not in query_args:
+                # A configured term is the legacy default. Explicit variants
+                # must replace it or every planned Gupy request repeats one term.
+                if planned_query.get("query"):
                     query_args["term"] = planned_query["query"]
                 if "limit" not in query_args:
                     query_args["limit"] = 20
@@ -190,19 +192,10 @@ def run_check():
     if linkedin_searches:
         try:
             max_linkedin_queries = int(config.get("linkedin_max_queries", 8))
-            unique_searches = []
-            seen_search_keys = set()
-            for search in linkedin_searches:
-                key = (
-                    search.get("description") or search.get("query") or search.get("keywords"),
-                    search.get("time_range") or search.get("published_within_hours"),
-                    search.get("geo_id"),
-                )
-                if key in seen_search_keys:
-                    continue
-                seen_search_keys.add(key)
-                unique_searches.append(search)
-            linkedin_searches = unique_searches[:max_linkedin_queries]
+            linkedin_searches = rotate_searches(
+                unique_searches(linkedin_searches), max_linkedin_queries,
+                slot=int(time.time() // 3600),
+            )
             li_col = LinkedInCollector(HTTP, linkedin_searches)
             result = collect_result(li_col)
             discovered_linkedin, linkedin_status = result.jobs, result.status
@@ -278,11 +271,12 @@ def run_check():
     discarded_location = 0
     discarded_senior = 0
     discarded_score = 0
+    discarded_scope = 0
     fallback_count = 0
     approved_jobs = []
 
     for idx, job in enumerate(unique_jobs, 1):
-        fp = job.fingerprint
+        fp = delivery_fingerprint(job)
         source_ids = [s.source_job_id for s in job.sources.values()]
         if durable:
             store.remember_job(job)
@@ -373,6 +367,9 @@ def run_check():
         # A análise de escopo acontece antes da decisão final: o título anunciado
         # pode ser pleno, mas a rotina diária ainda ser compatível com júnior.
         scope = analyze_scope(job)
+        for preserved_key in ("duplicate_listings", "semantic_fingerprint"):
+            if job.analysis.get(preserved_key):
+                scope[preserved_key] = job.analysis[preserved_key]
         job.analysis = scope
         job.compatibility_category = scope["category"]
         job.potential_score = scope["potential_score"]
@@ -387,18 +384,53 @@ def run_check():
             fallback_count += 1
 
         job.match_score = score
+        gap_note = f"Lacunas treináveis: {', '.join(scope['trainable_gaps'][:3])}" if scope["trainable_gaps"] else ""
         job.match_reasons = reasons + [f"Categoria: {scope['category']}", f"Leitura do escopo: {scope['reasoning']}"]
+        if gap_note:
+            job.match_reasons.append(gap_note)
 
-        # O canal de progressão permite disputar vagas de pleno cujo escopo
-        # seja acessível, sem misturá-las às vagas diretamente compatíveis.
+        # A classe explicável decide elegibilidade; score apenas ordena vagas.
+        # A progressão inclui pleno com sinais de escopo acessível e lacunas limitadas.
         progression = (
             scope["category"] == "POTENCIALMENTE_COMPATIVEL"
             and scope["potential_score"] >= max(45, progression_min_score)
             and scope["declared_level"] == "mid"
-            and scope["operational_level"] in {"junior", "junior_to_mid"}
+            and scope["operational_level"] in {"junior", "junior_to_mid", "mid"}
             and len((job.description or "").strip()) >= 180
             and not scope["hard_barriers"]
         )
+
+        direct_compatible = (
+            scope["category"] == "COMPATIVEL"
+            or (scope["category"] == "POTENCIALMENTE_COMPATIVEL" and scope["declared_level"] == "junior")
+        ) and not scope["hard_barriers"]
+        if scope["hard_barriers"] or scope["category"] == "INCOMPATIVEL":
+            reason = "; ".join(scope["hard_barriers"] or scope["trainable_gaps"] or [scope["reasoning"]])
+            print(f"✗ Escopo: DESCARTADO ({reason})")
+            discarded_scope += 1
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DISCARD_SCOPE", reason, final_score=score,
+                raw_url=job.raw_url, canonical_url=job.canonical_url,
+                evidence_level=job.evidence_level, category=scope["category"],
+                potential_score=scope["potential_score"], operational_seniority=scope["operational_level"],
+            )
+            store.mark_seen(fp, source_ids)
+            continue
+
+        if not direct_compatible and not progression:
+            reason = f"Categoria de escopo {scope['category']} não atende às regras de alerta"
+            print(f"✗ Escopo: DESCARTADO ({reason})")
+            discarded_scope += 1
+            store.record_decision(
+                job_id, primary_source, job.identity_fingerprint, job.content_hash,
+                "DISCARD_SCOPE", reason, final_score=score,
+                raw_url=job.raw_url, canonical_url=job.canonical_url,
+                evidence_level=job.evidence_level, category=scope["category"],
+                potential_score=scope["potential_score"], operational_seniority=scope["operational_level"],
+            )
+            store.mark_seen(fp, source_ids)
+            continue
 
         decision = classify_score(score, min_score)
         if decision == "VETO":
@@ -417,20 +449,15 @@ def run_check():
             store.mark_seen(fp, source_ids)
             continue
 
-        if decision == "LOW_SCORE":
-            if progression:
-                print(f"~ Oportunidade de progressao: {scope['category']} (potencial {scope['potential_score']}/100)")
-                approved_jobs.append((job, source_ids, job.match_reasons))
-                continue
+        if decision == "LOW_SCORE" and not (direct_compatible or progression):
             print(f"✗ Match Score: {score}/100 (Abaixo do mínimo {min_score})")
-            for r in reasons:
-                print(f"   • {r}")
-            print(f"DECISÃO: DESCARTADA (Score insuficiente)")
             discarded_score += 1
             store.record_decision(
                 job_id, primary_source, job.identity_fingerprint, job.content_hash,
                 "DISCARD_LOW_SCORE", reasons[0] if reasons else "Score insuficiente", final_score=score,
-                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level
+                raw_url=job.raw_url, canonical_url=job.canonical_url, evidence_level=job.evidence_level,
+                category=scope["category"], potential_score=scope["potential_score"],
+                operational_seniority=scope["operational_level"],
             )
             store.mark_seen(fp, source_ids)
             continue
@@ -447,7 +474,7 @@ def run_check():
         ),
         reverse=True,
     ):
-        fp = job.fingerprint
+        fp = delivery_fingerprint(job)
         if durable:
             notified_count += int(deliver(store, job, source_ids, notifier, email_notifier))
             continue
@@ -505,12 +532,13 @@ def run_check():
     print(f"├─ Rejeitadas Região:   {discarded_location}")
     print(f"├─ Rejeitadas Nível:    {discarded_senior}")
     print(f"├─ Rejeitadas Score:    {discarded_score}")
+    print(f"├─ Rejeitadas Escopo:   {discarded_scope}")
     print(f"├─ 🎯 Notificadas:       {notified_count}")
     cycle_metrics = summarize_cycle(
         len(discovered_jobs),
         len(unique_jobs),
         notified_count,
-        {"pcd": discarded_pcd, "location": discarded_location, "seniority": discarded_senior, "score": discarded_score},
+        {"pcd": discarded_pcd, "location": discarded_location, "seniority": discarded_senior, "score": discarded_score, "scope": discarded_scope},
         {"gupy": gupy_status, "linkedin": linkedin_status, "rss": rss_status, "github": github_status, "trampos": trampos_status},
     )
     health_report = {

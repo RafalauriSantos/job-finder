@@ -2,6 +2,7 @@ from typing import List
 
 from models.job import Job
 from storage.state_store import StateStore
+from core.deduplicator import delivery_fingerprint
 
 
 def finalize_delivery(
@@ -33,7 +34,8 @@ def finalize_delivery(
         potential_score=job.potential_score,
         operational_seniority=job.operational_seniority,
     )
-    store.record_delivery(job.fingerprint, source_ids, delivered=sent)
+    fingerprint = delivery_fingerprint(job)
+    store.record_delivery(fingerprint, source_ids, delivered=sent)
     if not sent:
-        store.release_delivery_claim(job.fingerprint)
+        store.release_delivery_claim(fingerprint)
     return status

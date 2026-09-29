@@ -135,8 +135,104 @@ def test_run_check_plans_recent_seniority_queries_and_survives_source_failure(mo
 
     assert len(calls["gupy"]) == 4
     assert {query["seniority"] for query in calls["gupy"]} == {"junior", "mid"}
+    assert {query["term"] for query in calls["gupy"]} == {"developer", "desenvolvedor"}
     assert {query["published_within_hours"] for query in calls["gupy"]} == {24}
     assert len(notifier.alerts) == 1
+
+
+def test_run_check_preserves_distinct_linkedin_query_variants(monkeypatch, tmp_path):
+    state_file = tmp_path / "seen.json"
+    captured = {}
+
+    class RecordingLinkedIn(EmptyCollector):
+        def __init__(self, *args, **kwargs):
+            captured["searches"] = args[1]
+            super().__init__(*args, **kwargs)
+
+    config = {
+        "min_match_score": 50,
+        "heartbeat": {"enabled": False},
+        "monitors": [{
+            "type": "linkedin",
+            "description": "same monitor description",
+            "query_variants": ["React Junior", "React Pleno", "Frontend React"],
+            "time_range": "r7200",
+            "enrich_details": False,
+        }],
+    }
+    monkeypatch.setattr(monitor, "load_config", lambda: config)
+    monkeypatch.setattr(monitor, "STATE_FILE", str(state_file))
+    monkeypatch.setattr(monitor, "GupyCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "LinkedInCollector", RecordingLinkedIn)
+    monkeypatch.setattr(monitor, "RssCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "GithubIssuesCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TramposCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TelegramNotifier", lambda *args, **kwargs: FakeNotifier())
+
+    monitor.run_check()
+
+    assert [query["query"] for query in captured["searches"]] == ["React Junior", "React Pleno", "Frontend React"]
+
+
+def test_run_check_never_sends_scope_with_hard_barrier_even_if_score_is_high(monkeypatch, tmp_path):
+    state_file = tmp_path / "seen.json"
+    config = {"min_match_score": 1, "heartbeat": {"enabled": False}, "monitors": [{"type": "gupy", "term": "Java"}]}
+
+    class BarrierGupy(FakeGupyCollector):
+        def collect(self):
+            job = Job(
+                title="Desenvolvedor Java Junior", company="Empresa", workplace_type="remote",
+                description="Requisitos obrigatórios: 1+ ano de experiência prática com Java e inglês avançado.",
+            )
+            job.add_source("gupy", "barrier-java", "https://empresa.gupy.io/jobs/2")
+            return [job]
+
+    notifier = FakeNotifier()
+    monkeypatch.setattr(monitor, "load_config", lambda: config)
+    monkeypatch.setattr(monitor, "STATE_FILE", str(state_file))
+    monkeypatch.setattr(monitor, "GupyCollector", BarrierGupy)
+    monkeypatch.setattr(monitor, "LinkedInCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "RssCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "GithubIssuesCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TramposCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TelegramNotifier", lambda *args, **kwargs: notifier)
+    monkeypatch.setattr(monitor, "evaluate_job", lambda job, is_rss=False: (99, ["score artificialmente alto"]))
+
+    monitor.run_check()
+
+    assert notifier.alerts == []
+    saved = StateStore(str(state_file))
+    assert saved.state["recent_decisions"][-1]["decision"] == "DISCARD_SCOPE"
+
+
+def test_scope_compatible_job_is_not_lost_only_because_legacy_score_is_low(monkeypatch, tmp_path):
+    state_file = tmp_path / "seen.json"
+    config = {"min_match_score": 50, "heartbeat": {"enabled": False}, "monitors": [{"type": "gupy", "term": "React"}]}
+
+    class CompatibleGupy(FakeGupyCollector):
+        def collect(self):
+            job = Job(
+                title="Desenvolvedor React Junior", company="Startup", workplace_type="remote",
+                description="Requisitos obrigatórios: React e Node.js. Trabalho sob orientação com APIs.",
+            )
+            job.add_source("gupy", "compatible-low-score", "https://startup.gupy.io/jobs/3")
+            return [job]
+
+    notifier = FakeNotifier()
+    monkeypatch.setattr(monitor, "load_config", lambda: config)
+    monkeypatch.setattr(monitor, "STATE_FILE", str(state_file))
+    monkeypatch.setattr(monitor, "GupyCollector", CompatibleGupy)
+    monkeypatch.setattr(monitor, "LinkedInCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "RssCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "GithubIssuesCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TramposCollector", EmptyCollector)
+    monkeypatch.setattr(monitor, "TelegramNotifier", lambda *args, **kwargs: notifier)
+    monkeypatch.setattr(monitor, "evaluate_job", lambda job, is_rss=False: (10, ["legacy score baixo"]))
+
+    monitor.run_check()
+
+    assert len(notifier.alerts) == 1
+    assert notifier.alerts[0].compatibility_category == "COMPATIVEL"
 
 
 def test_run_check_uses_email_when_telegram_delivery_fails(monkeypatch, tmp_path):

@@ -44,3 +44,42 @@ def test_location_decision_uses_regional_policy():
 
     job = Job(title="Dev", company="Empresa", workplace_type="hybrid", location="Sorocaba, SP")
     assert classify_location(job)[0] == "APPROVED"
+
+
+def test_location_description_overrides_home_office_title_when_hybrid_travel_is_required():
+    job = Job(
+        title="Pessoa Desenvolvedora Node.js Pleno - Home office",
+        company="Monjuá",
+        workplace_type="remote",
+        location="Porto Alegre, RS",
+        description="Modalidade de trabalho híbrido, com deslocamento para Porto Alegre uma semana por mês.",
+    )
+
+    decision, reason = classify_location(job)
+
+    assert decision == "LOCATION_REJECTED"
+    assert "hybrid" in reason.lower() or "híbrido" in reason.lower()
+
+
+def test_location_detects_feminine_hybrid_workplace():
+    job = Job(
+        title="Desenvolvedora",
+        company="Empresa",
+        workplace_type="remote",
+        location="Campinas, SP",
+        description="Modalidade híbrida, com presença semanal no escritório.",
+    )
+
+    assert classify_location(job)[0] == "LOCATION_REJECTED"
+
+
+def test_ambiguous_external_location_is_not_assumed_remote():
+    job = Job(
+        title="Pessoa Desenvolvedora",
+        company="Empresa",
+        workplace_type="unknown",
+        location="Campinas, SP",
+        description="Modelo de trabalho não informado.",
+    )
+
+    assert classify_location(job)[0] == "LOCATION_REJECTED"

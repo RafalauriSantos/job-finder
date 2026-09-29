@@ -162,6 +162,33 @@ def test_linkedin_collector_enriches_detail_description(monkeypatch):
     assert collector.query_stats[0]["enrichment_successes"] == 1
 
 
+def test_linkedin_detail_budget_prioritizes_profile_stack_over_first_card(monkeypatch):
+    session = requests.Session()
+    cards = '''<ul>
+    <li><div data-entity-urn="urn:li:jobPosting:1"><a class="base-card__full-link" href="https://www.linkedin.com/jobs/view/generic-1"></a><h3 class="base-search-card__title">Junior Developer</h3><h4 class="base-search-card__subtitle"><a>Company</a></h4><span class="job-search-card__location">Brasil</span></div></li>
+    <li><div data-entity-urn="urn:li:jobPosting:2"><a class="base-card__full-link" href="https://www.linkedin.com/jobs/view/react-2"></a><h3 class="base-search-card__title">Junior React Developer</h3><h4 class="base-search-card__subtitle"><a>Company</a></h4><span class="job-search-card__location">Brasil</span></div></li>
+    </ul>'''
+    detail_urls = []
+
+    def fake_get(url, **kwargs):
+        if "seeMoreJobPostings" in url:
+            return MockResponse(cards, 200)
+        detail_urls.append(url)
+        return MockResponse('<div class="show-more-less-html__markup">React is required for this frontend role with APIs and tests.</div>', 200)
+
+    monkeypatch.setattr(session, "get", fake_get)
+    collector = LinkedInCollector(session, [{
+        "keywords": "developer", "max_pages": 1,
+        "enrich_details": True, "detail_enrichment_limit": 1,
+    }])
+
+    jobs = collector.collect()
+
+    assert len(jobs) == 2
+    assert len(detail_urls) == 1
+    assert detail_urls[0].endswith("react-2")
+
+
 def test_linkedin_collector_records_planned_seniority_and_recent_window(monkeypatch):
     session = requests.Session()
     monkeypatch.setattr(session, "get", lambda *args, **kwargs: MockResponse("<ul></ul>", 200))

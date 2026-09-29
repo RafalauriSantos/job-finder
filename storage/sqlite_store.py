@@ -126,9 +126,10 @@ class SQLiteStore(StateStore):
 
     def enqueue(self, job):
         from dataclasses import asdict
+        from core.deduplicator import delivery_fingerprint
         with self.connect() as db:
             db.execute("INSERT OR IGNORE INTO outbox(fingerprint,payload,status) VALUES (?,?,'PENDING')",
-                       (job.fingerprint, json.dumps(asdict(job), ensure_ascii=False)))
+                       (delivery_fingerprint(job), json.dumps(asdict(job), ensure_ascii=False)))
 
     def pending_jobs(self):
         from models.job import Job, JobSource

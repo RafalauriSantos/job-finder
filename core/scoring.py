@@ -127,7 +127,7 @@ def calculate_match_score(job: Job, now: datetime = None) -> Tuple[int, List[str
         job.ranking_evidence["seniority"] = "unknown"
         job.seniority = "unknown"
 
-    senior_risks = [signal for signal in SENIOR_REQUIREMENT_SIGNALS if signal in text_to_analyze]
+    senior_risks = [signal for signal in SENIOR_REQUIREMENT_SIGNALS if matches_any([signal], text_to_analyze)]
     if senior_risks and not has_senior:
         risk_points = min(25, len(senior_risks) * 15)
         score -= risk_points

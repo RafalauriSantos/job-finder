@@ -1,6 +1,7 @@
 {
   "nivel_atual": "Junior / Pleno em desenvolvimento",
   "formacao": "Técnico em Desenvolvimento de Sistemas (Etec, jun/2026); cursando Fatec GTI",
+  "english_level": "basic-intermediate",
   "stack_core": [
     "React",
     "TypeScript",
@@ -15,6 +16,16 @@
     "Docker",
     "Git"
   ],
+  "skills_evidence": {
+    "java": {
+      "level": "learning",
+      "evidence": "projeto pessoal inicial; sem um ano de experiência comprovado"
+    },
+    "python": {
+      "level": "project",
+      "evidence": "implementação do Job Finder local; não apresentada como emprego formal"
+    }
+  },
   "ferramentas_ia": [
     "Claude Code",
     "GitHub Copilot",

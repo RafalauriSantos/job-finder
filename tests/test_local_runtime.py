@@ -65,11 +65,18 @@ def test_migration_repeat_and_backup_restore(tmp_path):
 
 @pytest.mark.parametrize(('now', 'last', 'expected'), [
     ('2026-09-19T03:05:00+00:00', '2026-09-19T02:00:00+00:00', True),
-    ('2026-09-21T03:05:00+00:00', '2026-09-21T02:00:00+00:00', False),
+    ('2026-09-21T03:05:00+00:00', '2026-09-21T02:00:00+00:00', True),
     ('2026-09-21T06:00:00+00:00', '2026-09-21T02:00:00+00:00', True),
 ])
-def test_local_weekend_boundary(now, last, expected):
+def test_local_schedule_honors_sixty_minute_configured_interval(now, last, expected):
     assert is_due(datetime.fromisoformat(now), datetime.fromisoformat(last)) is expected
+
+
+def test_local_schedule_supports_explicit_configured_interval():
+    now = datetime.fromisoformat('2026-09-21T03:05:00+00:00')
+    last = datetime.fromisoformat('2026-09-21T02:00:00+00:00')
+
+    assert is_due(now, last, 180) is False
 
 
 def test_first_run_and_long_offline():

@@ -84,7 +84,7 @@ class TestJobModel:
 
 class TestNormalizer:
     def test_normalizes_workplace(self):
-        assert normalize_workplace("Presencial", title_text="Vaga Home Office") == "remote"
+        assert normalize_workplace("Presencial", title_text="Vaga Home Office") == "on-site"
         assert normalize_workplace("", location_text="São Paulo (Híbrido)") == "hybrid"
 
     def test_location_allowed_rules(self):

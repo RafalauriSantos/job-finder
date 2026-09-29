@@ -17,6 +17,9 @@ def deliver(store, job, source_ids, telegram, email):
     outcome = 'FAILED'
     for channel, notifier in [('telegram', telegram), ('email', email)]:
         # Persist uncertainty BEFORE the external side effect.
+        attempt_id = store.begin_delivery_attempt(
+            fingerprint, source_ids, channel, store.state.get("active_cycle_id", "")
+        )
         with store.connect() as db:
             attempt = db.execute('INSERT INTO channel_attempts(fingerprint,channel,status,created) '
                                  "VALUES (?,?,'UNKNOWN',datetime('now'))", (fingerprint, channel)).lastrowid
@@ -27,6 +30,7 @@ def deliver(store, job, source_ids, telegram, email):
             outcome = 'UNKNOWN'
         with store.connect() as db:
             db.execute('UPDATE channel_attempts SET status=? WHERE id=?', (outcome, attempt))
+        store.finish_delivery_attempt(attempt_id, outcome)
         if sent or outcome == 'UNKNOWN':
             break
     with store.connect() as db:

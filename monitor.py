@@ -104,6 +104,8 @@ def check_heartbeat(config: dict, store: StateStore, notifier: TelegramNotifier)
 def run_check():
     config = load_config()
     store = StateStore(STATE_FILE)
+    cycle_id = datetime.now().strftime("%Y%m%dT%H%M%S") + "-" + __import__("uuid").uuid4().hex[:8]
+    store.state["active_cycle_id"] = cycle_id
     notifier = TelegramNotifier(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, HTTP)
     email_notifier = ResendEmailNotifier(
         RESEND_API_KEY, ALERT_EMAIL_FROM, ALERT_EMAIL_TO, HTTP
@@ -486,12 +488,16 @@ def run_check():
             print(f"   • {reason}")
         print(f"🎯 DECISÃO: NOTIFICAR TELEGRAM")
 
+        attempt_id = store.begin_delivery_attempt(fp, source_ids, "telegram", cycle_id)
         sent = notifier.send_job_alert(job)
         delivery_channel = "telegram"
+        store.finish_delivery_attempt(attempt_id, "DELIVERED" if sent else "FAILED")
         if not sent:
             print("⚠️ Telegram falhou; tentando fallback por e-mail via Resend.")
+            email_attempt = store.begin_delivery_attempt(fp, source_ids, "email", cycle_id)
             sent = email_notifier.send_job_alert(job)
             delivery_channel = "email" if sent else "none"
+            store.finish_delivery_attempt(email_attempt, "DELIVERED" if sent else "FAILED")
         if sent:
             notified_count += 1
             print(f"✓ Alerta entregue pelo canal: {delivery_channel}")
@@ -533,6 +539,8 @@ def run_check():
     print(f"├─ Rejeitadas Nível:    {discarded_senior}")
     print(f"├─ Rejeitadas Score:    {discarded_score}")
     print(f"├─ Rejeitadas Escopo:   {discarded_scope}")
+    # Count only durable, confirmed deliveries from this cycle.
+    notified_count = store.delivered_count_for_cycle(cycle_id)
     print(f"├─ 🎯 Notificadas:       {notified_count}")
     cycle_metrics = summarize_cycle(
         len(discovered_jobs),

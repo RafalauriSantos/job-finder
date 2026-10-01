@@ -1,7 +1,7 @@
 {
-  "finished_at": "2026-09-30T23:06:21",
-  "status": "SUCCESS",
-  "duration_seconds": 157.2,
+  "finished_at": "2026-10-01T01:00:08",
+  "status": "DEGRADED",
+  "duration_seconds": 561.6,
   "sources": {
     "gupy": {
       "status": "OK",
@@ -245,11 +245,109 @@
       ]
     },
     "linkedin": {
-      "status": "OK",
-      "discovered": 230,
+      "status": "PARTIAL",
+      "discovered": 151,
       "queries": [
         {
-          "keywords": "Desenvolvedor Python Junior",
+          "keywords": "developer full stack",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "programador full stack",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 30,
+          "parsed_jobs": 30,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "Desenvolvedor React Junior",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "Desenvolvedor React Pleno",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 14,
+          "parsed_jobs": 14,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "developer React",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 28,
+          "parsed_jobs": 28,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 7
+        },
+        {
+          "keywords": "frontend React",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 1,
+          "cards": 0,
+          "parsed_jobs": 0,
+          "status": "HTTP_429",
+          "enrichment_attempts": 0,
+          "enrichment_successes": 0
+        },
+        {
+          "keywords": "Desenvolvedor Node Junior",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 3,
+          "cards": 19,
+          "parsed_jobs": 19,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 7
+        },
+        {
+          "keywords": "Desenvolvedor Node Pleno",
           "time_range": "r21600",
           "seniority": null,
           "published_within_hours": null,
@@ -258,113 +356,15 @@
           "pages": 3,
           "cards": 20,
           "parsed_jobs": 20,
-          "status": "OK",
-          "enrichment_attempts": 8,
-          "enrichment_successes": 8
-        },
-        {
-          "keywords": "Desenvolvedor Python Pleno",
-          "time_range": "r21600",
-          "seniority": null,
-          "published_within_hours": null,
-          "geo_id": "106057199",
-          "max_pages": 3,
-          "pages": 3,
-          "cards": 30,
-          "parsed_jobs": 30,
-          "status": "OK",
-          "enrichment_attempts": 8,
-          "enrichment_successes": 8
-        },
-        {
-          "keywords": "developer Python",
-          "time_range": "r21600",
-          "seniority": null,
-          "published_within_hours": null,
-          "geo_id": "106057199",
-          "max_pages": 3,
-          "pages": 3,
-          "cards": 30,
-          "parsed_jobs": 30,
-          "status": "OK",
-          "enrichment_attempts": 8,
-          "enrichment_successes": 8
-        },
-        {
-          "keywords": "programador Python",
-          "time_range": "r21600",
-          "seniority": null,
-          "published_within_hours": null,
-          "geo_id": "106057199",
-          "max_pages": 3,
-          "pages": 3,
-          "cards": 30,
-          "parsed_jobs": 30,
-          "status": "OK",
-          "enrichment_attempts": 8,
-          "enrichment_successes": 8
-        },
-        {
-          "keywords": "Goomer desenvolvedor",
-          "time_range": "r21600",
-          "seniority": null,
-          "published_within_hours": null,
-          "geo_id": "106057199",
-          "max_pages": 3,
-          "pages": 3,
-          "cards": 30,
-          "parsed_jobs": 30,
-          "status": "OK",
-          "enrichment_attempts": 8,
-          "enrichment_successes": 8
-        },
-        {
-          "keywords": "GFT Brasil desenvolvedor",
-          "time_range": "r21600",
-          "seniority": null,
-          "published_within_hours": null,
-          "geo_id": "106057199",
-          "max_pages": 3,
-          "pages": 3,
-          "cards": 30,
-          "parsed_jobs": 30,
-          "status": "OK",
-          "enrichment_attempts": 8,
-          "enrichment_successes": 8
-        },
-        {
-          "keywords": "Desenvolvedor Full Stack Junior",
-          "time_range": "r21600",
-          "seniority": null,
-          "published_within_hours": null,
-          "geo_id": "106057199",
-          "max_pages": 3,
-          "pages": 3,
-          "cards": 30,
-          "parsed_jobs": 30,
-          "status": "OK",
-          "enrichment_attempts": 8,
-          "enrichment_successes": 8
-        },
-        {
-          "keywords": "Desenvolvedor Full Stack Pleno",
-          "time_range": "r21600",
-          "seniority": null,
-          "published_within_hours": null,
-          "geo_id": "106057199",
-          "max_pages": 3,
-          "pages": 3,
-          "cards": 30,
-          "parsed_jobs": 30,
-          "status": "OK",
+          "status": "HTTP_429",
           "enrichment_attempts": 8,
           "enrichment_successes": 8
         }
       ]
     },
     "rss": {
-      "status": "OK",
-      "discovered": 6
+      "status": "PARTIAL",
+      "discovered": 2
     },
     "github": {
       "status": "OK",
@@ -376,35 +376,38 @@
     }
   },
   "funnel": {
-    "raw": 240,
-    "unique": 132,
-    "seen": 26,
+    "raw": 157,
+    "unique": 73,
+    "seen": 40,
     "discarded": {
-      "pcd": 3,
-      "location": 63,
+      "pcd": 0,
+      "location": 19,
       "seniority": 0,
-      "score": 31
+      "score": 12
     },
     "notified": 0
   },
   "metrics": {
-    "raw_count": 240,
-    "unique_count": 132,
-    "duplicate_count": 108,
-    "duplicate_rate": 0.45,
+    "raw_count": 157,
+    "unique_count": 73,
+    "duplicate_count": 84,
+    "duplicate_rate": 0.535031847133758,
     "notified_count": 0,
     "discarded_counts": {
-      "pcd": 3,
-      "location": 63,
+      "pcd": 0,
+      "location": 19,
       "seniority": 0,
-      "score": 31,
-      "scope": 9
+      "score": 12,
+      "scope": 2
     },
-    "source_failures": [],
+    "source_failures": [
+      "linkedin",
+      "rss"
+    ],
     "precision_estimate": null,
     "recall_estimate": null,
     "precision_recall_note": "Feedback humano ainda não registrado"
   },
   "llm_calls_today": 2,
-  "llm_fallbacks": 1
+  "llm_fallbacks": 0
 }

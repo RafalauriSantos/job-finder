@@ -900,7 +900,9 @@
     "4475076502",
     "4473838544",
     "https://jobs.gft.com/job/Alphaville-Barueri-Desenvolvimento-Java-AWS-H%C3%ADbridoSP-135597-06_454-000/1434127633/?feedId=null&utm_source=J2WRSS&utm_medium=rss&utm_campaign=J2W_RSS",
-    "https://jobs.gft.com/job/Alphaville-Barueri-Arquitetura-de-Software-Remota-135716-06_454-000/1434133433/?feedId=null&utm_source=J2WRSS&utm_medium=rss&utm_campaign=J2W_RSS"
+    "https://jobs.gft.com/job/Alphaville-Barueri-Arquitetura-de-Software-Remota-135716-06_454-000/1434133433/?feedId=null&utm_source=J2WRSS&utm_medium=rss&utm_campaign=J2W_RSS",
+    "4473845147",
+    "4475079312"
   ],
   "seen_fingerprints": [
     "1ba193cd6f10e2ed7b08f4b0617e91ce5d473dc6521e1fc3fa6beaf6ee24bf5f",
@@ -1803,46 +1805,12 @@
     "968834258e31359cb92d0b77e73df0ff807e767cb4a0e8224344c7ff6bef6c28",
     "de11e1298dbe8675f6009114cd04cf0cf2431b3b0fbc50aa342e15ee4cc2738b",
     "2e12eb8f577273a9366e03a8378ac058fdf62e426fdf12d49925ef37f491bfc4",
-    "f964651e677ec72df2c11e7fcb8bb3279ca175b00c166b6d8711fc89ca750f5b"
+    "f964651e677ec72df2c11e7fcb8bb3279ca175b00c166b6d8711fc89ca750f5b",
+    "8283ed14bdde05b2f275433e135fe9b8590f6617bb55e9488547e16ad126b486",
+    "0174734ae06f5aeb524df584ec70f1d19ab27d372346d00ca30939da00cd7ab1"
   ],
   "last_heartbeat": "2026-09-29",
   "recent_decisions": [
-    {
-      "timestamp": "2026-10-03T00:35:13.422937",
-      "job_id": "4473194478",
-      "source": "linkedin",
-      "raw_url": "https://br.linkedin.com/jobs/view/analista-de-dados-pleno-at-brasilseg-4473194478",
-      "canonical_url": "",
-      "identity_fingerprint": "0efaa21016f8f4dc3308cd689011165e3c283991d29eb2b4989a99fe4cb53099",
-      "content_hash": "3576547952deec85a445804a2a9374d4eaebd51f5503124c73276f1d30180835",
-      "evidence_level": "MEDIUM_EVIDENCE",
-      "decision": "DISCARD_LOCATION",
-      "decision_reason": "Localidade explícita fora da região aceita e modalidade não confirmada",
-      "heuristic_score": 0,
-      "llm_score": null,
-      "final_score": 0,
-      "category": "",
-      "potential_score": 0,
-      "operational_seniority": ""
-    },
-    {
-      "timestamp": "2026-10-03T00:35:13.423027",
-      "job_id": "4475010456",
-      "source": "linkedin",
-      "raw_url": "https://br.linkedin.com/jobs/view/engenheiro-a-de-dados-s%C3%AAnior-h%C3%ADbrido-s%C3%A3o-paulo-sp-at-solutis-tecnologias-4475010456",
-      "canonical_url": "",
-      "identity_fingerprint": "084cbc4eb65535d4f672156d98ddbb6d1a349425d33393b5635d779b760281c1",
-      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "evidence_level": "HIGH_EVIDENCE",
-      "decision": "DISCARD_LOCATION",
-      "decision_reason": "Vaga hybrid fora da região atendida (Tatuí/Sorocaba/Boituva/Itapetininga)",
-      "heuristic_score": 0,
-      "llm_score": null,
-      "final_score": 0,
-      "category": "",
-      "potential_score": 0,
-      "operational_seniority": ""
-    },
     {
       "timestamp": "2026-10-03T00:35:13.423102",
       "job_id": "4475010902",
@@ -3606,6 +3574,42 @@
       "category": "INCOMPATIVEL",
       "potential_score": 15,
       "operational_seniority": "senior"
+    },
+    {
+      "timestamp": "2026-10-03T07:08:27.772460",
+      "job_id": "4473845147",
+      "source": "linkedin",
+      "raw_url": "https://br.linkedin.com/jobs/view/engenheira-de-software-s%C3%AAnior-vaga-afirmativa-para-mulheres-at-flash-4473845147",
+      "canonical_url": "",
+      "identity_fingerprint": "2ebe5621df4336812b606a489302d9276105a35cb72ddc5731e5b69f2a3912a3",
+      "content_hash": "9f8f2688b7ee0c733c46f345e98c4114ac13d06a1630c51fa0207fb660b60f25",
+      "evidence_level": "HIGH_EVIDENCE",
+      "decision": "DISCARD_SCOPE",
+      "decision_reason": "Categoria de escopo POTENCIALMENTE_COMPATIVEL não atende às regras de alerta",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0,
+      "category": "POTENCIALMENTE_COMPATIVEL",
+      "potential_score": 45,
+      "operational_seniority": "senior"
+    },
+    {
+      "timestamp": "2026-10-03T07:08:27.773512",
+      "job_id": "4475079312",
+      "source": "linkedin",
+      "raw_url": "https://br.linkedin.com/jobs/view/analista-tecnico-florianopolis-sc-at-rinnai-brasil-4475079312",
+      "canonical_url": "",
+      "identity_fingerprint": "6fe4094c3cc83e7288b23c912d7df851c83dc949a95c19adc5a34500067e67c1",
+      "content_hash": "4a4f69befec8b6911bd7831bde76c9e90b1da20cbe39053992c5a3f354f2e86e",
+      "evidence_level": "MEDIUM_EVIDENCE",
+      "decision": "DISCARD_LOCATION",
+      "decision_reason": "Vaga on-site fora da região atendida (Tatuí/Sorocaba/Boituva/Itapetininga)",
+      "heuristic_score": 0,
+      "llm_score": null,
+      "final_score": 0,
+      "category": "",
+      "potential_score": 0,
+      "operational_seniority": ""
     }
   ],
   "deliveries": {
@@ -17193,6 +17197,390 @@
       "status": "OK",
       "discovered": 2,
       "details": {}
+    },
+    {
+      "timestamp": "2026-10-03T07:08:27.774521+00:00",
+      "source": "gupy",
+      "status": "OK",
+      "discovered": 0,
+      "details": [
+        {
+          "parameters": {
+            "companyId": 2245,
+            "query_id": "7a062856188b",
+            "term": "Goomer (Vagas de Tecnologia / Dev)",
+            "limit": 20
+          },
+          "results": 0,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "Full Stack Junior",
+            "limit": 20,
+            "query_id": "03f015c5c09e"
+          },
+          "results": 4,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "desenvolvedor full stack",
+            "limit": 20,
+            "query_id": "d9a02d514f54"
+          },
+          "results": 20,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "developer full stack",
+            "limit": 20,
+            "query_id": "f558a5e5e90d"
+          },
+          "results": 3,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "fullstack",
+            "limit": 20,
+            "query_id": "dbb7fd9f5cc4"
+          },
+          "results": 20,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "Java Junior",
+            "limit": 20,
+            "query_id": "0ef2fdd56a24"
+          },
+          "results": 4,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "desenvolvedor Java",
+            "limit": 20,
+            "query_id": "a0b9b44eec90"
+          },
+          "results": 20,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "developer Java",
+            "limit": 20,
+            "query_id": "a7c8b4110454"
+          },
+          "results": 7,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "programador Java",
+            "limit": 20,
+            "query_id": "81b9bacf5523"
+          },
+          "results": 1,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "Python Junior",
+            "limit": 20,
+            "query_id": "8fc062f41761"
+          },
+          "results": 2,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "desenvolvedor Python",
+            "limit": 20,
+            "query_id": "82b45b3b41be"
+          },
+          "results": 13,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE",
+            "MISSING_PUBLICATION_DATE"
+          ]
+        },
+        {
+          "parameters": {
+            "term": "developer Python",
+            "limit": 20,
+            "query_id": "f8de6fa7bd8a"
+          },
+          "results": 0,
+          "status": "OK"
+        },
+        {
+          "parameters": {
+            "term": "programador Python",
+            "limit": 20,
+            "query_id": "0ac323332c04"
+          },
+          "results": 1,
+          "status": "OK",
+          "warnings": [
+            "MISSING_PUBLICATION_DATE"
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-03T07:08:27.774535+00:00",
+      "source": "linkedin",
+      "status": "OK",
+      "discovered": 56,
+      "details": [
+        {
+          "keywords": "developer full stack",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "programador full stack",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "Desenvolvedor React Junior",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 3,
+          "parsed_jobs": 3,
+          "status": "OK",
+          "enrichment_attempts": 3,
+          "enrichment_successes": 3
+        },
+        {
+          "keywords": "Desenvolvedor React Pleno",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 5,
+          "parsed_jobs": 5,
+          "status": "OK",
+          "enrichment_attempts": 5,
+          "enrichment_successes": 5
+        },
+        {
+          "keywords": "developer React",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 8,
+          "parsed_jobs": 8,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        },
+        {
+          "keywords": "frontend React",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 5,
+          "parsed_jobs": 5,
+          "status": "OK",
+          "enrichment_attempts": 5,
+          "enrichment_successes": 5
+        },
+        {
+          "keywords": "Desenvolvedor Node Junior",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 5,
+          "parsed_jobs": 5,
+          "status": "OK",
+          "enrichment_attempts": 5,
+          "enrichment_successes": 5
+        },
+        {
+          "keywords": "Desenvolvedor Node Pleno",
+          "time_range": "r21600",
+          "seniority": null,
+          "published_within_hours": null,
+          "geo_id": "106057199",
+          "max_pages": 3,
+          "pages": 2,
+          "cards": 10,
+          "parsed_jobs": 10,
+          "status": "OK",
+          "enrichment_attempts": 8,
+          "enrichment_successes": 8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-03T07:08:27.774548+00:00",
+      "source": "rss",
+      "status": "OK",
+      "discovered": 6,
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-03T07:08:27.774553+00:00",
+      "source": "github",
+      "status": "OK",
+      "discovered": 0,
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-03T07:08:27.774556+00:00",
+      "source": "trampos",
+      "status": "OK",
+      "discovered": 2,
+      "details": {}
     }
   ],
   "delivery_claims": {
@@ -17395,5 +17783,5 @@
       "finished_at": "2026-10-02T15:55:07.294782+00:00"
     }
   ],
-  "active_cycle_id": "20261003T063639-3385476c"
+  "active_cycle_id": "20261003T070637-cd8ba649"
 }

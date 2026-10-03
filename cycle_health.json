@@ -1,7 +1,7 @@
 {
-  "finished_at": "2026-10-03T12:39:32",
+  "finished_at": "2026-10-03T12:46:38",
   "status": "SUCCESS",
-  "duration_seconds": 156.7,
+  "duration_seconds": 139.9,
   "sources": {
     "gupy": {
       "status": "OK",
@@ -378,21 +378,21 @@
   "funnel": {
     "raw": 157,
     "unique": 63,
-    "seen": 8,
+    "seen": 10,
     "discarded": {
       "pcd": 1,
       "location": 41,
       "seniority": 0,
       "score": 9
     },
-    "notified": 2
+    "notified": 0
   },
   "metrics": {
     "raw_count": 157,
     "unique_count": 63,
     "duplicate_count": 94,
     "duplicate_rate": 0.5987261146496815,
-    "notified_count": 2,
+    "notified_count": 0,
     "discarded_counts": {
       "pcd": 1,
       "location": 41,

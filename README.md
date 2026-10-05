@@ -182,6 +182,11 @@ Register a URL with the lightweight CLI:
 The browser extension under `tools/linkedin_extension/` captures relevant
 posts visible in the LinkedIn feed and sends them to the loopback receiver.
 The receiver deduplicates content and places it in the same analysis pipeline.
+The Telegram worker uses long polling: it waits for updates for up to 45
+seconds instead of repeatedly asking whether a message arrived. Commands are
+answered immediately and do not start a collection cycle. A submitted job URL
+starts only the manual analysis path; the scheduled collectors remain
+independent.
 To install it:
 
 1. Start `workhunter-linkedin-ingest.service`.

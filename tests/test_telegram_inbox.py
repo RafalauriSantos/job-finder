@@ -10,6 +10,26 @@ def test_extract_job_urls_from_plain_message():
     ]
 
 
+def test_poll_uses_configured_long_poll_timeout(tmp_path):
+    store = SQLiteStore(tmp_path / 'state.db')
+    calls = []
+
+    class Response:
+        status_code = 200
+
+        def json(self):
+            return {'result': []}
+
+    class Http:
+        def get(self, url, **kwargs):
+            calls.append(kwargs)
+            return Response()
+
+    assert poll_manual_urls(store, Http(), 'token', '42', poll_timeout=45, request_timeout=60) == 0
+    assert calls[0]['params']['timeout'] == 45
+    assert calls[0]['timeout'] == 60
+
+
 def test_linkedin_safety_wrapper_uses_nested_share_url():
     class Response:
         url = 'https://www.linkedin.com/jobs/view/123456789/'

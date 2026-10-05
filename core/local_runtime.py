@@ -87,7 +87,8 @@ def execute_cycle(monitor, store, due_only=False):
         cycle = db.execute('INSERT INTO cycles(started,status,revision) VALUES (?, ?, ?)',
                            (now.isoformat(), 'RUNNING', revision)).lastrowid
     try:
-        if os.environ.get('JOB_FINDER_MANUAL_ONLY') == '1':
+        if (os.environ.get('JOB_FINDER_MANUAL_ONLY') == '1'
+                and os.environ.get('JOB_FINDER_SKIP_TELEGRAM_POLL') != '1'):
             from core.telegram_inbox import poll_manual_urls
             poll_manual_urls(store, getattr(monitor, 'HTTP', None),
                              getattr(monitor, 'TELEGRAM_BOT_TOKEN', None),

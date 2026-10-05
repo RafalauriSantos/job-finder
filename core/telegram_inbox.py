@@ -36,15 +36,23 @@ def resolve_linkedin_share(url, http):
         return candidate
 
 
-def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None):
-    """Consume authorized messages, commands and URLs; returns items handled."""
+def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
+                     poll_timeout=0, request_timeout=10):
+    """Consume authorized messages, commands and URLs; returns items handled.
+
+    ``poll_timeout`` enables Telegram long polling. A non-zero value keeps the
+    connection open until a message arrives or the server-side wait expires,
+    avoiding a tight loop when the inbox is quiet.
+    """
     if not token or not chat_id or http is None:
         return 0
     with store.connect() as db:
         row = db.execute("SELECT value FROM metadata WHERE key='telegram_update_offset'").fetchone()
         offset = int(row[0]) if row else 0
     response = http.get(f'https://api.telegram.org/bot{token}/getUpdates',
-                        params={'offset': offset, 'timeout': 0, 'allowed_updates': '["message"]'}, timeout=10)
+                        params={'offset': offset, 'timeout': poll_timeout,
+                                'allowed_updates': '["message"]'},
+                        timeout=request_timeout)
     if response.status_code != 200:
         return 0
     updates = response.json().get('result', [])

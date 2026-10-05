@@ -54,6 +54,13 @@ git status --short
 
 O arquivo `seen_jobs.json` pode mudar após uma execução real e deve permanecer local. Falhas de entrega ficam registradas para retry com backoff e limite de tentativas.
 
+## Worker do Telegram
+
+O worker `workhunter-inbox.service` usa long polling da API do Telegram por
+até 45 segundos. Quando não há mensagens, ele permanece aguardando sem iniciar
+coletas nem consumir ciclos completos. Comandos respondem diretamente; URLs
+recebidas entram na fila e executam somente a análise manual.
+
 ## Métricas
 
 O relatório de cada ciclo mostra descoberta bruta, vagas únicas, duplicatas implícitas, descartes por motivo, alertas entregues, chamadas LLM, duração e saúde por fonte. Precisão e recall reais exigem feedback humano sobre relevância e candidaturas; o sistema não os inventa a partir de contagens de filtro.

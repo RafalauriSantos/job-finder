@@ -1,6 +1,6 @@
 """Minimal inbound Telegram adapter for manual job URLs."""
-import re
 import json
+import re
 from urllib.parse import urlparse, parse_qs, unquote
 
 URL_RE = re.compile(r'https?://[^\s<>]+', re.IGNORECASE)
@@ -37,7 +37,7 @@ def resolve_linkedin_share(url, http):
 
 
 def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None):
-    """Consume authorized messages and register URLs; returns number registered."""
+    """Consume authorized messages, commands and URLs; returns items handled."""
     if not token or not chat_id or http is None:
         return 0
     with store.connect() as db:
@@ -58,7 +58,16 @@ def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None):
             continue
         if allowed_user_id and str(message.get('from', {}).get('id', '')) != str(allowed_user_id):
             continue
-        for url in extract_job_urls(message.get('text', '')):
+        message_text = message.get('text', '') or ''
+        command = message_text.strip().split()[0] if message_text.strip() else ''
+        from core.telegram_reports import command_response
+        report = command_response(command, store) if command.startswith('/') else None
+        if report:
+            http.post(f'https://api.telegram.org/bot{token}/sendMessage',
+                      json={'chat_id': chat_id, 'text': report, 'parse_mode': 'HTML'}, timeout=10)
+            registered += 1
+            continue
+        for url in extract_job_urls(message_text):
             resolved_url = resolve_linkedin_share(url, http)
             if not resolved_url:
                 continue

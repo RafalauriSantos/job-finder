@@ -22,7 +22,7 @@ class SQLiteStore(StateStore):
                 CREATE TABLE IF NOT EXISTS claims(fingerprint TEXT PRIMARY KEY, expires REAL NOT NULL);
                 CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY, kind TEXT NOT NULL, payload TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS cycles(id INTEGER PRIMARY KEY, started TEXT NOT NULL,
-                    finished TEXT, status TEXT NOT NULL, revision TEXT);
+                    finished TEXT, status TEXT NOT NULL, revision TEXT, report TEXT);
                 CREATE TABLE IF NOT EXISTS channel_attempts(id INTEGER PRIMARY KEY,
                     fingerprint TEXT NOT NULL, channel TEXT NOT NULL, status TEXT NOT NULL,
                     created TEXT NOT NULL);
@@ -56,6 +56,9 @@ class SQLiteStore(StateStore):
             columns = {row[1] for row in db.execute('PRAGMA table_info(collection_attempts)')}
             if 'duration_ms' not in columns:
                 db.execute('ALTER TABLE collection_attempts ADD COLUMN duration_ms INTEGER NOT NULL DEFAULT 0')
+            cycle_columns = {row[1] for row in db.execute('PRAGMA table_info(cycles)')}
+            if 'report' not in cycle_columns:
+                db.execute('ALTER TABLE cycles ADD COLUMN report TEXT')
             queue_columns = {row[1] for row in db.execute('PRAGMA table_info(manual_analysis_queue)')}
             for column, definition in (('telegram_chat_id', 'TEXT'), ('telegram_message_id', 'INTEGER'), ('notified_at', 'TEXT')):
                 if column not in queue_columns:

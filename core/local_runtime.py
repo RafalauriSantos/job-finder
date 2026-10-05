@@ -103,8 +103,9 @@ def execute_cycle(monitor, store, due_only=False):
     report = json.loads(Path(monitor.HEALTH_REPORT_FILE).read_text(encoding='utf-8'))
     status = 'DEGRADED' if report.get('status') == 'DEGRADED' else 'COMPLETED'
     with store.connect() as db:
-        db.execute('UPDATE cycles SET finished=?,status=? WHERE id=?',
-                   (datetime.now(timezone.utc).isoformat(), status, cycle))
+        db.execute('UPDATE cycles SET finished=?,status=?,report=? WHERE id=?',
+                   (datetime.now(timezone.utc).isoformat(), status,
+                    json.dumps(report, ensure_ascii=False), cycle))
     return status
 
 

@@ -1,5 +1,7 @@
 import re
 import hashlib
+import html as html_lib
+import json
 from datetime import datetime, timezone
 
 from collectors.base import BaseCollector
@@ -25,7 +27,7 @@ class ManualCollector(BaseCollector):
             with self.store.connect() as db:
                 db.execute("UPDATE manual_analysis_queue SET status='RUNNING',started_at=?,attempts=attempts+1 WHERE id=?",
                            (datetime.now(timezone.utc).isoformat(), queue_id))
-            if source != 'linkedin' or (not native_id and not raw_text):
+            if source not in {'linkedin', 'gupy'} or (not native_id and not raw_text):
                 with self.store.connect() as db:
                     db.execute("UPDATE manual_analysis_queue SET status='DONE',finished_at=?,result=? WHERE id=?",
                                (datetime.now(timezone.utc).isoformat(), 'identity_unresolved', queue_id))
@@ -39,8 +41,9 @@ class ManualCollector(BaseCollector):
                                         http_status=response_status, error_type=f'HTTP_{response_status}')
                     continue
                 html = '' if raw_text else response.text
-                title_match = re.search(r'<title[^>]*>\s*(.*?)\s*\|', html, re.I | re.S)
+                title_match = re.search(r'<title[^>]*>\s*(.*?)\s*</title>', html, re.I | re.S)
                 title = normalize_title(re.sub(r'<[^>]+>', ' ', title_match.group(1))) if title_match else ''
+                title = re.sub(r'^Página da Vaga\s*\|\s*', '', title, flags=re.I).strip()
                 if not title:
                     title = 'Vaga do LinkedIn'
                 if raw_text:
@@ -52,21 +55,31 @@ class ManualCollector(BaseCollector):
                 company = company_match.group(1) if company_match else (author or 'LinkedIn')
                 location_match = re.search(r'"jobLocation".*?"addressLocality"\s*:\s*"([^"]+)', html, re.I | re.S)
                 location = location_match.group(1) if location_match else 'Brasil'
+                description = raw_text
+                if source == 'gupy' and html:
+                    match = re.search(r'"description":"(.*?)","responsibilities"', html, re.S)
+                    if match:
+                        try:
+                            description = html_lib.unescape(json.loads('"' + match.group(1) + '"'))
+                        except (ValueError, json.JSONDecodeError):
+                            description = html_lib.unescape(match.group(1))
+                        description = re.sub(r'<[^>]+>', ' ', description)
+                        description = re.sub(r'\s+', ' ', description).strip()
                 source_id = native_id or hashlib.sha256(raw_text.encode()).hexdigest()[:20]
-                workplace = ('remote' if raw_text and has_explicit_remote_signal(raw_text)
+                workplace = ('remote' if description and has_explicit_remote_signal(description)
                              else normalize_workplace('', location, title))
                 job = Job(title=title, company=company, workplace_type=workplace,
-                          location=location, description=raw_text, raw_url=url, technologies=extract_technologies(raw_text or title))
-                job.add_source('linkedin', source_id, url)
+                          location=location, description=description, raw_url=url, technologies=extract_technologies(description or title))
+                job.add_source(source, source_id, url)
                 # Reuse the normal public LinkedIn enrichment path. It extracts
                 # the public description/meta description and updates evidence.
-                enriched = False if raw_text else LinkedInCollector(self.http, [])._enrich_job(
+                enriched = False if raw_text or source != 'linkedin' else LinkedInCollector(self.http, [])._enrich_job(
                     job, {'User-Agent': 'Mozilla/5.0', 'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8'})
                 if enriched:
                     job.workplace_type = ('remote' if has_explicit_remote_signal(job.description)
                                           else normalize_workplace('', location_text=location,
                                                                    title_text=f'{title} {job.description}'))
-                evidence_status = 'FULL_EVIDENCE' if enriched or raw_text else (
+                evidence_status = 'FULL_EVIDENCE' if enriched or raw_text or (source == 'gupy' and len(description) > 80) else (
                     'PARTIAL_EVIDENCE' if title and company != 'LinkedIn' else 'NO_DESCRIPTION')
                 jobs.append(job)
                 with self.store.connect() as db:

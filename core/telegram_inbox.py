@@ -8,6 +8,12 @@ from urllib.parse import urlparse, parse_qs, unquote
 
 URL_RE = re.compile(r'https?://[^\s<>]+', re.IGNORECASE)
 LINKEDIN_HOSTS = {'linkedin.com', 'www.linkedin.com', 'lnkd.in'}
+# Short links often lead to the ATS that owns the vacancy.  Keep this list
+# explicit: accepting arbitrary redirects would turn manual intake into an
+# SSRF/phishing surface.
+TRUSTED_JOB_HOSTS = {
+    'gupy.io', 'greenhouse.io', 'lever.co', 'trampos.co',
+}
 logger = logging.getLogger(__name__)
 
 
@@ -40,6 +46,14 @@ def _safe_linkedin_url(url):
             host not in {'localhost', '127.0.0.1', '::1', '0.0.0.0'})
 
 
+def _safe_job_destination(url):
+    parsed = urlparse(url or '')
+    host = (parsed.hostname or '').lower().rstrip('.')
+    return (parsed.scheme.lower() in {'http', 'https'} and
+            (host in TRUSTED_JOB_HOSTS or
+             any(host.endswith('.' + suffix) for suffix in TRUSTED_JOB_HOSTS)))
+
+
 def extract_job_urls(text):
     return [url.rstrip('.,);]}>') for url in URL_RE.findall(text or '')
             if urlparse(url).scheme in {'http', 'https'}]
@@ -56,7 +70,8 @@ def resolve_linkedin_share(url, http):
         response = http.get(candidate, allow_redirects=True, timeout=10,
                             headers={'User-Agent': 'Mozilla/5.0'})
         resolved = getattr(response, 'url', '') or candidate
-        return resolved if _safe_linkedin_url(resolved) else ''
+        return resolved if (_safe_linkedin_url(resolved) or
+                            _safe_job_destination(resolved)) else ''
     except Exception:
         return candidate
 

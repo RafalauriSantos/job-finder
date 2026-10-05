@@ -1,5 +1,7 @@
 """Stable source identity and URL normalization for collection diagnostics."""
 import re
+import base64
+import json
 from dataclasses import dataclass
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
@@ -40,6 +42,15 @@ def extract_source_identity(url: str) -> SourceIdentity:
         source = 'gupy'
         match = re.search(r'/jobs?/([^/]+)', path)
         native_id = match.group(1) if match else None
+        # Gupy share links use /job/<base64url JSON> while canonical pages use
+        # /jobs/<numeric id>. Decode the token so both forms share one identity.
+        if native_id and not native_id.isdigit():
+            try:
+                padded = native_id + '=' * (-len(native_id) % 4)
+                payload = json.loads(base64.urlsafe_b64decode(padded).decode())
+                native_id = str(payload.get('jobId') or native_id)
+            except (ValueError, TypeError, UnicodeDecodeError, json.JSONDecodeError):
+                pass
     elif host == 'github.com' or host.endswith('.github.com'):
         source = 'github'
         match = re.search(r'/([^/]+/[^/]+)/issues/([0-9]+)', path)

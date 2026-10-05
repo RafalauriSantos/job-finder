@@ -39,7 +39,7 @@ def test_commands_have_expected_responses(tmp_path):
     store = _store(tmp_path)
     assert 'Comandos do WorkHunter' in command_response('/ajuda', store)
     assert 'Último ciclo' in command_response('/status', store)
-    assert 'linkedin' in command_response('/fontes', store)
+    assert 'LinkedIn' in command_response('/fontes', store)
     assert 'Últimas decisões' in command_response('/ultimas', store)
     assert 'Problemas' in command_response('/problemas', store)
 

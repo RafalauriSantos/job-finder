@@ -41,10 +41,6 @@ def _reports_for_day(store, now=None):
                 report = json.loads(raw_report) if raw_report else {}
             except (TypeError, ValueError):
                 report = {}
-            try:
-                report = json.loads(raw_report) if raw_report else {}
-            except (TypeError, ValueError):
-                report = {}
             # Older manual-only cycles predate the mode column. Their empty,
             # zero-duration reports are excluded from the collection report.
             legacy_empty_manual = (
@@ -67,6 +63,54 @@ def _number(report, *path):
             return 0
         value = value.get(key, 0)
     return value if isinstance(value, (int, float)) else 0
+
+
+def _friendly_datetime(value):
+    parsed = _parse(value)
+    if not parsed:
+        return 'horário desconhecido'
+    local = parsed.astimezone(LOCAL_ZONE)
+    return local.strftime('%d/%m às %H:%M')
+
+
+def _friendly_status(value):
+    return {
+        'COMPLETED': 'Concluído', 'DEGRADED': 'Concluído com alertas',
+        'FAILED': 'Falhou', 'INTERRUPTED': 'Interrompido',
+        'RUNNING': 'Em andamento', 'SUCCESS': 'Normal', 'OK': 'Normal',
+        'NOT_CONFIGURED': 'Não configurada',
+    }.get(value, str(value or 'Indisponível').replace('_', ' ').title())
+
+
+def _friendly_source(value):
+    return {
+        'linkedin': 'LinkedIn', 'gupy': 'Gupy', 'github': 'GitHub',
+        'geekhunter': 'GeekHunter', 'trampos': 'Trampos', 'rss': 'RSS',
+    }.get(str(value).lower(), str(value).replace('_', ' ').title())
+
+
+def _friendly_decision(value):
+    return {
+        'DISCARD_SCOPE': 'Descartada por compatibilidade',
+        'DISCARD_LOCATION': 'Descartada por localização',
+        'DISCARD_LOW_EVIDENCE': 'Descartada por pouca evidência',
+        'DISCARD_LOW_SCORE': 'Descartada por pontuação',
+        'DISCARD_PCD': 'Descartada pelo filtro PCD',
+        'DISCARD_SENIOR_OR_VETO': 'Descartada por senioridade ou relevância',
+        'DELIVERED': 'Alerta enviado', 'APPROVED': 'Aprovada',
+    }.get(value, str(value or 'Decisão não identificada').replace('_', ' ').title())
+
+
+def _short_job_id(value):
+    value = str(value or 'vaga sem identificador')
+    source, separator, identifier = value.partition(':')
+    if separator:
+        label = _friendly_source(source)
+        identifier = identifier or 'identificador não resolvido'
+        if len(identifier) > 18:
+            identifier = identifier[:14] + '…'
+        return f'{label} · {identifier}'
+    return value if len(value) <= 22 else value[:18] + '…'
 
 
 def build_daily_report(store, now=None):
@@ -108,7 +152,7 @@ def build_daily_report(store, now=None):
         f"• Ciclos concluídos: {len(cycles) - failed}\n"
         f"• Ciclos degradados: {degraded}\n"
         f"• Ciclos com falha: {failed}\n"
-        f"• Duração média: {average}s\n\n"
+        f"• Duração média: {str(average).replace('.', ',')}s\n\n"
         f"🔎 <b>Vagas</b>\n"
         f"• Encontradas: {raw}\n"
         f"• Únicas: {unique}\n"
@@ -116,7 +160,7 @@ def build_daily_report(store, now=None):
         f"• Alertas enviados: {notified}\n\n"
         f"🤖 <b>Análise</b>\n"
         f"• Chamadas LLM registradas: {llm_calls}\n"
-        f"• Fallback heurístico: {fallbacks}\n\n"
+        f"• Análises com fallback heurístico: {fallbacks}\n\n"
         f"⚠️ <b>Problemas</b>\n"
         f"• Fontes degradadas: {', '.join(sorted(source_failures)) or 'nenhuma'}"
     )
@@ -125,7 +169,7 @@ def build_daily_report(store, now=None):
 def build_status(store):
     with store.connect() as db:
         cycle = db.execute(
-            "SELECT started,finished,status FROM cycles ORDER BY id DESC LIMIT 1"
+            "SELECT started,finished,status,mode FROM cycles ORDER BY id DESC LIMIT 1"
         ).fetchone()
         pending = db.execute(
             "SELECT COUNT(*) FROM outbox WHERE status!='DELIVERED'"
@@ -134,15 +178,19 @@ def build_status(store):
             "SELECT COUNT(*) FROM manual_analysis_queue WHERE status='PENDING'"
         ).fetchone()[0]
     if not cycle:
-        cycle_text = 'nenhum ciclo registrado'
+        cycle_text = 'nenhum ciclo registrado ainda'
+        cycle_details = ''
     else:
-        cycle_text = f"{cycle[2]} — início {cycle[0]} — fim {cycle[1] or 'em andamento'}"
+        cycle_text = _friendly_status(cycle[2])
+        when = _friendly_datetime(cycle[0])
+        kind = 'coleta programada' if cycle[3] != 'manual' else 'análise manual'
+        cycle_details = f"\n• Quando: {when} · {kind}"
     return (
         "🩺 <b>Status do WorkHunter</b>\n\n"
-        f"• Último ciclo: {cycle_text}\n"
+        f"• Último ciclo: {cycle_text}{cycle_details}\n"
         f"• Entregas pendentes: {pending}\n"
         f"• Análises manuais pendentes: {manual}\n"
-        f"• Banco local: OK"
+        f"• Banco local: funcionando"
     )
 
 
@@ -158,11 +206,14 @@ def build_sources(store):
             if details.get('status') not in {'SUCCESS', 'OK', 'NOT_CONFIGURED'}:
                 stats[source]['failures'] += 1
     if not stats:
-        return '📡 <b>Fontes</b>\n\nNenhum ciclo registrado hoje.'
+        return ('📡 <b>Fontes</b>\n\n'
+                'Ainda não houve uma coleta programada registrada hoje.\n'
+                'O monitor está aguardando o próximo horário.')
     lines = ['📡 <b>Fontes — hoje</b>', '']
     for source in sorted(stats):
         item = stats[source]
-        lines.append(f"• {source}: {item['discovered']} vagas, {item['failures']} falha(s)")
+        status = 'normal' if item['failures'] == 0 else f"{item['failures']} alerta(s)"
+        lines.append(f"• {_friendly_source(source)}: {item['discovered']} vagas · {status}")
     return '\n'.join(lines)
 
 
@@ -177,7 +228,11 @@ def build_latest(store):
             item = json.loads(row[0])
         except (TypeError, ValueError):
             continue
-        lines.append(f"• {item.get('decision', 'N/D')} — {item.get('job_id', 'vaga sem ID')}")
+        decision = _friendly_decision(item.get('decision'))
+        lines.append(f"• {decision}\n  {_short_job_id(item.get('job_id'))}")
+        reason = str(item.get('reason') or '').strip()
+        if reason:
+            lines.append(f"  Motivo: {reason[:120]}{'…' if len(reason) > 120 else ''}")
     return '\n'.join(lines) if len(lines) > 2 else '🧾 <b>Últimas decisões</b>\n\nNenhuma decisão registrada.'
 
 
@@ -186,12 +241,12 @@ def build_problems(store):
     problems = []
     for cycle in cycles:
         if cycle['status'] in {'FAILED', 'INTERRUPTED', 'DEGRADED'}:
-            problems.append(f"ciclo {cycle['id']}: {cycle['status']}")
+            problems.append(f"ciclo {cycle['id']}: {_friendly_status(cycle['status'])}")
         for source, details in (cycle['report'].get('sources') or {}).items():
             if isinstance(details, dict) and details.get('status') not in {'SUCCESS', 'OK', 'NOT_CONFIGURED'}:
-                problems.append(f"{source}: {details.get('status')}")
+                problems.append(f"{_friendly_source(source)}: {_friendly_status(details.get('status'))}")
     if not problems:
-        return '✅ <b>Problemas</b>\n\nNenhum problema registrado hoje.'
+        return '✅ <b>Problemas</b>\n\nNenhuma falha foi registrada nas coletas programadas de hoje.'
     return '⚠️ <b>Problemas — hoje</b>\n\n' + '\n'.join(f'• {item}' for item in problems[-20:])
 
 

@@ -30,6 +30,34 @@ def test_poll_uses_configured_long_poll_timeout(tmp_path):
     assert calls[0]['timeout'] == 60
 
 
+def test_command_send_falls_back_to_plain_text_on_telegram_error(tmp_path):
+    store = SQLiteStore(tmp_path / 'state.db')
+    sent = []
+
+    class Response:
+        def __init__(self, status_code):
+            self.status_code = status_code
+
+        def json(self):
+            return {'result': []}
+
+    class Http:
+        def get(self, url, **kwargs):
+            response = Response(200)
+            response.json = lambda: {'result': [{'update_id': 1, 'message': {
+                'chat': {'id': '42'}, 'from': {'id': '99'}, 'text': '/ajuda'
+            }}]}
+            return response
+
+        def post(self, url, **kwargs):
+            sent.append(kwargs['json'])
+            return Response(400 if len(sent) == 1 else 200)
+
+    assert poll_manual_urls(store, Http(), 'token', '42', '99') == 1
+    assert len(sent) == 2
+    assert 'parse_mode' not in sent[1]
+
+
 def test_linkedin_safety_wrapper_uses_nested_share_url():
     class Response:
         url = 'https://www.linkedin.com/jobs/view/123456789/'

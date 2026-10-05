@@ -20,7 +20,7 @@ def _parse(value):
         return None
 
 
-def _rows(store, limit=500):
+def _rows(store, limit=20000):
     with store.connect() as db:
         return db.execute(
             "SELECT id,started,finished,status,report FROM cycles ORDER BY id DESC LIMIT ?",
@@ -183,7 +183,9 @@ def build_problems(store):
 
 
 def command_response(command, store):
-    command = command.lower().split('@', 1)[0]
+    command = command.strip().lower().split('@', 1)[0]
+    if not command.startswith('/'):
+        command = '/' + command
     responses = {
         '/relatorio': build_daily_report,
         '/status': build_status,

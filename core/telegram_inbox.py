@@ -1,10 +1,30 @@
 """Minimal inbound Telegram adapter for manual job URLs."""
 import json
+import logging
 import re
 from urllib.parse import urlparse, parse_qs, unquote
 
 URL_RE = re.compile(r'https?://[^\s<>]+', re.IGNORECASE)
 LINKEDIN_HOSTS = {'linkedin.com', 'www.linkedin.com', 'lnkd.in'}
+logger = logging.getLogger(__name__)
+
+
+def _send_command_response(http, token, chat_id, text):
+    """Send a command response with a plain-text fallback for Telegram errors."""
+    endpoint = f'https://api.telegram.org/bot{token}/sendMessage'
+    try:
+        response = http.post(endpoint, json={
+            'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML'
+        }, timeout=10)
+        if response.status_code == 200:
+            return True
+        logger.warning('Telegram command response failed with HTTP %s', response.status_code)
+        plain = re.sub(r'<[^>]+>', '', text)
+        fallback = http.post(endpoint, json={'chat_id': chat_id, 'text': plain}, timeout=10)
+        return fallback.status_code == 200
+    except Exception as exc:
+        logger.warning('Telegram command response failed: %s', exc)
+        return False
 
 
 def _safe_linkedin_url(url):
@@ -69,10 +89,17 @@ def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
         message_text = message.get('text', '') or ''
         command = message_text.strip().split()[0] if message_text.strip() else ''
         from core.telegram_reports import command_response
-        report = command_response(command, store) if command.startswith('/') else None
+        report = command_response(command, store) if command else None
         if report:
-            http.post(f'https://api.telegram.org/bot{token}/sendMessage',
-                      json={'chat_id': chat_id, 'text': report, 'parse_mode': 'HTML'}, timeout=10)
+            _send_command_response(http, token, chat_id, report)
+            registered += 1
+            continue
+        if command.startswith('/') or command.lower() in {
+                'relatorio', 'status', 'fontes', 'ultimas', 'problemas', 'ajuda'}:
+            _send_command_response(
+                http, token, chat_id,
+                '🤖 Não reconheci esse comando. Envie /ajuda para ver as opções.'
+            )
             registered += 1
             continue
         for url in extract_job_urls(message_text):

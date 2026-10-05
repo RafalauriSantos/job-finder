@@ -30,6 +30,28 @@ def test_poll_uses_configured_long_poll_timeout(tmp_path):
     assert calls[0]['timeout'] == 60
 
 
+def test_poll_details_distinguish_command_from_url(tmp_path):
+    store = SQLiteStore(tmp_path / 'state.db')
+
+    class Response:
+        status_code = 200
+
+        def json(self):
+            return {'result': [{'update_id': 1, 'message': {
+                'chat': {'id': '42'}, 'from': {'id': '99'}, 'text': '/ajuda'
+            }}]}
+
+    class Http:
+        def get(self, url, **kwargs):
+            return Response()
+
+        def post(self, *args, **kwargs):
+            return Response()
+
+    result = poll_manual_urls(store, Http(), 'token', '42', '99', return_details=True)
+    assert result == {'handled': 1, 'urls_registered': 0}
+
+
 def test_command_send_falls_back_to_plain_text_on_telegram_error(tmp_path):
     store = SQLiteStore(tmp_path / 'state.db')
     sent = []

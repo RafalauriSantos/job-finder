@@ -34,11 +34,12 @@ def main():
                 time.sleep(10)
                 continue
             store = SQLiteStore(database)
-            handled = poll_manual_urls(
+            result = poll_manual_urls(
                 store, monitor.HTTP, token, chat_id, allowed_user_id,
                 poll_timeout=45, request_timeout=60,
+                return_details=True,
             )
-            if handled:
+            if result['urls_registered']:
                 # The update was already consumed. The one-shot manual cycle
                 # must process the queue without opening a second getUpdates
                 # request and without running the normal collectors.

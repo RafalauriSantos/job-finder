@@ -58,7 +58,7 @@ def resolve_linkedin_share(url, http):
 
 
 def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
-                     poll_timeout=0, request_timeout=10):
+                     poll_timeout=0, request_timeout=10, return_details=False):
     """Consume authorized messages, commands and URLs; returns items handled.
 
     ``poll_timeout`` enables Telegram long polling. A non-zero value keeps the
@@ -78,6 +78,7 @@ def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
         return 0
     updates = response.json().get('result', [])
     registered = 0
+    urls_registered = 0
     next_offset = offset
     for update in updates:
         next_offset = max(next_offset, int(update.get('update_id', 0)) + 1)
@@ -113,6 +114,7 @@ def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
                 continue
             queue_id = store.record_manual_case(resolved_url)
             registered += 1
+            urls_registered += 1
             response = http.post(f'https://api.telegram.org/bot{token}/sendMessage',
                       json={'chat_id': chat_id, 'text': '🔎 Link recebido. Identificando a fonte e iniciando a análise...'}, timeout=10)
             try:
@@ -126,6 +128,8 @@ def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
         with store.connect() as db:
             db.execute("INSERT INTO metadata(key,value) VALUES('telegram_update_offset',?) "
                        "ON CONFLICT(key) DO UPDATE SET value=excluded.value", (str(next_offset),))
+    if return_details:
+        return {'handled': registered, 'urls_registered': urls_registered}
     return registered
 
 

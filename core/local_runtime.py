@@ -84,8 +84,9 @@ def execute_cycle(monitor, store, due_only=False):
         if subprocess.run(['git', 'status', '--porcelain', '--untracked-files=no'],
                           capture_output=True, text=True, check=True).stdout.strip():
             revision += '+dirty'
-        cycle = db.execute('INSERT INTO cycles(started,status,revision) VALUES (?, ?, ?)',
-                           (now.isoformat(), 'RUNNING', revision)).lastrowid
+        mode = 'manual' if os.environ.get('JOB_FINDER_MANUAL_ONLY') == '1' else 'scheduled'
+        cycle = db.execute('INSERT INTO cycles(started,status,revision,mode) VALUES (?, ?, ?, ?)',
+                           (now.isoformat(), 'RUNNING', revision, mode)).lastrowid
     try:
         if (os.environ.get('JOB_FINDER_MANUAL_ONLY') == '1'
                 and os.environ.get('JOB_FINDER_SKIP_TELEGRAM_POLL') != '1'):

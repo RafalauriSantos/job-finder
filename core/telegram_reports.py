@@ -24,7 +24,7 @@ def _parse(value):
 def _rows(store, limit=20000):
     with store.connect() as db:
         return db.execute(
-            "SELECT id,started,finished,status,report FROM cycles ORDER BY id DESC LIMIT ?",
+            "SELECT id,started,finished,status,report,mode FROM cycles ORDER BY id DESC LIMIT ?",
             (limit,),
         ).fetchall()
 
@@ -34,16 +34,28 @@ def _reports_for_day(store, now=None):
     local_now = now.astimezone(LOCAL_ZONE)
     start = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
     result = []
-    for cycle_id, started, finished, status, raw_report in _rows(store):
+    for cycle_id, started, finished, status, raw_report, mode in _rows(store):
         parsed = _parse(started)
         if parsed and parsed.astimezone(LOCAL_ZONE).date() == start.date():
             try:
                 report = json.loads(raw_report) if raw_report else {}
             except (TypeError, ValueError):
                 report = {}
+            try:
+                report = json.loads(raw_report) if raw_report else {}
+            except (TypeError, ValueError):
+                report = {}
+            # Older manual-only cycles predate the mode column. Their empty,
+            # zero-duration reports are excluded from the collection report.
+            legacy_empty_manual = (
+                not mode and report.get('duration_seconds', 0) == 0
+                and _number(report, 'funnel', 'raw') == 0
+            )
+            if legacy_empty_manual:
+                continue
             result.append({
                 'id': cycle_id, 'started': started, 'finished': finished,
-                'status': status, 'report': report,
+                'status': status, 'report': report, 'mode': mode or 'scheduled',
             })
     return result
 

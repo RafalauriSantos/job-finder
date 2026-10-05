@@ -21,9 +21,9 @@ def _store(tmp_path):
         'llm_fallbacks': 1,
     }
     with store.connect() as db:
-        db.execute('INSERT INTO cycles(started,finished,status,report) VALUES (?,?,?,?)',
+        db.execute('INSERT INTO cycles(started,finished,status,report,mode) VALUES (?,?,?,?,?)',
                    ('2026-10-05T12:00:00+00:00', '2026-10-05T12:00:30+00:00',
-                    'DEGRADED', json.dumps(report)))
+                    'DEGRADED', json.dumps(report), 'scheduled'))
     return store
 
 

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import unicodedata
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -184,6 +185,10 @@ def build_problems(store):
 
 def command_response(command, store):
     command = command.strip().lower().split('@', 1)[0]
+    command = ''.join(
+        char for char in unicodedata.normalize('NFKD', command)
+        if not unicodedata.combining(char)
+    )
     if not command.startswith('/'):
         command = '/' + command
     responses = {

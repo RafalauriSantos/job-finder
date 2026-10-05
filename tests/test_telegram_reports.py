@@ -50,6 +50,8 @@ def test_unknown_command_is_ignored(tmp_path):
 
 def test_plain_word_alias_is_supported(tmp_path):
     assert 'Relatório do WorkHunter' in command_response('Relatorio', _store(tmp_path))
+    assert 'Relatório do WorkHunter' in command_response('Relatório', _store(tmp_path))
+    assert 'Relatório do WorkHunter' in command_response('/relatório@Radarvagas_Rafael_bot', _store(tmp_path))
 
 
 def test_telegram_command_is_replied_to_without_entering_manual_queue(tmp_path):

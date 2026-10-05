@@ -2,6 +2,7 @@
 import json
 import logging
 import re
+import unicodedata
 from urllib.parse import urlparse, parse_qs, unquote
 
 URL_RE = re.compile(r'https?://[^\s<>]+', re.IGNORECASE)
@@ -94,7 +95,11 @@ def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
             _send_command_response(http, token, chat_id, report)
             registered += 1
             continue
-        if command.startswith('/') or command.lower() in {
+        normalized_command = ''.join(
+            char for char in unicodedata.normalize('NFKD', command.lower())
+            if not unicodedata.combining(char)
+        )
+        if command.startswith('/') or normalized_command in {
                 'relatorio', 'status', 'fontes', 'ultimas', 'problemas', 'ajuda'}:
             _send_command_response(
                 http, token, chat_id,

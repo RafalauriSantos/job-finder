@@ -92,7 +92,7 @@ def main():
             import requests
             from core.operational_alerts import send_operational
             with requests.Session() as http:
-                send_operational(http, 'Job Finder: critical local storage/runtime failure. Collection stopped; check local diagnostics.')
+                send_operational(http, 'WorkHunter: critical local storage/runtime failure. Collection stopped; check local diagnostics.')
         return 1
     finally:
         handler.flush()

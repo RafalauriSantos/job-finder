@@ -1,6 +1,6 @@
-# Architecture
+# WorkHunter architecture
 
-Job Finder is a local-first pipeline for discovering and evaluating software
+WorkHunter is a local-first pipeline for discovering and evaluating software
 engineering opportunities. It is intentionally designed as a single-user
 service with durable local state and explicit operational boundaries.
 

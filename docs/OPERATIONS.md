@@ -1,8 +1,8 @@
-# Operacao do Job Finder
+# Operação do WorkHunter
 
 ## Executar
 
-```powershell
+```bash
 python monitor.py --once
 ```
 
@@ -37,7 +37,7 @@ No Gupy, os parâmetros seguem para a busca sem o `query_id` interno.
 
 Cada alteração de código é publicada em commit separado. Para voltar a uma versão anterior, primeiro identifique o commit e use uma reversão explícita:
 
-```powershell
+```bash
 git log --oneline -10
 git revert <commit>
 python -m pytest -q
@@ -47,7 +47,7 @@ Mudanças de configuração podem ser revertidas restaurando o commit anterior d
 
 ## Verificação
 
-```powershell
+```bash
 python -m pytest -q
 git status --short
 ```

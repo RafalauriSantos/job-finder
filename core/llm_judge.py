@@ -53,6 +53,9 @@ DESCRIÇÃO:
 
 Regras de julgamento:
 - Se NÃO for uma oportunidade de vaga real (despedida, desabafo, notícia institucional, vaga não-dev), marque is_real_job_opportunity=false.
+- Conte competências demonstradas em projetos próprios como evidência prática de aderência técnica.
+- Não converta projetos próprios em anos de experiência profissional nem em senioridade formal.
+- Considere CI/CD, cloud, testes e deploy competências reais quando houver evidência de implementação no perfil.
 - Se exigir graduação completa OBRIGATÓRIA (não apenas preferencial), marque cv_compatibility_score <= 20.
 - Se for vaga PCD exclusiva/afirmativa, marque is_real_job_opportunity=false.
 - Se for sênior/lead/gerente/especialista, marque cv_compatibility_score <= 10.

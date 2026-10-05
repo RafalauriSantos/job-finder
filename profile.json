@@ -1,5 +1,5 @@
 {
-  "nivel_atual": "Junior / Pleno em desenvolvimento",
+  "nivel_atual": "Júnior avançado / início de pleno; primeira experiência formal em desenvolvimento",
   "formacao": "Técnico em Desenvolvimento de Sistemas (Etec, jun/2026); cursando Fatec GTI",
   "english_level": "basic-intermediate",
   "stack_core": [
@@ -8,13 +8,16 @@
     "Node.js",
     "Supabase",
     "PostgreSQL",
-    "Tailwind"
+    "Tailwind",
+    "Cloudflare"
   ],
   "stack_secundaria": [
     "Java",
     "Python",
     "Docker",
-    "Git"
+    "Git",
+    "Playwright",
+    "Vitest"
   ],
   "skills_evidence": {
     "java": {
@@ -24,8 +27,38 @@
     "python": {
       "level": "project",
       "evidence": "implementação do Job Finder local; não apresentada como emprego formal"
+    },
+    "ci_cd": {
+      "level": "project",
+      "evidence": "pipeline GitHub Actions no projeto Marque's Barbearia, com testes de integração e E2E bloqueando deploys inválidos"
+    },
+    "cloudflare": {
+      "level": "project",
+      "evidence": "deploy e operação de frontend em Cloudflare Pages e backend serverless em Cloudflare Workers"
+    },
+    "playwright": {
+      "level": "project",
+      "evidence": "fluxos E2E no projeto Marque's Barbearia"
+    },
+    "vitest": {
+      "level": "project",
+      "evidence": "testes de integração no projeto Marque's Barbearia"
     }
   },
+  "projetos_com_evidencia": [
+    "ArenaSys: SaaS com React, PostgreSQL, Supabase, pagamentos, webhooks, RLS e tempo real",
+    "Marque's Barbearia: PWA com React, Hono, Cloudflare, sincronização offline, Vitest, Playwright e CI/CD"
+  ],
+  "experiencia_formal_desenvolvimento_anos": 0,
+  "autonomia_comprovada_em_projetos": [
+    "banco de dados",
+    "backend",
+    "frontend",
+    "deploy",
+    "testes",
+    "integrações",
+    "observabilidade"
+  ],
   "ferramentas_ia": [
     "Claude Code",
     "GitHub Copilot",

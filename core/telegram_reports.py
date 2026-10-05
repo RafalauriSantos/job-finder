@@ -260,6 +260,9 @@ def command_response(command, store):
     if not command.startswith('/'):
         command = '/' + command
     responses = {
+        '/start': lambda store: ('👋 <b>Olá! Eu sou o WorkHunter.</b>\n\n'
+                                 'Posso monitorar vagas, analisar links e mostrar o estado do sistema.\n\n'
+                                 + command_response('/ajuda', store)),
         '/relatorio': build_daily_report,
         '/status': build_status,
         '/fontes': build_sources,

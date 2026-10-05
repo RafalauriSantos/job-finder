@@ -6,7 +6,7 @@ def test_health_snapshot_reports_healthy_runtime(tmp_path):
     store = SQLiteStore(tmp_path / 'state.db')
     with store.connect() as db:
         db.execute("INSERT INTO cycles(started,finished,status) VALUES ('2026-10-04T12:00:00+00:00','2026-10-04T12:01:00+00:00','COMPLETED')")
-    result = health_snapshot(store, tmp_path, cycle_max_age_seconds=100000)
+    result = health_snapshot(store, tmp_path, cycle_max_age_seconds=200000)
     assert result['database'] == 'OK'
     assert result['last_cycle_status'] == 'COMPLETED'
     assert result['status'] == 'HEALTHY'

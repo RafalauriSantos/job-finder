@@ -37,6 +37,7 @@ def test_daily_report_aggregates_persisted_cycle(tmp_path):
 
 def test_commands_have_expected_responses(tmp_path):
     store = _store(tmp_path)
+    assert 'Olá! Eu sou o WorkHunter' in command_response('/start', store)
     assert 'Comandos do WorkHunter' in command_response('/ajuda', store)
     assert 'Último ciclo' in command_response('/status', store)
     assert 'LinkedIn' in command_response('/fontes', store)

@@ -2,6 +2,7 @@
 import json
 import logging
 import re
+import time
 import unicodedata
 from urllib.parse import urlparse, parse_qs, unquote
 
@@ -14,9 +15,12 @@ def _send_command_response(http, token, chat_id, text):
     """Send a command response with a plain-text fallback for Telegram errors."""
     endpoint = f'https://api.telegram.org/bot{token}/sendMessage'
     try:
+        started = time.perf_counter()
         response = http.post(endpoint, json={
             'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML'
         }, timeout=10)
+        logger.info('Telegram response API latency=%.3fs status=%s',
+                    time.perf_counter() - started, response.status_code)
         if response.status_code == 200:
             return True
         logger.warning('Telegram command response failed with HTTP %s', response.status_code)
@@ -89,6 +93,11 @@ def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
         if allowed_user_id and str(message.get('from', {}).get('id', '')) != str(allowed_user_id):
             continue
         message_text = message.get('text', '') or ''
+        received_at = time.time()
+        telegram_at = message.get('date')
+        if telegram_at:
+            logger.info('Telegram message received transport_latency=%.3fs',
+                        max(0.0, received_at - float(telegram_at)))
         command = message_text.strip().split()[0] if message_text.strip() else ''
         from core.telegram_reports import command_response
         report = command_response(command, store) if command else None

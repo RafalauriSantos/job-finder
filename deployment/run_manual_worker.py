@@ -10,6 +10,10 @@ sys.path.insert(0, str(ROOT))
 os.environ.setdefault('JOB_FINDER_RUNTIME_LOG', str(Path.home() / '.job-finder' / 'manual-worker.log'))
 os.environ['JOB_FINDER_MANUAL_ONLY'] = '1'
 
+from dotenv import load_dotenv
+
+load_dotenv(Path.home() / '.job-finder' / 'secrets.env', override=False)
+
 import monitor
 from core.local_runtime import data_directory
 from core.telegram_inbox import poll_manual_urls
@@ -25,6 +29,10 @@ def main():
     database = data_directory() / 'state.db'
     while True:
         try:
+            if not token or not chat_id:
+                print('manual worker waiting for Telegram credentials', flush=True)
+                time.sleep(10)
+                continue
             store = SQLiteStore(database)
             handled = poll_manual_urls(
                 store, monitor.HTTP, token, chat_id, allowed_user_id,

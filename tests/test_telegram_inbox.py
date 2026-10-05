@@ -52,6 +52,30 @@ def test_poll_details_distinguish_command_from_url(tmp_path):
     assert result == {'handled': 1, 'urls_registered': 0}
 
 
+def test_plain_start_is_replied_to_without_entering_manual_queue(tmp_path):
+    store = SQLiteStore(tmp_path / 'state.db')
+    sent = []
+
+    class Response:
+        status_code = 200
+
+        def json(self):
+            return {'result': [{'update_id': 2, 'message': {
+                'chat': {'id': '42'}, 'from': {'id': '99'}, 'text': 'Start'
+            }}]}
+
+    class Http:
+        def get(self, url, **kwargs):
+            return Response()
+
+        def post(self, url, **kwargs):
+            sent.append(kwargs['json'])
+            return Response()
+
+    assert poll_manual_urls(store, Http(), 'token', '42', '99') == 1
+    assert 'Olá! Eu sou o WorkHunter' in sent[0]['text']
+
+
 def test_command_send_falls_back_to_plain_text_on_telegram_error(tmp_path):
     store = SQLiteStore(tmp_path / 'state.db')
     sent = []

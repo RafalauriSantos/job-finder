@@ -101,7 +101,7 @@ def poll_manual_urls(store, http, token, chat_id, allowed_user_id=None,
             if not unicodedata.combining(char)
         )
         if command.startswith('/') or normalized_command in {
-                'relatorio', 'status', 'fontes', 'ultimas', 'problemas', 'ajuda'}:
+                'start', 'relatorio', 'status', 'fontes', 'ultimas', 'problemas', 'ajuda'}:
             _send_command_response(
                 http, token, chat_id,
                 '🤖 Não reconheci esse comando. Envie /ajuda para ver as opções.'

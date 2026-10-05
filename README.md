@@ -149,6 +149,13 @@ requires it; the important requirement is that the services run without a
 logged-in desktop session and use the persistent `~/.job-finder/` data
 directory.
 
+## Cadência de coleta
+
+O monitor verifica novas vagas a cada **30 minutos**. As consultas do LinkedIn
+consideram uma janela de aproximadamente **6 horas** (`r21600`), enquanto a
+deduplicação evita que uma vaga já registrada gere outro alerta. A janela de
+busca amplia a cobertura; ela não altera a frequência dos ciclos.
+
 ## External heartbeat
 
 The heartbeat is optional and is intended to notify you when the local host

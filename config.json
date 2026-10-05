@@ -1,5 +1,5 @@
 {
-  "check_interval_minutes": 60,
+  "check_interval_minutes": 30,
   "max_cycle_seconds": 220,
   "resolve_rss_urls": true,
   "rss_min_description_chars": 120,

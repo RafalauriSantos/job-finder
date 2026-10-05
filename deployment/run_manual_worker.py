@@ -1,5 +1,6 @@
 """Long-polling Telegram worker, independent from scheduled collection."""
 import os
+import logging
 import sys
 import time
 import traceback
@@ -9,6 +10,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 os.environ.setdefault('JOB_FINDER_RUNTIME_LOG', str(Path.home() / '.job-finder' / 'manual-worker.log'))
 os.environ['JOB_FINDER_MANUAL_ONLY'] = '1'
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s',
+    handlers=[logging.FileHandler(
+        os.environ['JOB_FINDER_RUNTIME_LOG'], encoding='utf-8'
+    )],
+)
 
 from dotenv import load_dotenv
 

@@ -3,6 +3,7 @@ import urllib.parse
 from html import unescape
 from typing import List, Dict, Any
 import requests
+from datetime import datetime, timezone
 from collectors.base import BaseCollector
 from models.job import Job
 from core.normalizer import normalize_title, normalize_workplace, extract_technologies
@@ -14,12 +15,16 @@ class LinkedInCollector(BaseCollector):
         self.http = http_session
         self.searches = searches
         self.query_stats: List[Dict[str, Any]] = []
+        self.collection_attempts = []
 
     def _enrich_job(self, job: Job, headers: Dict[str, str]) -> bool:
         """Tenta obter descrição pública; falhas mantêm o cartão original."""
         try:
+            started = datetime.now(timezone.utc).isoformat()
             response = self.http.get(job.sources["linkedin"].url, headers=headers, timeout=6)
             if response.status_code != 200:
+                self.record_attempt('linkedin', 'detail', started, query={'job_id': job.sources['linkedin'].source_job_id},
+                                    http_status=response.status_code, error_type=f'HTTP_{response.status_code}')
                 return False
             html = response.text
             description_match = re.search(
@@ -38,6 +43,8 @@ class LinkedInCollector(BaseCollector):
             description = re.sub(r"<[^>]+>", " ", description_match.group(1))
             description = re.sub(r"\s+", " ", unescape(description)).strip()
             if len(description) < 40:
+                self.record_attempt('linkedin', 'detail', started, query={'job_id': job.sources['linkedin'].source_job_id},
+                                    http_status=response.status_code, result_count=0, reason='description unavailable')
                 return False
             job.description = description
             job.technologies = extract_technologies(f"{job.title} {description}")
@@ -47,7 +54,10 @@ class LinkedInCollector(BaseCollector):
                 job.resolved_url = final_url
                 job.canonical_url = sanitize_canonical_url(final_url)
             return True
-        except Exception:
+        except Exception as exc:
+            self.record_attempt('linkedin', 'detail', locals().get('started', datetime.now(timezone.utc).isoformat()),
+                                query={'job_id': job.sources['linkedin'].source_job_id}, error_type=type(exc).__name__,
+                                timed_out=isinstance(exc, requests.Timeout), reason=str(exc))
             return False
 
     @staticmethod
@@ -115,6 +125,7 @@ class LinkedInCollector(BaseCollector):
         }
         try:
             for page in range(max_pages):
+                started = datetime.now(timezone.utc).isoformat()
                 stats["pages"] += 1
                 params = {**base_params, "start": page * 25}
                 query_str = urllib.parse.urlencode(params)
@@ -123,10 +134,16 @@ class LinkedInCollector(BaseCollector):
                 if resp.status_code != 200:
                     stats["status"] = f"HTTP_{resp.status_code}"
                     print(f"[ALERTA LinkedInCollector] Requisição falhou para '{keywords}' com status {resp.status_code}.")
+                    self.record_attempt('linkedin', 'search', started, query=params, page=page,
+                                        http_status=resp.status_code, error_type=f'HTTP_{resp.status_code}',
+                                        reason='HTTP response')
                     break
 
                 resp.encoding = "utf-8"
                 cards = re.findall(r'<li[^>]*>(.*?)</li>', resp.text, re.DOTALL)
+                page_ids = re.findall(r'data-entity-urn=\\"urn:li:jobPosting:(\\d+)\\"', resp.text)
+                self.record_attempt('linkedin', 'search', started, query=params, page=page,
+                                    http_status=resp.status_code, result_count=len(cards), native_ids=page_ids)
                 stats["cards"] += len(cards)
                 if not cards:
                     break
@@ -185,6 +202,8 @@ class LinkedInCollector(BaseCollector):
             stats["status"] = "ERROR"
             stats["error"] = str(e)
             print(f"[ERRO LinkedInCollector] {e}")
+            self.record_attempt('linkedin', 'search', started if 'started' in locals() else datetime.now(timezone.utc).isoformat(),
+                                query=base_params, error_type=type(e).__name__, timed_out=isinstance(e, requests.Timeout), reason=str(e))
 
         stats["parsed_jobs"] = len(jobs)
         self.query_stats.append(stats)

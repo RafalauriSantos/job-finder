@@ -1,6 +1,6 @@
 from typing import Literal
 from models.job import Job
-from core.normalizer import is_location_allowed, normalize_workplace, ALLOWED_REGIONAL_CITIES
+from core.normalizer import is_location_allowed, normalize_workplace, has_explicit_remote_signal, ALLOWED_REGIONAL_CITIES
 
 
 Decision = Literal["VETO", "LOW_SCORE", "APPROVED"]
@@ -27,9 +27,9 @@ def classify_location(job: Job):
     description = job.description or ""
     # Always reconcile the card's workplace with the full description. LinkedIn
     # cards can say "Home office" while the body requires regular travel onsite.
-    effective_workplace = normalize_workplace(
+    effective_workplace = ('remote' if has_explicit_remote_signal(description) else normalize_workplace(
         job.workplace_type, description, f"{job.title} {job.location}"
-    )
+    ))
     job.workplace_type = effective_workplace
     combined = f"{job.location} {job.title} {description}".lower()
     known_location = bool(job.location and job.location.lower() not in {"brasil", "brazil", "remoto", "a confirmar"})

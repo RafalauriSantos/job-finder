@@ -30,9 +30,40 @@ class SQLiteStore(StateStore):
                     status TEXT NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, retry_at REAL NOT NULL DEFAULT 0);
                 CREATE TABLE IF NOT EXISTS jobs(source TEXT NOT NULL, external_id TEXT NOT NULL,
                     payload TEXT NOT NULL, PRIMARY KEY(source,external_id));
+                CREATE TABLE IF NOT EXISTS collection_attempts(
+                    id INTEGER PRIMARY KEY, cycle_id TEXT NOT NULL, source TEXT NOT NULL,
+                    operation TEXT NOT NULL, query TEXT, query_hash TEXT, page INTEGER,
+                    cursor TEXT, started TEXT NOT NULL, finished TEXT NOT NULL,
+                    duration_ms INTEGER NOT NULL DEFAULT 0,
+                    http_status INTEGER, result_count INTEGER NOT NULL DEFAULT 0,
+                    native_ids TEXT NOT NULL DEFAULT '[]', error_type TEXT,
+                    timed_out INTEGER NOT NULL DEFAULT 0, retry_count INTEGER NOT NULL DEFAULT 0,
+                    reason TEXT);
+                CREATE TABLE IF NOT EXISTS manual_cases(
+                    id INTEGER PRIMARY KEY, url TEXT NOT NULL, normalized_url TEXT NOT NULL,
+                    source TEXT NOT NULL, native_id TEXT, identity_status TEXT NOT NULL,
+                    manual_found_at TEXT NOT NULL, raw_text TEXT NOT NULL DEFAULT '',
+                    author TEXT NOT NULL DEFAULT '', UNIQUE(source, native_id, normalized_url));
+                CREATE TABLE IF NOT EXISTS manual_analysis_queue(
+                    id INTEGER PRIMARY KEY, manual_case_id INTEGER NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'PENDING', attempts INTEGER NOT NULL DEFAULT 0,
+                    created_at TEXT NOT NULL, started_at TEXT, finished_at TEXT,
+                    result TEXT, error TEXT, telegram_chat_id TEXT, telegram_message_id INTEGER,
+                    notified_at TEXT);
             ''')
             db.execute("INSERT OR IGNORE INTO metadata VALUES ('state', ?)",
                        (json.dumps({'seen_ids': [], 'seen_fingerprints': [], 'last_heartbeat': ''}),))
+            columns = {row[1] for row in db.execute('PRAGMA table_info(collection_attempts)')}
+            if 'duration_ms' not in columns:
+                db.execute('ALTER TABLE collection_attempts ADD COLUMN duration_ms INTEGER NOT NULL DEFAULT 0')
+            queue_columns = {row[1] for row in db.execute('PRAGMA table_info(manual_analysis_queue)')}
+            for column, definition in (('telegram_chat_id', 'TEXT'), ('telegram_message_id', 'INTEGER'), ('notified_at', 'TEXT')):
+                if column not in queue_columns:
+                    db.execute(f'ALTER TABLE manual_analysis_queue ADD COLUMN {column} {definition}')
+            case_columns = {row[1] for row in db.execute('PRAGMA table_info(manual_cases)')}
+            for column, definition in (('raw_text', "TEXT NOT NULL DEFAULT ''"), ('author', "TEXT NOT NULL DEFAULT ''")):
+                if column not in case_columns:
+                    db.execute(f'ALTER TABLE manual_cases ADD COLUMN {column} {definition}')
         self.state = self._load()
 
     @contextmanager
@@ -115,6 +146,40 @@ class SQLiteStore(StateStore):
         with self.connect() as db:
             db.execute('INSERT INTO channel_attempts(fingerprint,channel,status,created) VALUES (?,?,?,?)',
                        (fingerprint, channel, status, datetime.now(timezone.utc).isoformat()))
+
+    def record_collection_attempt(self, attempt):
+        with self.connect() as db:
+            db.execute('''INSERT INTO collection_attempts
+                (cycle_id,source,operation,query,query_hash,page,cursor,started,finished,duration_ms,
+                 http_status,result_count,native_ids,error_type,timed_out,retry_count,reason)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+                attempt.get('cycle_id', ''), attempt.get('source', ''), attempt.get('operation', ''),
+                json.dumps(attempt.get('query'), ensure_ascii=False, sort_keys=True, default=str)
+                if attempt.get('query') is not None else None,
+                attempt.get('query_hash'), attempt.get('page'), attempt.get('cursor'),
+                attempt.get('started', datetime.now(timezone.utc).isoformat()),
+                attempt.get('finished', datetime.now(timezone.utc).isoformat()),
+                int(attempt.get('duration_ms', 0)), attempt.get('http_status'),
+                int(attempt.get('result_count', 0)), json.dumps(attempt.get('native_ids', [])),
+                attempt.get('error_type'), int(bool(attempt.get('timed_out'))), int(attempt.get('retry_count', 0)),
+                attempt.get('reason')))
+
+    def record_manual_case(self, url, source=None, native_id=None, manual_found_at=None, raw_text='', author=''):
+        from core.source_identity import extract_source_identity
+        identity = extract_source_identity(url)
+        with self.connect() as db:
+            db.execute('''INSERT INTO manual_cases
+                (url,normalized_url,source,native_id,identity_status,manual_found_at,raw_text,author)
+                VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(source,native_id,normalized_url) DO UPDATE SET
+                url=excluded.url, manual_found_at=excluded.manual_found_at,
+                raw_text=excluded.raw_text, author=excluded.author''', (
+                url, identity.normalized_url, source or identity.source, native_id or identity.native_id,
+                identity.identity_status, manual_found_at or datetime.now(timezone.utc).isoformat(), raw_text, author))
+            case = db.execute('SELECT id FROM manual_cases WHERE source=? AND native_id IS ? AND normalized_url=?',
+                              (source or identity.source, native_id or identity.native_id, identity.normalized_url)).fetchone()
+            queue = db.execute('INSERT INTO manual_analysis_queue(manual_case_id,created_at) VALUES (?,?)',
+                       (case[0], datetime.now(timezone.utc).isoformat()))
+            return queue.lastrowid
 
     def remember_job(self, job):
         from dataclasses import asdict

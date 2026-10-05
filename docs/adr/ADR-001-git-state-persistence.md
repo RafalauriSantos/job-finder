@@ -1,10 +1,14 @@
 # ADR-001: Git-Based State Persistence
 
-- **Status**: Accepted (Retrospectively documented)
+- **Status**: Superseded (historical decision)
 - **Decision Date**: Originates from initial implementation (commit `54cfb2f`)
 - **Documented**: 2026-09-13
 
 ## Context
+
+This ADR documents the original GitHub Actions deployment. The production
+runtime is now local-first; SQLite and the local runtime own current state.
+
 The monitoring runner executes periodically via GitHub Actions in ephemeral virtual machine runners. It must remember which job IDs and fingerprints have already been observed and alerted on, in order to prevent redundant notifications across runs.
 
 ## Decision

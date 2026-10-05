@@ -1,0 +1,19 @@
+[Unit]
+Description=WorkHunter local LinkedIn capture receiver
+After=network-online.target workhunter-inbox.service
+
+[Service]
+Type=simple
+WorkingDirectory=REPLACE_WITH_INSTALL_DIR
+Environment=JOB_FINDER_DB=%h/.job-finder/state.db
+ExecStart=REPLACE_WITH_INSTALL_DIR/.venv/bin/python tools/linkedin_ingest_server.py
+Restart=on-failure
+RestartSec=15
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.job-finder
+
+[Install]
+WantedBy=default.target

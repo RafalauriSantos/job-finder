@@ -1,155 +1,165 @@
 # Job Finder
 
-Automated software engineering job monitor with multi-source collection, deterministic filtering, and semantic evaluation, running on scheduled GitHub Actions workflows.
+Local-first radar for software engineering opportunities. The project collects
+public listings from multiple sources, normalizes and deduplicates them,
+applies deterministic eligibility rules, evaluates ambiguous cases with a
+configurable LLM provider and sends useful decisions to Telegram.
 
----
+It is a personal project designed to run continuously on a Linux host. GitHub
+is used for source control and automated tests; production collection and
+runtime state remain on the local machine.
 
-## 🎯 What It Does
+## Why this project exists
 
-Job Finder monitors technical job postings across multiple platforms for software engineering opportunities (configured for **Node.js, React, TypeScript, Java, and Python** at **Internship, Trainee, and Junior** levels).
-
-Candidate positions are processed through deterministic filtering (geographic radius, affirmative-action signals, seniority detection), profiled for context evidence density, and conditionally evaluated by a constrained LLM-based semantic judge for selected ambiguous candidates. Alerts are dispatched to **Telegram**.
-
----
-
-## 🏗️ How It Works
-
-The batch pipeline processes collected positions in sequential stages:
+Job search data is fragmented, duplicated and often incomplete. Job Finder
+turns that problem into an auditable pipeline with explicit decisions:
 
 ```mermaid
-flowchart TD
-    subgraph Ingestion["1. Ingestion Sources"]
-        GUPY["Gupy REST API"]
-        LI["LinkedIn Guest Search"]
-        GH["GitHub Issues"]
-        RSS["RSS / Atom Feeds"]
-        TRAMPOS["Trampos.co REST API"]
-    end
-
-    subgraph Pipeline["2. Processing Pipeline"]
-        MERGE["Cross-Source Deduplication"]
-        SEEN["Seen Jobs Filter"]
-        PCD["PCD Title Heuristic Guard"]
-        LOC["Regional / Remote Location Guard"]
-        EVAL["Scoring & Evidence-Based LLM Evaluation"]
-        THRESHOLD["Relevance Score Threshold"]
-    end
-
-    subgraph Dispatch["3. Audit & Notification"]
-        TG["Telegram Bot"]
-        STORE["State Store & Decision Audit Trail"]
-    end
-
-    Ingestion --> MERGE
-    MERGE --> SEEN
-    SEEN -->|New| PCD
-    PCD -->|Passed| LOC
-    LOC -->|Passed| EVAL
-    EVAL --> THRESHOLD
-    THRESHOLD -->|Qualified| TG
-    TG -->|Alert Dispatched| STORE
-    THRESHOLD -->|Insufficient Score| STORE
-    PCD -->|Discarded| STORE
-    LOC -->|Discarded| STORE
-    SEEN -->|Already Observed| STORE
+flowchart LR
+    A[Public feeds and APIs] --> B[Collectors]
+    C[Visible LinkedIn feed] --> D[Local capture queue]
+    B --> E[Normalize and identify]
+    D --> E
+    E --> F[Eligibility and evidence]
+    F --> G[Gemini / OpenRouter]
+    F --> H[Heuristic fallback]
+    G --> I[Decision audit]
+    H --> I
+    I --> J[SQLite local state]
+    I --> K[Telegram]
 ```
 
----
+The detailed design is in [Architecture](docs/architecture.md). Engineering
+decisions and evolution history are documented in [docs/](docs/).
 
-## 📡 Ingestion Sources
+## Capabilities
 
-| Source | Target / Scope | Mechanism |
-| :--- | :--- | :--- |
-| **Gupy** | Targeted company monitors and entry-level keyword searches | Public REST API |
-| **LinkedIn** | Role and company keyword queries | Unauthenticated Guest Search |
-| **GitHub Issues** | Configured developer communities | GitHub REST API |
-| **RSS** | Configured search indices and corporate career feeds | XML / Atom with RFC-822 / ISO-8601 parsing |
-| **Trampos.co** | Junior and technical opportunities | Public REST API |
+- Multi-source collection through public APIs, RSS/Atom feeds and public ATS
+  listings.
+- LinkedIn browser capture for content already visible in an authenticated
+  desktop browser session.
+- Stable source identity using native IDs and normalized URLs.
+- Cross-source deduplication and evidence-aware filtering.
+- Configurable Gemini or OpenRouter provider with a shared judge interface.
+- Deterministic heuristic fallback when an LLM is unavailable.
+- Manual URL intake and an independent worker for immediate analysis.
+- SQLite audit trail for decisions, collection attempts and recovery.
+- Telegram notifications, local health checks and an external heartbeat.
+- Automated tests and CI that validate code without executing real collection.
 
----
+## Sources
 
-## ⚖️ Scope & Trade-offs
+| Source | Access pattern | Role |
+| --- | --- | --- |
+| Gupy | Public API and detail enrichment | Targeted company listings |
+| GitHub Issues | GitHub REST API | Community job boards |
+| RSS/Atom | Public feeds | Career pages and search feeds |
+| Trampos.co | Public listing API | Technical opportunities |
+| GeekHunter | Public listing/detail pages | Complementary source |
+| LinkedIn | Guest queries plus visible browser capture | Coverage complement |
 
-Job Finder is designed as a **single-user / single-profile scheduled batch process**:
+LinkedIn coverage is intentionally bounded. The browser extension only submits
+posts that LinkedIn has loaded in the open feed. It does not bypass login,
+challenges, rate limits or access controls.
 
-- **No external database infrastructure**: Uses a Git-versioned state file (`seen_jobs.json`) to persist observed jobs across ephemeral GitHub Actions runners without hosting costs ([ADR-001](docs/adr/ADR-001-git-state-persistence.md)).
-- **Selective LLM utilization**: Deterministic heuristics and evidence density profiling filter out non-matching or low-context items before semantic evaluation, reducing unnecessary API calls and preserving available quotas ([ADR-002](docs/adr/ADR-002-llm-after-deterministic-filtering.md)).
-- **Independent identity & content tracking**: Separates identity hashing from description hashing to accurately detect identical roles cross-platform ([ADR-003](docs/adr/ADR-003-identity-content-decoupling.md)).
-- **Deliberate boundaries**: The system does not attempt to be a high-concurrency universal job aggregator or real-time indexer; it prioritizes operational simplicity, cost efficiency, and auditable decision-making.
+## Reliability and safety
 
----
+Each source has isolated timeout, retry and rate-limit handling. A source
+failure is recorded and does not have to stop the complete cycle. A separate
+manual worker prevents a user-submitted URL from waiting for the scheduled
+radar. systemd restarts local services, while the heartbeat gives an external
+signal when the host stops checking in.
 
-## 📚 Engineering Documentation
+Secrets, browser profiles, databases and runtime logs stay outside Git. See
+[SECURITY.md](SECURITY.md) for the security boundary and
+[CONTRIBUTING.md](CONTRIBUTING.md) for repository hygiene.
 
-The project's architectural decisions, development process, and evolution history are documented in [`docs/`](docs/):
+## Quick start
 
-- **[Evolution History](docs/engineering/evolution-history.md)**: Progression from the initial single-file script to the current layered pipeline, reconstructed from repository commits.
-- **[Engineering Methodology](docs/engineering/methodology.md)**: Development process, test-backed verification, and the distinction between *AI-Assisted Development* (build time) and *AI at Runtime* (semantic evaluation stage).
-- **Architecture Decision Records (ADRs)**:
-  - [ADR-001: Git-Based State Persistence](docs/adr/ADR-001-git-state-persistence.md)
-  - [ADR-002: Deterministic Filtering Before LLM Evaluation](docs/adr/ADR-002-llm-after-deterministic-filtering.md)
-  - [ADR-003: Identity and Content Decoupling](docs/adr/ADR-003-identity-content-decoupling.md)
-  - [ADR-004: Multi-Stage Job Evaluation Pipeline](docs/adr/ADR-004-multi-stage-job-evaluation-pipeline.md)
+Requirements: Python 3.10 or newer and Git.
 
----
-
-## 🚀 Quick Start
-
-### 1. Requirements
-- Python 3.10+
-- Git
-
-### 2. Setup
 ```bash
 git clone https://github.com/RafalauriSantos/job-finder.git
 cd job-finder
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+cp .env.example .env
 ```
 
-### 3. Environment Configuration (`.env`)
+Edit `.env` with local values. Keep the real file untracked. The public
+configuration template is [config.example.json](config.example.json); the
+personal `config.json` contains the owner's monitor selection.
+
+For Gemini:
+
 ```env
-TELEGRAM_BOT_TOKEN=your_token_here
-TELEGRAM_CHAT_ID=your_chat_id_here
-
-# Optional: enables LLM semantic evaluation (Google Gemini)
-GEMINI_API_KEY=your_gemini_key_here
-
-# Optional: secondary LLM fallback (Anthropic Claude)
-ANTHROPIC_API_KEY=your_anthropic_key_here
-
-# Optional: increases GitHub API rate limit from 60 to 5000 req/hr
-GITHUB_TOKEN=your_github_token_here
+LLM_PROVIDER=gemini
+LLM_MODEL=
+GEMINI_API_KEY=your_key_here
 ```
 
+For OpenRouter:
 
-### 4. Running
-- **Execute single cycle:**
-  ```bash
-  python monitor.py --once
-  ```
-- **Run continuous daemon (local):**
-  ```bash
-  python monitor.py
-  ```
+```env
+LLM_PROVIDER=openrouter
+LLM_MODEL=google/gemini-2.5-flash-lite
+OPENROUTER_API_KEY=your_key_here
+```
 
----
-
-## 🧪 Automated Tests
-
-The test suite covers normalization, deduplication, URL resolution, evidence density, scoring rules, and failure handling:
+Run one cycle or start the local runner:
 
 ```bash
-pytest tests/ -v
+python monitor.py --once
+python monitor.py
 ```
 
----
+The systemd units under `deployment/` are installation examples for the local
+host. They should be reviewed for the installation path before being copied to
+the system unit directory.
 
-## ⚙️ Scheduled Automation
+## Manual and LinkedIn intake
 
-The repository includes a GitHub Actions workflow ([`.github/workflows/monitor.yml`](.github/workflows/monitor.yml)) configured to run periodically, committing state updates back to `seen_jobs.json` to maintain persistence across runs.
+Register a URL with the lightweight CLI:
 
----
+```bash
+./workhunter add 'https://www.linkedin.com/jobs/view/123456789/'
+./workhunter worker-once
+./workhunter diagnose
+```
 
-## 📄 License
+The browser extension under `tools/linkedin_extension/` captures relevant
+posts visible in the LinkedIn feed and sends them to the loopback receiver.
+The receiver deduplicates content and places it in the same analysis pipeline.
 
-Distributed under the [MIT](LICENSE) License.
+## Testing
+
+The suite covers collectors, normalization, identity, deduplication, scoring,
+LLM contracts, fallback behavior, manual intake, LinkedIn ingestion and health
+checks.
+
+```bash
+python -m pytest -q
+```
+
+GitHub Actions runs this test suite only. It does not execute collection, use
+production credentials or commit runtime state.
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Operations](docs/OPERATIONS.md)
+- [Engineering methodology](docs/engineering/methodology.md)
+- [Security policy](SECURITY.md)
+- [Contribution guide](CONTRIBUTING.md)
+- [License](LICENSE)
+
+## Roadmap
+
+- Improve coverage measurement with collection-attempt evidence.
+- Compare manual LinkedIn findings against future collector results.
+- Calibrate scoring using a time-separated evaluation set.
+- Expand reliable public ATS and RSS adapters.
+
+The project does not claim complete market coverage. Its goal is a measurable,
+recoverable and maintainable personal radar.

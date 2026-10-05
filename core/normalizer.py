@@ -137,6 +137,16 @@ def normalize_workplace(raw_workplace: str, location_text: str = "", title_text:
     return "unknown"
 
 
+def has_explicit_remote_signal(text: str) -> bool:
+    """Strong body-text evidence that remote work is allowed."""
+    normalized = (text or "").lower()
+    return any(signal in normalized for signal in (
+        "atuação remota", "atuacao remota", "trabalho remoto", "100% remoto",
+        "100% remota", "qualquer lugar do brasil", "home office",
+        "pode ser exercida de qualquer lugar", "fully remote", "fully-remote",
+    ))
+
+
 def is_location_allowed(workplace: str, location_text: str = "", title_text: str = "") -> Tuple[bool, str]:
     """
     Aplica a regra estrita de localidade:

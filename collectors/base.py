@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
+from datetime import datetime, timezone
+import hashlib
+import json
 from models.job import Job
 from dataclasses import dataclass, field
 
@@ -26,6 +29,23 @@ def collect_result(collector):
 
 
 class BaseCollector(ABC):
+    def __init__(self):
+        self.collection_attempts = []
+
+    def record_attempt(self, source, operation, started, *, query=None, page=None,
+                       cursor=None, http_status=None, result_count=0, native_ids=None,
+                       error_type=None, timed_out=False, retry_count=0, reason=None):
+        self.collection_attempts.append({
+            'cycle_id': getattr(self, 'cycle_id', ''), 'source': source, 'operation': operation,
+            'query': query, 'query_hash': hashlib.sha256(json.dumps(query, sort_keys=True, default=str).encode()).hexdigest() if query is not None else None,
+            'page': page, 'cursor': cursor, 'started': started,
+            'finished': datetime.now(timezone.utc).isoformat(), 'http_status': http_status,
+            'result_count': result_count, 'native_ids': native_ids or [], 'error_type': error_type,
+            'timed_out': timed_out, 'retry_count': retry_count, 'reason': reason,
+        })
+        item = self.collection_attempts[-1]
+        item['duration_ms'] = max(0, int((datetime.fromisoformat(item['finished']) - datetime.fromisoformat(started)).total_seconds() * 1000))
+
     def report_issue(self, issue):
         if not hasattr(self, 'collection_issues'):
             self.collection_issues = []

@@ -51,11 +51,13 @@ def diagnostic(store, config=None):
         uncertain = db.execute("SELECT COUNT(*) FROM channel_attempts WHERE status='UNKNOWN'").fetchone()[0]
         pending = db.execute("SELECT status,COUNT(*) FROM outbox WHERE status!='DELIVERED' GROUP BY status").fetchall()
     last = datetime.fromisoformat(cycle[1]) if cycle else None
+    from core.health import health_snapshot
     return {'database': store.filepath, 'last_cycle': cycle,
             'due': is_due(now, last, interval_minutes),
             'next_check_due': (last + interval_at(now, interval_minutes)).isoformat() if last else now.isoformat(),
             'pending_deliveries': dict(pending),
-            'uncertain_attempts': uncertain}
+            'uncertain_attempts': uncertain,
+            'health': health_snapshot(store, Path(store.filepath).parent)}
 
 
 def execute_cycle(monitor, store, due_only=False):
@@ -85,6 +87,12 @@ def execute_cycle(monitor, store, due_only=False):
         cycle = db.execute('INSERT INTO cycles(started,status,revision) VALUES (?, ?, ?)',
                            (now.isoformat(), 'RUNNING', revision)).lastrowid
     try:
+        if os.environ.get('JOB_FINDER_MANUAL_ONLY') == '1':
+            from core.telegram_inbox import poll_manual_urls
+            poll_manual_urls(store, getattr(monitor, 'HTTP', None),
+                             getattr(monitor, 'TELEGRAM_BOT_TOKEN', None),
+                             getattr(monitor, 'TELEGRAM_CHAT_ID', None),
+                             os.getenv('TELEGRAM_ALLOWED_USER_ID'))
         store.backup(Path(store.filepath).parent / 'backups')
         monitor.run_check()
     except BaseException:

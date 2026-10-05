@@ -18,7 +18,9 @@ def main():
     from core.local_runtime import data_directory
     directory = data_directory()
     directory.mkdir(parents=True, exist_ok=True)
-    handler = RotatingFileHandler(directory / 'runtime.log', maxBytes=2_000_000,
+    log_path = Path(os.environ.get('JOB_FINDER_RUNTIME_LOG', str(directory / 'runtime.log')))
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    handler = RotatingFileHandler(log_path, maxBytes=2_000_000,
                                   backupCount=7, encoding='utf-8')
     handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
     logger = logging.getLogger('local-runner')
@@ -94,6 +96,8 @@ def main():
         return 1
     finally:
         handler.flush()
+        logger.removeHandler(handler)
+        handler.close()
     return 0
 
 

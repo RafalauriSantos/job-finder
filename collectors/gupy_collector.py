@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any
 import requests
+from datetime import datetime, timezone
 from collectors.base import BaseCollector
 from models.job import Job
 from core.normalizer import normalize_title, normalize_workplace, extract_technologies
@@ -31,8 +32,10 @@ class GupyCollector(BaseCollector):
         self.detail_attempts = 0
         self.query_stats: List[Dict[str, Any]] = []
         self._last_query_status = "UNKNOWN"
+        self.collection_attempts = []
 
     def _query_api(self, args: Dict[str, Any]) -> List[Dict[str, Any]]:
+        started = datetime.now(timezone.utc).isoformat()
         api_args = {key: value for key, value in args.items() if key != "query_id"}
         body = {
             "jsonrpc": "2.0",
@@ -51,6 +54,8 @@ class GupyCollector(BaseCollector):
             resp = self.http.post(GUPY_MCP_URL, json=body, headers=headers, timeout=15)
             if resp.status_code != 200:
                 self._last_query_status = f"HTTP_{resp.status_code}"
+                self.record_attempt('gupy', 'search', started, query=args, http_status=resp.status_code,
+                                    error_type=self._last_query_status, reason='HTTP response')
                 return []
 
             resp.encoding = "utf-8"
@@ -64,18 +69,24 @@ class GupyCollector(BaseCollector):
                         self._last_query_status = 'INVALID_RESPONSE'
                         return []
                     self._last_query_status = "OK"
+                    self.record_attempt('gupy', 'search', started, query=args, http_status=resp.status_code,
+                                        result_count=len(jobs), native_ids=[str(item.get('id')) for item in jobs])
                     return jobs
         except Exception as e:
             self._last_query_status = "ERROR"
+            self.record_attempt('gupy', 'search', started, query=args,
+                                error_type=type(e).__name__, timed_out=isinstance(e, requests.Timeout), reason=str(e))
             print(f"[ERRO GupyCollector] {e}")
             return []
         self._last_query_status = "INVALID_RESPONSE"
+        self.record_attempt('gupy', 'search', started, query=args, error_type='INVALID_RESPONSE')
         return []
 
     def _get_detail(self, job_id: str) -> Dict[str, Any]:
         if not job_id or self.detail_attempts >= self.detail_limit:
             return {}
         self.detail_attempts += 1
+        started = datetime.now(timezone.utc).isoformat()
         body = {
             "jsonrpc": "2.0",
             "id": 1,
@@ -90,6 +101,8 @@ class GupyCollector(BaseCollector):
                 timeout=15,
             )
             if response.status_code != 200:
+                self.record_attempt('gupy', 'detail', started, query={'job_id': job_id},
+                                    http_status=response.status_code, error_type=f'HTTP_{response.status_code}')
                 return {}
             for line in response.text.splitlines():
                 if line.startswith("data:"):
@@ -97,9 +110,15 @@ class GupyCollector(BaseCollector):
                     content = payload.get("result", {}).get("content", [{}])[0].get("text", "{}")
                     parsed = json.loads(content)
                     data = parsed.get("data", {})
+                    self.record_attempt('gupy', 'detail', started, query={'job_id': job_id},
+                                        http_status=response.status_code, result_count=1 if data else 0,
+                                        native_ids=[job_id] if data else [])
                     return data.get("job") or data.get("data") or {}
         except (requests.RequestException, ValueError, TypeError, KeyError):
+            self.record_attempt('gupy', 'detail', started, query={'job_id': job_id},
+                                error_type='ERROR', reason='detail request or parsing failed')
             return {}
+        self.record_attempt('gupy', 'detail', started, query={'job_id': job_id}, error_type='INVALID_RESPONSE')
         return {}
 
     def collect(self) -> List[Job]:

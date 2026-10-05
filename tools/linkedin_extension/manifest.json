@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "WorkHunter LinkedIn Capture",
+  "version": "0.1.0",
+  "description": "Captura posts visíveis de recrutamento e envia ao WorkHunter local.",
+  "permissions": [],
+  "host_permissions": ["http://127.0.0.1:8765/*"],
+  "background": {"service_worker": "background.js"},
+  "content_scripts": [{
+    "matches": ["https://www.linkedin.com/*"],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }]
+}

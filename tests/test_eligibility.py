@@ -83,3 +83,17 @@ def test_ambiguous_external_location_is_not_assumed_remote():
     )
 
     assert classify_location(job)[0] == "LOCATION_REJECTED"
+
+
+def test_explicit_remote_description_overrides_hybrid_header():
+    job = Job(
+        title="Desenvolvedor Full-Stack JavaScript Júnior",
+        company="4DF Connect",
+        workplace_type="hybrid",
+        location="São Paulo, SP",
+        description="Esta vaga é para atuação remota, podendo ser exercida de qualquer lugar do Brasil.",
+    )
+    decision, reason = classify_location(job)
+    assert decision == "APPROVED"
+    assert job.workplace_type == "remote"
+    assert "Remoto" in reason

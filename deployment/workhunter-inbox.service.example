@@ -1,0 +1,19 @@
+[Unit]
+Description=WorkHunter manual Telegram analysis worker
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=REPLACE_WITH_INSTALL_DIR
+Environment=JOB_FINDER_RUNTIME_LOG=%h/.job-finder/manual-worker.log
+ExecStart=REPLACE_WITH_INSTALL_DIR/.venv/bin/python deployment/run_manual_worker.py
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.job-finder
+
+[Install]
+WantedBy=default.target

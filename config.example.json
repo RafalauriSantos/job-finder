@@ -1,0 +1,17 @@
+{
+  "check_interval_minutes": 60,
+  "max_cycle_seconds": 220,
+  "progression_min_score": 45,
+  "linkedin_max_queries": 8,
+  "linkedin_detail_enrichment_limit": 8,
+  "monitors": [
+    {
+      "type": "rss",
+      "description": "Exemplo de feed de oportunidades",
+      "company": "Example",
+      "url": "https://example.com/jobs.rss",
+      "keywords": ["desenvolvedor", "developer", "software", "junior"],
+      "exclude_keywords": ["senior", "sênior", "lead"]
+    }
+  ]
+}

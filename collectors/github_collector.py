@@ -3,6 +3,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any, Optional
 import requests
+from datetime import datetime, timezone
 from collectors.base import BaseCollector
 from models.job import Job
 from core.normalizer import normalize_title, normalize_workplace
@@ -52,6 +53,7 @@ class GithubIssuesCollector(BaseCollector):
             "primary_jobs": 0,
             "fallback_used": False,
         }
+        self.collection_attempts = []
 
     def _get_headers(self) -> Dict[str, str]:
         headers = {
@@ -129,6 +131,7 @@ class GithubIssuesCollector(BaseCollector):
             self.stats["repos"][repo] = repo_stats
             try:
                 for page in range(1, self.max_pages + 1):
+                    started = datetime.now(timezone.utc).isoformat()
                     url = f"https://api.github.com/repos/{repo}/issues"
                     resp = self.http.get(
                         url,
@@ -139,11 +142,17 @@ class GithubIssuesCollector(BaseCollector):
                     self.stats["pages"] += 1
                     repo_stats["pages"] += 1
                     if resp.status_code != 200:
+                        self.record_attempt('github', 'issues', started, query={'repo': repo}, page=page,
+                                            http_status=resp.status_code, error_type=f'HTTP_{resp.status_code}')
                         self.report_issue(f'HTTP_{resp.status_code}')
                         print(f"[ALERTA GithubCollector] Repo {repo} retornou status {resp.status_code}")
                         break
 
                     issues = resp.json()
+                    self.record_attempt('github', 'issues', started, query={'repo': repo}, page=page,
+                                        http_status=resp.status_code, result_count=len(issues) if isinstance(issues, list) else 0,
+                                        native_ids=[str(issue.get('id')) for issue in issues] if isinstance(issues, list) else [],
+                                        error_type=None if isinstance(issues, list) else 'INVALID_RESPONSE')
                     if not isinstance(issues, list):
                         self.report_issue('INVALID_RESPONSE')
                         break

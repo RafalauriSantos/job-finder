@@ -1,6 +1,7 @@
 import re
 from typing import List, Dict, Any, Optional
 import requests
+from datetime import datetime, timezone
 from collectors.base import BaseCollector
 from models.job import Job
 from core.normalizer import normalize_title, normalize_workplace
@@ -25,6 +26,7 @@ class TramposCollector(BaseCollector):
         self.keywords = [k.lower() for k in (keywords or [])]
         self.exclude_keywords = [k.lower() for k in (exclude_keywords or [])]
         self.max_pages = max_pages
+        self.collection_attempts = []
 
     def _matches_filters(self, text_to_check: str) -> bool:
         lower = text_to_check.lower()
@@ -41,16 +43,22 @@ class TramposCollector(BaseCollector):
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 
         for page in range(1, self.max_pages + 1):
+            started = datetime.now(timezone.utc).isoformat()
             url = f"{self.BASE_URL}?page={page}"
             try:
                 resp = self.http.get(url, headers=headers, timeout=12)
                 if resp.status_code != 200:
+                    self.record_attempt('trampos', 'opportunities', started, page=page,
+                                        http_status=resp.status_code, error_type=f'HTTP_{resp.status_code}')
                     self.report_issue(f'HTTP_{resp.status_code}')
                     print(f"[ALERTA TramposCollector] Status {resp.status_code} na página {page}")
                     continue
 
                 data = resp.json()
                 opportunities = data.get("opportunities", [])
+                self.record_attempt('trampos', 'opportunities', started, page=page,
+                                    http_status=resp.status_code, result_count=len(opportunities),
+                                    native_ids=[str(item.get('id')) for item in opportunities])
                 if not opportunities:
                     break
 

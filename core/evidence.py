@@ -71,7 +71,7 @@ def should_route_to_llm(job: Job) -> bool:
     """
     Regra de decisão da SPEC-008:
     Vagas LOW_EVIDENCE (especialmente RSS raso ou sem metadados suficientes)
-    NÃO devem consumir a cota de 15 RPM do Gemini 2.5 Flash-Lite.
+    NÃO devem consumir a cota do provedor LLM configurado (Gemini).
     Vagas MEDIUM_EVIDENCE e HIGH_EVIDENCE possuem evidência suficiente e são roteadas ao LLM.
     """
     profile = profile_job_evidence(job)

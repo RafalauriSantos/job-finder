@@ -4,6 +4,7 @@ from datetime import datetime, timezone, timedelta
 import xml.etree.ElementTree as ET
 from typing import List, Dict, Any, Optional, Tuple
 import requests
+from datetime import datetime, timezone
 from html import unescape
 from collectors.base import BaseCollector
 from models.job import Job
@@ -70,13 +71,17 @@ class RssCollector(BaseCollector):
         self.configs = configs
         self.resolve_urls = resolve_urls
         self.min_description_chars = max(0, int(min_description_chars or 0))
+        self.collection_attempts = []
 
     def _parse_feed(self, feed_url: str) -> List[Dict[str, Any]]:
         """Faz fetch e parse do XML do feed, retorna lista de {id, title, link, pub_date}."""
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         try:
+            started = datetime.now(timezone.utc).isoformat()
             resp = self.http.get(feed_url, headers=headers, timeout=15)
             if resp.status_code != 200:
+                self.record_attempt('rss', 'feed', started, query={'url': feed_url},
+                                    http_status=resp.status_code, error_type=f'HTTP_{resp.status_code}')
                 self.report_issue(f'HTTP_{resp.status_code}')
                 print(f"[ALERTA RssCollector] Feed retornou status {resp.status_code}: {feed_url[:80]}")
                 return []
@@ -103,6 +108,9 @@ class RssCollector(BaseCollector):
                         "raw_date": raw_date,
                         "description": description,
                     })
+                self.record_attempt('rss', 'feed', started, query={'url': feed_url},
+                                    http_status=resp.status_code, result_count=len(items),
+                                    native_ids=[str(item['id']) for item in items])
                 return items
 
             # 2. Formato RSS 2.0 (Google News)
@@ -122,9 +130,15 @@ class RssCollector(BaseCollector):
                         "raw_date": raw_date,
                         "description": description,
                     })
+                self.record_attempt('rss', 'feed', started, query={'url': feed_url},
+                                    http_status=resp.status_code, result_count=len(items),
+                                    native_ids=[str(item['id']) for item in items])
                 return items
 
         except Exception as e:
+            self.record_attempt('rss', 'feed', locals().get('started', datetime.now(timezone.utc).isoformat()),
+                                query={'url': feed_url}, error_type=type(e).__name__,
+                                timed_out=isinstance(e, requests.Timeout), reason=str(e))
             self.report_issue(type(e).__name__)
             print(f"[ERRO RssCollector] {e}")
         return []

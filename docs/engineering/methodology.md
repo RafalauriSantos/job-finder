@@ -44,7 +44,7 @@ Large Language Models (LLMs) are used during the development phase as engineerin
 **Rule of Trust**: Code and tests produced with AI assistance are never assumed correct by default. Every behavior must be validated through automated test execution and observable runtime behavior.
 
 ### 2. AI at Runtime (Execution Pipeline)
-At runtime, an LLM (`gemini-2.5-flash-lite`) acts strictly as a **Semantic Judge** in an isolated stage of the processing pipeline:
+At runtime, an LLM (Gemini, padrão `gemini-2.5-flash-lite`) acts strictly as a **Semantic Judge** in an isolated stage of the processing pipeline:
 - It is **not** the primary discovery mechanism (collectors handle discovery).
 - It is **not** invoked for all incoming items (deterministic heuristics filter out non-matches first).
 - It evaluates whether a job's stated requirements, responsibilities, and stack match the candidate's actual profile when keyword matching produces ambiguity.

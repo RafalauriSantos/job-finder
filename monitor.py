@@ -17,6 +17,8 @@ from collectors.linkedin_collector import LinkedInCollector
 from collectors.rss_collector import RssCollector
 from collectors.github_collector import GithubIssuesCollector
 from collectors.trampos_collector import TramposCollector
+from collectors.manual_collector import ManualCollector
+from collectors.geekhunter_collector import GeekHunterCollector
 from notify.telegram_notifier import TelegramNotifier
 from notify.email_notifier import ResendEmailNotifier
 from storage.state_store import StateStore
@@ -103,6 +105,7 @@ def check_heartbeat(config: dict, store: StateStore, notifier: TelegramNotifier)
 
 def run_check():
     config = load_config()
+    manual_only = os.getenv('JOB_FINDER_MANUAL_ONLY') == '1'
     store = StateStore(STATE_FILE)
     cycle_id = datetime.now().strftime("%Y%m%dT%H%M%S") + "-" + __import__("uuid").uuid4().hex[:8]
     store.state["active_cycle_id"] = cycle_id
@@ -132,6 +135,7 @@ def run_check():
     rss_configs = []
     github_configs = []
     trampos_configs = []
+    geekhunter_configs = []
 
     for m in monitors:
         m_type = m.get("type", "")
@@ -154,6 +158,12 @@ def run_check():
                 search = dict(planned_query)
                 search["keywords"] = planned_query["query"]
                 search["max_pages"] = m.get("max_pages", 3)
+                # Keep automatic searches on the same public enrichment path as
+                # manual links, with a bounded per-query request budget.
+                search["enrich_details"] = m.get("enrich_details", True)
+                search["detail_enrichment_limit"] = int(
+                    m.get("detail_enrichment_limit", config.get("linkedin_detail_enrichment_limit", 8))
+                )
                 linkedin_searches.append(search)
         elif m_type == "rss":
             rss_configs.append(m)
@@ -161,6 +171,8 @@ def run_check():
             github_configs.append(m)
         elif m_type == "trampos":
             trampos_configs.append(m)
+        elif m_type == "geekhunter":
+            geekhunter_configs.append(m)
 
     # 2. Executa a Coleta (Fase de Descoberta / Recall Alto)
     discovered_gupy = []
@@ -168,6 +180,7 @@ def run_check():
     discovered_rss = []
     discovered_github = []
     discovered_trampos = []
+    discovered_manual = []
     gupy_status = "OK"
     linkedin_status = "OK"
     linkedin_query_stats = []
@@ -175,8 +188,34 @@ def run_check():
     rss_status = "OK"
     github_status = "OK"
     trampos_status = "OK"
+    geekhunter_status = "OK"
 
-    if gupy_queries:
+    if durable:
+        try:
+            manual_col = ManualCollector(HTTP, store)
+            manual_result = collect_result(manual_col)
+            discovered_manual, manual_status = manual_result.jobs, manual_result.status
+            for attempt in manual_col.collection_attempts:
+                attempt['cycle_id'] = cycle_id
+                store.record_collection_attempt(attempt)
+        except Exception as e:
+            manual_status = f"FALHA ({e})"
+    else:
+        manual_status = "NOT_CONFIGURED"
+
+    if geekhunter_configs and not manual_only:
+        for cfg in geekhunter_configs:
+            gh_col = GeekHunterCollector(HTTP, cfg.get('keywords'), cfg.get('exclude_keywords'), cfg.get('max_jobs', 30))
+            result = collect_result(gh_col)
+            discovered_manual.extend(result.jobs)
+            if result.status != 'OK':
+                geekhunter_status = result.status
+            for attempt in gh_col.collection_attempts:
+                attempt['cycle_id'] = cycle_id
+                if durable:
+                    store.record_collection_attempt(attempt)
+
+    if gupy_queries and not manual_only:
         try:
             gupy_col = GupyCollector(
                 HTTP,
@@ -188,10 +227,14 @@ def run_check():
             result = collect_result(gupy_col)
             discovered_gupy, gupy_status = result.jobs, result.status
             gupy_query_stats = gupy_col.query_stats
+            for attempt in gupy_col.collection_attempts:
+                attempt['cycle_id'] = cycle_id
+                if durable:
+                    store.record_collection_attempt(attempt)
         except Exception as e:
             gupy_status = f"FALHA ({e})"
 
-    if linkedin_searches:
+    if linkedin_searches and not manual_only:
         try:
             max_linkedin_queries = int(config.get("linkedin_max_queries", 8))
             linkedin_searches = rotate_searches(
@@ -202,6 +245,10 @@ def run_check():
             result = collect_result(li_col)
             discovered_linkedin, linkedin_status = result.jobs, result.status
             linkedin_query_stats = li_col.query_stats
+            for attempt in li_col.collection_attempts:
+                attempt['cycle_id'] = cycle_id
+                if durable:
+                    store.record_collection_attempt(attempt)
             failed_queries = [
                 item.get("status", "UNKNOWN")
                 for item in linkedin_query_stats
@@ -212,7 +259,7 @@ def run_check():
         except Exception as e:
             linkedin_status = f"FALHA ({e})"
 
-    if rss_configs:
+    if rss_configs and not manual_only:
         try:
             rss_col = RssCollector(
                 HTTP,
@@ -222,10 +269,14 @@ def run_check():
             )
             result = collect_result(rss_col)
             discovered_rss, rss_status = result.jobs, result.status
+            for attempt in rss_col.collection_attempts:
+                attempt['cycle_id'] = cycle_id
+                if durable:
+                    store.record_collection_attempt(attempt)
         except Exception as e:
             rss_status = f"FALHA ({e})"
 
-    if github_configs:
+    if github_configs and not manual_only:
         try:
             for cfg in github_configs:
                 gh_col = GithubIssuesCollector(
@@ -242,10 +293,14 @@ def run_check():
                 discovered_github.extend(result.jobs)
                 if result.status != 'OK':
                     github_status = result.status
+                for attempt in gh_col.collection_attempts:
+                    attempt['cycle_id'] = cycle_id
+                    if durable:
+                        store.record_collection_attempt(attempt)
         except Exception as e:
             github_status = f"FALHA ({e})"
 
-    if trampos_configs:
+    if trampos_configs and not manual_only:
         try:
             for cfg in trampos_configs:
                 t_col = TramposCollector(
@@ -258,10 +313,14 @@ def run_check():
                 discovered_trampos.extend(result.jobs)
                 if result.status != 'OK':
                     trampos_status = result.status
+                for attempt in t_col.collection_attempts:
+                    attempt['cycle_id'] = cycle_id
+                    if durable:
+                        store.record_collection_attempt(attempt)
         except Exception as e:
             trampos_status = f"FALHA ({e})"
 
-    discovered_jobs = discovered_gupy + discovered_linkedin + discovered_rss + discovered_github + discovered_trampos
+    discovered_jobs = discovered_manual + discovered_gupy + discovered_linkedin + discovered_rss + discovered_github + discovered_trampos
 
     # 3. Deduplicação e Fusão de Múltiplas Fontes
     unique_jobs = deduplicator.process(discovered_jobs)
@@ -610,6 +669,9 @@ def run_check():
             'trampos': trampos_status if trampos_configs else 'NOT_CONFIGURED',
         }, lambda message: send_operational(HTTP, message))
     check_heartbeat(config, store, notifier)
+    if os.getenv('JOB_FINDER_MANUAL_ONLY') == '1':
+        from core.telegram_inbox import notify_finished_manual_analyses
+        notify_finished_manual_analyses(store, HTTP, TELEGRAM_BOT_TOKEN)
     store.save()
 
 

@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def isolated_runtime(monkeypatch, tmp_path):
-    for name in ('GEMINI_API_KEY', 'ANTHROPIC_API_KEY', 'TELEGRAM_BOT_TOKEN',
+    for name in ('LLM_PROVIDER', 'LLM_MODEL', 'GEMINI_API_KEY', 'GEMINI_MODEL', 'OPENROUTER_API_KEY', 'TELEGRAM_BOT_TOKEN',
                  'TELEGRAM_CHAT_ID', 'RESEND_API_KEY', 'GITHUB_TOKEN'):
         monkeypatch.delenv(name, raising=False)
     def denied(*args, **kwargs):

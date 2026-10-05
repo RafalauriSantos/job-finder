@@ -1,0 +1,11 @@
+[Unit]
+Description=Send WorkHunter heartbeat every 15 minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+Unit=workhunter-heartbeat.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

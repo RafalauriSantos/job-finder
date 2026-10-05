@@ -3,10 +3,8 @@ LLM Judge: camada semântica que roda em cima do scoring heurístico.
 Só é chamado para vagas que já passaram no heurístico com um piso mínimo,
 pra não gastar chamada de API em lixo óbvio (sênior, vaga não-dev, etc).
 
-Suporta múltiplos provedores com fallback automático:
-1. Google Gemini (100% GRÁTIS via Google AI Studio - GEMINI_API_KEY)
-2. Anthropic Claude (ANTHROPIC_API_KEY)
-3. Fallback Heurístico (se nenhuma chave estiver configurada ou se houver erro)
+Usa Gemini por padrão, permite OpenRouter como alternativa e mantém o fallback
+heurístico quando nenhuma chave estiver configurada ou quando a chamada falhar.
 """
 import json
 import logging
@@ -26,7 +24,7 @@ _HEURISTIC_FLOOR = 30  # abaixo disso, nem chama o LLM
 # Pacing preventivo: 15 RPM = 1 chamada a cada 4.0s. Usamos 4.5s + jitter para garantir folga
 PACING_SECONDS: float = 4.5
 _LAST_CALL_TIMESTAMP: float = 0.0
-_GEMINI_UNAVAILABLE = False
+_PROVIDER_UNAVAILABLE = set()
 
 _PROFILE_CACHE = None
 
@@ -107,82 +105,101 @@ def _enforce_pacing():
     _LAST_CALL_TIMESTAMP = time.time()
 
 
-def _call_gemini(api_key: str, prompt: str) -> Optional[Dict[str, Any]]:
-    """
-    Chama a API do Google Gemini com rate pacing (4.5s) e retry com backoff em caso de 429.
-    """
-    global _GEMINI_UNAVAILABLE
-    if _GEMINI_UNAVAILABLE:
+def _parse_provider_response(data: Dict[str, Any], provider: str) -> Dict[str, Any]:
+    """Extrai e interpreta o JSON dos formatos Gemini e OpenAI-compatível."""
+    if provider == "gemini":
+        text = data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+    else:
+        text = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+    clean = text.strip().replace("```json", "").replace("```", "").strip()
+    return json.loads(clean)
+
+
+def _call_provider(provider: str, api_key: str, model: str, prompt: str) -> Optional[Dict[str, Any]]:
+    """Executa uma chamada LLM com retry e parsing comum aos providers."""
+    if provider in _PROVIDER_UNAVAILABLE:
         return None
 
-    for model in ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]:
-        url = f"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent?key={api_key}"
+    if provider == "gemini":
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
         payload = {
-            "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {
-                "temperature": 0.1,
-                "responseMimeType": "application/json"
-            }
+            "system_instruction": {"parts": [{"text": "Responda somente com JSON válido."}]},
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json"},
         }
-        max_retries = 2
-        for attempt in range(max_retries + 1):
-            _enforce_pacing()
-            try:
-                # A timeout should fall back quickly; retrying a dead provider can
-                # consume the whole monitoring window. Rate-limit responses still
-                # use the explicit backoff path below.
-                resp = requests.post(url, json=payload, timeout=10)
-                if resp.status_code == 200:
-                    data = resp.json()
-                    text = data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-                    clean = text.strip().replace("```json", "").replace("```", "").strip()
-                    return json.loads(clean)
-                elif resp.status_code == 429:
-                    retry_after = resp.headers.get("Retry-After")
-                    try:
-                        wait_sec = float(retry_after) if retry_after else (6.0 * (2 ** attempt))
-                    except (ValueError, TypeError):
-                        wait_sec = 6.0 * (2 ** attempt)
+        headers = {"x-goog-api-key": api_key, "Content-Type": "application/json"}
+    else:
+        url = "https://openrouter.ai/api/v1/chat/completions"
+        payload = {
+            "model": model,
+            "temperature": 0.1,
+            "response_format": {"type": "json_object"},
+            "messages": [
+                {"role": "system", "content": "Responda somente com JSON válido."},
+                {"role": "user", "content": prompt},
+            ],
+        }
+        headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
 
-                    logger.warning(
-                        f"[LLM RateLimit 429] Limite de 15 RPM no Gemini ({model}). "
-                        f"Aguardando {wait_sec:.1f}s (tentativa {attempt + 1}/{max_retries + 1})..."
-                    )
-                    time.sleep(wait_sec)
-                    continue
-                else:
-                    logger.warning(f"Gemini API ({model}) retornou status {resp.status_code}: {resp.text[:100]}")
-                    break
-            except (requests.RequestException, TimeoutError) as e:
-                logger.warning(f"Erro de conexão ao chamar Gemini ({model}, tentativa {attempt + 1}): {e}")
-                _GEMINI_UNAVAILABLE = True
-                return None
+    max_retries = 2
+    for attempt in range(max_retries + 1):
+        _enforce_pacing()
+        try:
+            resp = requests.post(url, headers=headers, json=payload, timeout=20)
+            if resp.status_code == 200:
+                return _parse_provider_response(resp.json(), provider)
+            if resp.status_code == 429:
+                retry_after = resp.headers.get("Retry-After")
+                try:
+                    wait_sec = float(retry_after) if retry_after else (6.0 * (2 ** attempt))
+                except (ValueError, TypeError):
+                    wait_sec = 6.0 * (2 ** attempt)
+                logger.warning(
+                    f"[LLM RateLimit 429] Limite do provider {provider}. "
+                    f"Aguardando {wait_sec:.1f}s (tentativa {attempt + 1}/{max_retries + 1})..."
+                )
+                time.sleep(wait_sec)
+                continue
+            logger.warning(f"Provider {provider} retornou status HTTP {resp.status_code}: {resp.text[:100]}")
+            break
+        except (requests.RequestException, TimeoutError) as e:
+            logger.warning(f"Erro de conexão com provider {provider} (tentativa {attempt + 1}): {e}")
+            _PROVIDER_UNAVAILABLE.add(provider)
+            return None
     return None
 
 
-def _call_anthropic(api_key: str, prompt: str) -> Optional[Dict[str, Any]]:
-    """Chama a API da Anthropic (Claude Haiku)."""
-    import anthropic
-    client = anthropic.Anthropic(api_key=api_key)
-    response = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=300,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    raw = response.content[0].text.strip().replace("```json", "").replace("```", "").strip()
-    return json.loads(raw)
+def _call_gemini(api_key: str, model: str, prompt: str) -> Optional[Dict[str, Any]]:
+    return _call_provider("gemini", api_key, model, prompt)
+
+
+def _call_openrouter(api_key: str, model: str, prompt: str) -> Optional[Dict[str, Any]]:
+    return _call_provider("openrouter", api_key, model, prompt)
+
+
+def _provider_config():
+    provider = os.getenv("LLM_PROVIDER", "gemini").strip().lower()
+    if provider not in {"gemini", "openrouter"}:
+        logger.warning("LLM_PROVIDER inválido: %s; usando fallback heurístico", provider)
+        return None
+    key_name = "GEMINI_API_KEY" if provider == "gemini" else "OPENROUTER_API_KEY"
+    api_key = os.getenv(key_name)
+    if not api_key:
+        return None
+    default_model = "gemini-2.5-flash-lite" if provider == "gemini" else "google/gemini-2.5-flash-lite"
+    model = os.getenv("LLM_MODEL", "").strip() or default_model
+    return provider, api_key, model
 
 
 def judge(title: str, company: str, description: str) -> Optional[Dict[str, Any]]:
     """
-    Avalia a vaga usando o provedor de IA disponível (Gemini Grátis ou Claude).
+    Avalia a vaga usando o provider configurado.
     Retorna None em caso de ausência de chaves ou erro, ativando fallback heurístico.
     """
-    gemini_key = os.getenv("GEMINI_API_KEY")
-    anthropic_key = os.getenv("ANTHROPIC_API_KEY")
-
-    if not gemini_key and not anthropic_key:
+    configuration = _provider_config()
+    if not configuration:
         return None
+    provider, api_key, model = configuration
 
     prompt = JUDGE_PROMPT.format(
         profile_json=json.dumps(get_profile(), ensure_ascii=False),
@@ -193,10 +210,8 @@ def judge(title: str, company: str, description: str) -> Optional[Dict[str, Any]
 
     result = None
     try:
-        if gemini_key:
-            result = _call_gemini(gemini_key, prompt)
-        elif anthropic_key:
-            result = _call_anthropic(anthropic_key, prompt)
+        caller = _call_gemini if provider == "gemini" else _call_openrouter
+        result = caller(api_key, model, prompt)
 
         if result:
             assert isinstance(result.get("is_real_job_opportunity"), bool)

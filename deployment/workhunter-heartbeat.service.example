@@ -1,0 +1,15 @@
+[Unit]
+Description=WorkHunter external availability heartbeat
+After=network-online.target job-finder.service workhunter-inbox.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=REPLACE_WITH_INSTALL_DIR
+EnvironmentFile=-%h/.job-finder/secrets.env
+ExecStart=REPLACE_WITH_INSTALL_DIR/.venv/bin/python deployment/heartbeat.py
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.job-finder

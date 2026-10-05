@@ -12,7 +12,7 @@ from core.scoring import evaluate_job
 
 class TestLlmJudgeUnits:
     def setup_method(self):
-        llm_judge._GEMINI_UNAVAILABLE = False
+        llm_judge._PROVIDER_UNAVAILABLE.clear()
 
     def test_should_invoke_judge_threshold(self):
         assert llm_judge.should_invoke_judge(30) is True
@@ -50,11 +50,61 @@ class TestLlmJudgeUnits:
                 result = llm_judge.judge("Dev", "Corp", "Desc")
                 assert result is None
 
+    def test_gemini_request_uses_api_key_header_and_structured_json(self):
+        response = MagicMock(status_code=200)
+        response.json.return_value = {
+            "candidates": [{
+                "content": {"parts": [{"text": '{"is_real_job_opportunity": true, "cv_compatibility_score": 70}'}]}
+            }]
+        }
+        with patch("core.llm_judge._enforce_pacing"):
+            with patch("requests.post", return_value=response) as mock_post:
+                result = llm_judge._call_gemini("fake_gemini_key", "gemini-2.5-flash-lite", "prompt")
+
+        assert result["cv_compatibility_score"] == 70
+        args, kwargs = mock_post.call_args
+        assert args[0].endswith("/models/gemini-2.5-flash-lite:generateContent")
+        assert kwargs["headers"]["x-goog-api-key"] == "fake_gemini_key"
+        assert kwargs["json"]["generationConfig"]["responseMimeType"] == "application/json"
+
+    def test_openrouter_request_uses_openai_compatible_contract(self):
+        response = MagicMock(status_code=200)
+        response.json.return_value = {
+            "choices": [{
+                "message": {"content": '{"is_real_job_opportunity": true, "cv_compatibility_score": 65}'}
+            }]
+        }
+        with patch("core.llm_judge._enforce_pacing"):
+            with patch("requests.post", return_value=response) as mock_post:
+                result = llm_judge._call_openrouter("fake_openrouter_key", "google/gemini-2.5-flash-lite", "prompt")
+
+        assert result["cv_compatibility_score"] == 65
+        args, kwargs = mock_post.call_args
+        assert args[0] == "https://openrouter.ai/api/v1/chat/completions"
+        assert kwargs["headers"]["Authorization"] == "Bearer fake_openrouter_key"
+        assert kwargs["json"]["model"] == "google/gemini-2.5-flash-lite"
+
+    def test_http_error_returns_none_for_provider_fallback(self):
+        response = MagicMock(status_code=503, text="temporarily unavailable")
+        with patch("core.llm_judge._enforce_pacing"):
+            with patch("requests.post", return_value=response):
+                assert llm_judge._call_openrouter("fake_openrouter_key", "model", "prompt") is None
+
+    def test_provider_config_selects_openrouter_and_model_override(self):
+        with patch.dict(os.environ, {
+            "LLM_PROVIDER": "openrouter",
+            "LLM_MODEL": "openai/gpt-oss-20b",
+            "OPENROUTER_API_KEY": "fake_openrouter_key",
+        }, clear=True):
+            assert llm_judge._provider_config() == (
+                "openrouter", "fake_openrouter_key", "openai/gpt-oss-20b"
+            )
+
     def test_timeout_opens_provider_circuit_breaker(self):
         with patch("core.llm_judge._enforce_pacing"):
             with patch("requests.post", side_effect=TimeoutError("read timeout")) as mock_post:
-                assert llm_judge._call_gemini("fake_key", "prompt") is None
-                assert llm_judge._call_gemini("fake_key", "prompt") is None
+                assert llm_judge._call_gemini("fake_key", "gemini-2.5-flash-lite", "prompt") is None
+                assert llm_judge._call_gemini("fake_key", "gemini-2.5-flash-lite", "prompt") is None
                 assert mock_post.call_count == 1
 
     def test_pacing_enforced(self):
@@ -78,7 +128,9 @@ class TestLlmJudgeUnits:
         resp_200.json.return_value = {
             "candidates": [{
                 "content": {
-                    "parts": [{"text": '{"is_real_job_opportunity": true, "cv_compatibility_score": 90, "reasoning": "ok", "recommendation": "APPLY_NOW"}'}]
+                    "parts": [{
+                        "text": '{"is_real_job_opportunity": true, "cv_compatibility_score": 90, "reasoning": "ok", "recommendation": "APPLY_NOW"}'
+                    }]
                 }
             }]
         }
@@ -86,7 +138,7 @@ class TestLlmJudgeUnits:
         with patch("time.sleep") as mock_sleep:
             with patch("core.llm_judge._enforce_pacing"):
                 with patch("requests.post", side_effect=[resp_429, resp_200]) as mock_post:
-                    res = llm_judge._call_gemini("fake_key", "prompt")
+                    res = llm_judge._call_gemini("fake_key", "gemini-2.5-flash-lite", "prompt")
                     assert res is not None
                     assert res["cv_compatibility_score"] == 90
                     assert mock_sleep.called
@@ -106,7 +158,7 @@ class TestLlmJudgeUnits:
 
 class TestEvaluateJobIntegration:
     def test_skips_judge_when_heuristic_score_below_floor(self):
-        """Vaga com score < 30 nem bate na API do LLM."""
+        """Vaga com score < 30 nem bate na API do Gemini."""
         job = Job(
             title="Analista Administrativo",
             company="Empresa Genérica",
@@ -130,9 +182,9 @@ class TestEvaluateJobIntegration:
             assert any("react" in r.lower() or "júnior" in r.lower() or "junior" in r.lower() for r in reasons)
             assert any("Fallback Heurístico Ativado" in r for r in reasons)
 
-    def test_429_exhaustion_all_models_falls_back_cleanly(self):
+    def test_429_exhaustion_falls_back_cleanly(self):
         """
-        Cenário de pico real: 429 persistente em todas as retentativas e em ambos os modelos.
+        Cenário de pico real: 429 persistente em todas as retentativas.
         Deve retornar None sem crash, acionar o fallback heurístico em evaluate_job
         e marcar a ativação do fallback nas razões.
         """

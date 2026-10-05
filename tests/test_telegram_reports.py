@@ -40,7 +40,7 @@ def test_commands_have_expected_responses(tmp_path):
     assert 'Comandos do WorkHunter' in command_response('/ajuda', store)
     assert 'Último ciclo' in command_response('/status', store)
     assert 'LinkedIn' in command_response('/fontes', store)
-    assert 'Últimas decisões' in command_response('/ultimas', store)
+    assert 'Últimas decisões registradas' in command_response('/ultimas', store)
     assert 'Problemas' in command_response('/problemas', store)
 
 
@@ -59,7 +59,7 @@ def test_all_command_aliases_are_accent_and_case_tolerant(tmp_path):
     commands = {
         'STATUS': 'Último ciclo',
         'FÔNTES': 'Fontes',
-        'ÚLTIMAS': 'Últimas decisões',
+        'ÚLTIMAS': 'Últimas decisões registradas',
         'PROBLEMAS': 'Problemas',
         'AJÚDA': 'Comandos do WorkHunter',
     }

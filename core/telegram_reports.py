@@ -222,7 +222,8 @@ def build_latest(store):
         rows = db.execute(
             "SELECT payload FROM events WHERE kind='decision' ORDER BY id DESC LIMIT 5"
         ).fetchall()
-    lines = ['🧾 <b>Últimas decisões</b>', '']
+    lines = ['🧾 <b>Últimas decisões registradas</b>',
+             '<i>Histórico recente, independentemente da data.</i>', '']
     for row in rows:
         try:
             item = json.loads(row[0])
@@ -233,7 +234,7 @@ def build_latest(store):
         reason = str(item.get('reason') or '').strip()
         if reason:
             lines.append(f"  Motivo: {reason[:120]}{'…' if len(reason) > 120 else ''}")
-    return '\n'.join(lines) if len(lines) > 2 else '🧾 <b>Últimas decisões</b>\n\nNenhuma decisão registrada.'
+    return '\n'.join(lines) if len(lines) > 3 else '🧾 <b>Últimas decisões registradas</b>\n\nNenhuma decisão registrada.'
 
 
 def build_problems(store):
@@ -270,7 +271,7 @@ def command_response(command, store):
                 '• /relatorio — resumo dos ciclos de hoje\n'
                 '• /status — situação atual dos serviços e filas\n'
                 '• /fontes — desempenho das fontes hoje\n'
-                '• /ultimas — últimas decisões registradas\n'
+                '• /ultimas — últimas decisões do histórico\n'
                 '• /problemas — falhas e fontes degradadas\n'
                 '• /ajuda — esta lista')
     builder = responses.get(command)

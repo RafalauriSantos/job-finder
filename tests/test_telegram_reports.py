@@ -54,6 +54,19 @@ def test_plain_word_alias_is_supported(tmp_path):
     assert 'Relatório do WorkHunter' in command_response('/relatório@Radarvagas_Rafael_bot', _store(tmp_path))
 
 
+def test_all_command_aliases_are_accent_and_case_tolerant(tmp_path):
+    store = _store(tmp_path)
+    commands = {
+        'STATUS': 'Último ciclo',
+        'FÔNTES': 'Fontes',
+        'ÚLTIMAS': 'Últimas decisões',
+        'PROBLEMAS': 'Problemas',
+        'AJÚDA': 'Comandos do WorkHunter',
+    }
+    for command, expected in commands.items():
+        assert expected in command_response(command, store)
+
+
 def test_telegram_command_is_replied_to_without_entering_manual_queue(tmp_path):
     store = _store(tmp_path)
 

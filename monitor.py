@@ -239,7 +239,10 @@ def run_check():
             max_linkedin_queries = int(config.get("linkedin_max_queries", 8))
             linkedin_searches = rotate_searches(
                 unique_searches(linkedin_searches), max_linkedin_queries,
-                slot=int(time.time() // 3600),
+                # Rotate on the configured collection cadence. Using a fixed
+                # hourly slot would run the same query batch twice when the
+                # monitor is configured for 30-minute cycles.
+                slot=int(time.time() // (max(1, int(config.get("check_interval_minutes", 60))) * 60)),
             )
             li_col = LinkedInCollector(HTTP, linkedin_searches)
             result = collect_result(li_col)

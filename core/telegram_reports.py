@@ -194,8 +194,8 @@ def build_status(store):
     )
 
 
-def build_sources(store):
-    cycles = _reports_for_day(store)
+def build_sources(store, now=None):
+    cycles = _reports_for_day(store, now)
     stats = defaultdict(lambda: {'cycles': 0, 'discovered': 0, 'failures': 0})
     for cycle in cycles:
         for source, details in (cycle['report'].get('sources') or {}).items():
@@ -237,8 +237,8 @@ def build_latest(store):
     return '\n'.join(lines) if len(lines) > 3 else '🧾 <b>Últimas decisões registradas</b>\n\nNenhuma decisão registrada.'
 
 
-def build_problems(store):
-    cycles = _reports_for_day(store)
+def build_problems(store, now=None):
+    cycles = _reports_for_day(store, now)
     problems = []
     for cycle in cycles:
         if cycle['status'] in {'FAILED', 'INTERRUPTED', 'DEGRADED'}:
@@ -251,7 +251,7 @@ def build_problems(store):
     return '⚠️ <b>Problemas — hoje</b>\n\n' + '\n'.join(f'• {item}' for item in problems[-20:])
 
 
-def command_response(command, store):
+def command_response(command, store, now=None):
     command = command.strip().lower().split('@', 1)[0]
     command = ''.join(
         char for char in unicodedata.normalize('NFKD', command)
@@ -262,12 +262,12 @@ def command_response(command, store):
     responses = {
         '/start': lambda store: ('👋 <b>Olá! Eu sou o WorkHunter.</b>\n\n'
                                  'Posso monitorar vagas, analisar links e mostrar o estado do sistema.\n\n'
-                                 + command_response('/ajuda', store)),
-        '/relatorio': build_daily_report,
+                                 + command_response('/ajuda', store, now)),
+        '/relatorio': lambda current_store: build_daily_report(current_store, now),
         '/status': build_status,
-        '/fontes': build_sources,
+        '/fontes': lambda current_store: build_sources(current_store, now),
         '/ultimas': build_latest,
-        '/problemas': build_problems,
+        '/problemas': lambda current_store: build_problems(current_store, now),
     }
     if command == '/ajuda':
         return ('🤖 <b>Comandos do WorkHunter</b>\n\n'

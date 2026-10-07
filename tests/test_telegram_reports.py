@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 
 from core.telegram_inbox import poll_manual_urls
 from core.telegram_reports import command_response
@@ -28,7 +29,10 @@ def _store(tmp_path):
 
 
 def test_daily_report_aggregates_persisted_cycle(tmp_path):
-    report = command_response('/relatorio', _store(tmp_path))
+    report = command_response(
+        '/relatorio', _store(tmp_path),
+        now=datetime(2026, 10, 5, 13, 0, tzinfo=timezone.utc),
+    )
     assert 'Ciclos concluídos: 1' in report
     assert 'Encontradas: 6' in report
     assert 'Alertas enviados: 2' in report
@@ -40,7 +44,9 @@ def test_commands_have_expected_responses(tmp_path):
     assert 'Olá! Eu sou o WorkHunter' in command_response('/start', store)
     assert 'Comandos do WorkHunter' in command_response('/ajuda', store)
     assert 'Último ciclo' in command_response('/status', store)
-    assert 'LinkedIn' in command_response('/fontes', store)
+    assert 'LinkedIn' in command_response(
+        '/fontes', store, now=datetime(2026, 10, 5, 13, 0, tzinfo=timezone.utc)
+    )
     assert 'Últimas decisões registradas' in command_response('/ultimas', store)
     assert 'Problemas' in command_response('/problemas', store)
 

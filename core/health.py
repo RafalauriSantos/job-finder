@@ -5,8 +5,8 @@ import time
 from datetime import datetime, timezone
 
 
-def health_snapshot(store, data_dir, cycle_max_age_seconds=5400):
-    now = datetime.now(timezone.utc)
+def health_snapshot(store, data_dir, cycle_max_age_seconds=5400, now=None):
+    now = now or datetime.now(timezone.utc)
     disk = shutil.disk_usage(data_dir)
     disk_free_percent = round((disk.free / disk.total) * 100, 1) if disk.total else 0.0
     result = {

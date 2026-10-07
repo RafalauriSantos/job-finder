@@ -149,12 +149,12 @@ requires it; the important requirement is that the services run without a
 logged-in desktop session and use the persistent `~/.job-finder/` data
 directory.
 
-## Cadência de coleta
+## Collection cadence
 
-O monitor verifica novas vagas a cada **30 minutos**. As consultas do LinkedIn
-consideram uma janela de aproximadamente **6 horas** (`r21600`), enquanto a
-deduplicação evita que uma vaga já registrada gere outro alerta. A janela de
-busca amplia a cobertura; ela não altera a frequência dos ciclos.
+The monitor checks for new opportunities every **30 minutes**. LinkedIn queries
+use an approximately **6-hour** window (`r21600`), while deduplication prevents
+an already recorded job from generating another alert. The search window
+improves coverage; it does not change the cycle frequency.
 
 ## External heartbeat
 

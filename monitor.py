@@ -28,6 +28,7 @@ from core.eligibility import classify_score, classify_evidence, classify_locatio
 from core.scope_analyzer import analyze_scope
 from core.metrics import summarize_cycle
 from core.ranking import order_for_alerts
+from core import llm_judge
 from collectors.base import collect_result
 
 if os.getenv('JOB_FINDER_LOCAL_RUNTIME') != '1':
@@ -105,6 +106,7 @@ def check_heartbeat(config: dict, store: StateStore, notifier: TelegramNotifier)
 
 def run_check():
     config = load_config()
+    llm_judge.reset_cycle_stats()
     manual_only = os.getenv('JOB_FINDER_MANUAL_ONLY') == '1'
     store = StateStore(STATE_FILE)
     cycle_id = datetime.now().strftime("%Y%m%dT%H%M%S") + "-" + __import__("uuid").uuid4().hex[:8]

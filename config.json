@@ -6,7 +6,8 @@
   "gupy_detail_enrichment_limit": 5,
   "gupy_max_age_hours": 72,
   "gupy_require_publication_date": true,
-  "linkedin_max_queries": 8,
+  "linkedin_max_queries": 10,
+  "linkedin_detail_enrichment_limit": 8,
   "progression_min_score": 45,
   "heartbeat": {
     "enabled": true,
@@ -26,9 +27,36 @@
         "frontend-pt/vagas",
         "backend-pt/vagas"
       ],
-      "keywords": ["react", "frontend", "front-end", "backend", "back-end", "node", "typescript", "javascript", "fullstack", "full stack", "java", "spring", "python", "junior", "júnior", "estagio", "estágio"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador", "gerente"]
-      ,"max_pages": 3,
+      "keywords": [
+        "react",
+        "frontend",
+        "front-end",
+        "backend",
+        "back-end",
+        "node",
+        "typescript",
+        "javascript",
+        "fullstack",
+        "full stack",
+        "java",
+        "spring",
+        "python",
+        "junior",
+        "júnior",
+        "estagio",
+        "estágio"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "coordenador",
+        "gerente"
+      ],
+      "max_pages": 3,
       "lookback_days": 1,
       "fallback_lookback_days": 3,
       "strict_freshness": true
@@ -39,19 +67,56 @@
       "companyId": 2245,
       "only_remote": false,
       "strict_location": true,
-      "keywords": ["desenvolvedor", "developer", "software", "frontend", "front-end", "backend", "back-end", "fullstack", "full stack", "react", "node", "typescript", "python", "java", "estagio", "estágio", "junior", "júnior"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador", "gerente"]
+      "keywords": [
+        "desenvolvedor",
+        "developer",
+        "software",
+        "frontend",
+        "front-end",
+        "backend",
+        "back-end",
+        "fullstack",
+        "full stack",
+        "react",
+        "node",
+        "typescript",
+        "python",
+        "java",
+        "estagio",
+        "estágio",
+        "junior",
+        "júnior"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "coordenador",
+        "gerente"
+      ]
     },
     {
       "type": "linkedin",
       "description": "LinkedIn — Goomer (janela de cobertura 6h)",
       "keywords_search": "Goomer desenvolvedor",
       "enrich_details": true,
-        "detail_enrichment_limit": 8,
+      "detail_enrichment_limit": 8,
       "time_range": "r21600",
       "strict_location": true,
-      "keywords": ["goomer"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "gerente"]
+      "keywords": [
+        "goomer"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "gerente"
+      ],
+      "query_variants": []
     },
     {
       "type": "rss",
@@ -59,8 +124,20 @@
       "company": "Goomer",
       "url": "https://news.google.com/rss/search?q=%22Goomer%22+(vaga+OR+contratando+OR+oportunidade+OR+desenvolvedor+OR+programador)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["vaga", "contratando", "oportunidade", "desenvolvedor", "programador", "dev"],
-      "exclude_keywords": ["cardápio", "restaurante", "cliente", "pedido"]
+      "keywords": [
+        "vaga",
+        "contratando",
+        "oportunidade",
+        "desenvolvedor",
+        "programador",
+        "dev"
+      ],
+      "exclude_keywords": [
+        "cardápio",
+        "restaurante",
+        "cliente",
+        "pedido"
+      ]
     },
     {
       "type": "rss",
@@ -68,19 +145,45 @@
       "company": "Flavia Nasser",
       "url": "https://news.google.com/rss/search?q=%22Flavia+Nasser%22+(desenvolvedor+OR+programador+OR+software+OR+site+OR+sistema+OR+tecnologia+OR+dev)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["desenvolvedor", "programador", "software", "site", "sistema", "tecnologia", "dev", "web"],
-      "exclude_keywords": ["fotografia", "ensaio", "modelo", "atendimento", "recepcionista"]
+      "keywords": [
+        "desenvolvedor",
+        "programador",
+        "software",
+        "site",
+        "sistema",
+        "tecnologia",
+        "dev",
+        "web"
+      ],
+      "exclude_keywords": [
+        "fotografia",
+        "ensaio",
+        "modelo",
+        "atendimento",
+        "recepcionista"
+      ]
     },
     {
       "type": "linkedin",
       "description": "LinkedIn — GFT Brasil (janela de cobertura 6h)",
       "keywords_search": "GFT Brasil desenvolvedor",
       "enrich_details": true,
-        "detail_enrichment_limit": 8,
+      "detail_enrichment_limit": 8,
       "time_range": "r21600",
       "strict_location": true,
-      "keywords": ["gft"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "gerente", "diretor", "coordenador"]
+      "keywords": [
+        "gft"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "gerente",
+        "diretor",
+        "coordenador"
+      ],
+      "query_variants": []
     },
     {
       "type": "rss",
@@ -88,8 +191,33 @@
       "company": "GFT Brasil",
       "url": "https://news.google.com/rss/search?q=site:jobs.gft.com+(Brasil+OR+Sorocaba+OR+Remoto)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["desenvolvedor", "developer", "software", "engenharia", "java", "python", "react", "node", "dados", "starter", "junior", "jr", "estagio", "estágio"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor", "coordenador"]
+      "keywords": [
+        "desenvolvedor",
+        "developer",
+        "software",
+        "engenharia",
+        "java",
+        "python",
+        "react",
+        "node",
+        "dados",
+        "starter",
+        "junior",
+        "jr",
+        "estagio",
+        "estágio"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "gerente",
+        "diretor",
+        "coordenador"
+      ]
     },
     {
       "type": "rss",
@@ -98,8 +226,24 @@
       "official": true,
       "url": "https://jobs.gft.com/services/rss/job/?locale=en_US&keywords=(java)%20AND%20locationSearch:(Brazil)",
       "strict_location": true,
-      "keywords": ["java", "spring", "desenvolvedor", "developer", "software"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor", "coordenador"],
+      "keywords": [
+        "java",
+        "spring",
+        "desenvolvedor",
+        "developer",
+        "software"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "gerente",
+        "diretor",
+        "coordenador"
+      ],
       "max_age_hours": 72
     },
     {
@@ -109,8 +253,27 @@
       "official": true,
       "url": "https://jobs.gft.com/services/rss/job/?locale=en_US&keywords=(developer%20OR%20desenvolvedor%20OR%20fullstack%20OR%20backend)%20AND%20locationSearch:(Brazil)",
       "strict_location": true,
-      "keywords": ["developer", "desenvolvedor", "fullstack", "backend", "software", "java", "react", "python"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor", "coordenador"],
+      "keywords": [
+        "developer",
+        "desenvolvedor",
+        "fullstack",
+        "backend",
+        "software",
+        "java",
+        "react",
+        "python"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "gerente",
+        "diretor",
+        "coordenador"
+      ],
       "max_age_hours": 72
     },
     {
@@ -120,8 +283,29 @@
       "official": true,
       "url": "https://jobs.gft.com/services/rss/job/?locale=en_US&keywords=(junior%20OR%20jr%20OR%20estagio%20OR%20trainee)%20AND%20locationSearch:(Brazil)",
       "strict_location": true,
-      "keywords": ["junior", "jr", "estagio", "trainee", "desenvolvedor", "developer", "software", "java", "react", "python"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor", "coordenador"],
+      "keywords": [
+        "junior",
+        "jr",
+        "estagio",
+        "trainee",
+        "desenvolvedor",
+        "developer",
+        "software",
+        "java",
+        "react",
+        "python"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "gerente",
+        "diretor",
+        "coordenador"
+      ],
       "max_age_hours": 72
     },
     {
@@ -131,8 +315,28 @@
       "official": true,
       "url": "https://jobs.gft.com/services/rss/job/?locale=en_US&keywords=(pleno%20OR%20mid%20OR%20intermediate)%20AND%20locationSearch:(Brazil)",
       "strict_location": true,
-      "keywords": ["pleno", "mid", "intermediate", "desenvolvedor", "developer", "software", "java", "react", "python"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor", "coordenador"],
+      "keywords": [
+        "pleno",
+        "mid",
+        "intermediate",
+        "desenvolvedor",
+        "developer",
+        "software",
+        "java",
+        "react",
+        "python"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "gerente",
+        "diretor",
+        "coordenador"
+      ],
       "max_age_hours": 72
     },
     {
@@ -141,8 +345,35 @@
       "company": "Indeed",
       "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador+OR+software)+(junior+OR+jr+OR+estagio)+remoto&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["desenvolvedor", "developer", "programador", "junior", "jr", "estagio", "estágio", "front", "back", "fullstack", "react", "node", "python", "java"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "gerente", "padaria", "confeitaria", "recepcionista", "atendente", "caixa"]
+      "keywords": [
+        "desenvolvedor",
+        "developer",
+        "programador",
+        "junior",
+        "jr",
+        "estagio",
+        "estágio",
+        "front",
+        "back",
+        "fullstack",
+        "react",
+        "node",
+        "python",
+        "java"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "gerente",
+        "padaria",
+        "confeitaria",
+        "recepcionista",
+        "atendente",
+        "caixa"
+      ]
     },
     {
       "type": "rss",
@@ -150,8 +381,32 @@
       "company": "Lever ATS",
       "url": "https://news.google.com/rss/search?q=site%3Ajobs.lever.co+(developer+OR+desenvolvedor+OR+software)+(junior+OR+jr+OR+pleno+OR+mid)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["developer", "desenvolvedor", "software", "junior", "jr", "pleno", "mid", "backend", "frontend", "fullstack", "java", "python", "react", "node"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor"],
+      "keywords": [
+        "developer",
+        "desenvolvedor",
+        "software",
+        "junior",
+        "jr",
+        "pleno",
+        "mid",
+        "backend",
+        "frontend",
+        "fullstack",
+        "java",
+        "python",
+        "react",
+        "node"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "gerente",
+        "diretor"
+      ],
       "max_age_hours": 72
     },
     {
@@ -160,8 +415,32 @@
       "company": "Greenhouse ATS",
       "url": "https://news.google.com/rss/search?q=site%3Aboards.greenhouse.io+(developer+OR+desenvolvedor+OR+software)+(junior+OR+jr+OR+pleno+OR+mid)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["developer", "desenvolvedor", "software", "junior", "jr", "pleno", "mid", "backend", "frontend", "fullstack", "java", "python", "react", "node"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente", "diretor"],
+      "keywords": [
+        "developer",
+        "desenvolvedor",
+        "software",
+        "junior",
+        "jr",
+        "pleno",
+        "mid",
+        "backend",
+        "frontend",
+        "fullstack",
+        "java",
+        "python",
+        "react",
+        "node"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "gerente",
+        "diretor"
+      ],
       "max_age_hours": 72
     },
     {
@@ -170,8 +449,23 @@
       "company": "Indeed",
       "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(react+OR+node+OR+typescript)+(junior+OR+jr+OR+estagio)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["react", "node", "typescript", "junior", "jr", "estagio", "estágio"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "gerente"]
+      "keywords": [
+        "react",
+        "node",
+        "typescript",
+        "junior",
+        "jr",
+        "estagio",
+        "estágio"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "gerente"
+      ]
     },
     {
       "type": "rss",
@@ -179,8 +473,26 @@
       "company": "Indeed",
       "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(frontend+OR+backend+OR+fullstack)+(junior+OR+jr+OR+estagio)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["frontend", "front-end", "backend", "back-end", "fullstack", "full stack", "junior", "jr", "estagio", "estágio"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "gerente"]
+      "keywords": [
+        "frontend",
+        "front-end",
+        "backend",
+        "back-end",
+        "fullstack",
+        "full stack",
+        "junior",
+        "jr",
+        "estagio",
+        "estágio"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "gerente"
+      ]
     },
     {
       "type": "rss",
@@ -188,104 +500,297 @@
       "company": "Indeed",
       "url": "https://news.google.com/rss/search?q=site:br.indeed.com+(desenvolvedor+OR+developer+OR+programador+OR+software+OR+ti)+(sorocaba+OR+tatui)&hl=pt-BR&gl=BR&ceid=BR:pt-419",
       "strict_location": true,
-      "keywords": ["desenvolvedor", "developer", "programador", "estagio", "estágio", "junior", "jr", "ti", "sistemas", "software"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "gerente", "diretor", "padaria", "confeitaria", "recepcionista", "atendente", "caixa"]
+      "keywords": [
+        "desenvolvedor",
+        "developer",
+        "programador",
+        "estagio",
+        "estágio",
+        "junior",
+        "jr",
+        "ti",
+        "sistemas",
+        "software"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "gerente",
+        "diretor",
+        "padaria",
+        "confeitaria",
+        "recepcionista",
+        "atendente",
+        "caixa"
+      ]
     },
     {
       "type": "linkedin",
       "description": "LinkedIn — Full Stack Júnior (Janela de cobertura 6h)",
       "keywords_search": "Desenvolvedor Full Stack Junior",
       "enrich_details": true,
-        "detail_enrichment_limit": 8,
-      "query_variants": ["Desenvolvedor Full Stack Junior", "Desenvolvedor Full Stack Pleno", "developer full stack", "programador full stack"],
+      "detail_enrichment_limit": 8,
+      "query_variants": [
+        "Desenvolvedor Full Stack Junior",
+        "Desenvolvedor Full Stack Pleno",
+        "developer full stack",
+        "programador full stack",
+        "desenvolvedor OR developer OR programador OR software",
+        "frontend OR front-end OR frontend developer",
+        "backend OR back-end OR backend developer",
+        "full stack OR fullstack"
+      ],
       "time_range": "r21600",
       "strict_location": true,
-      "keywords": ["full stack", "fullstack", "desenvolvedor", "developer", "software"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "gerente"]
+      "keywords": [
+        "full stack",
+        "fullstack",
+        "desenvolvedor",
+        "developer",
+        "software"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "gerente"
+      ]
     },
     {
       "type": "linkedin",
       "description": "LinkedIn — React / Frontend Júnior (Janela de cobertura 6h)",
       "keywords_search": "Desenvolvedor React Junior",
       "enrich_details": true,
-        "detail_enrichment_limit": 8,
-      "query_variants": ["Desenvolvedor React Junior", "Desenvolvedor React Pleno", "developer React", "frontend React"],
+      "detail_enrichment_limit": 8,
+      "query_variants": [
+        "Desenvolvedor React Junior",
+        "Desenvolvedor React Pleno",
+        "developer React",
+        "frontend React",
+        "Desenvolvedor Front-end Junior",
+        "Frontend Developer Junior",
+        "Junior Frontend Developer",
+        "React TypeScript Junior",
+        "frontend OR front-end OR frontend developer",
+        "desenvolvedor frontend OR desenvolvedor front-end",
+        "React OR TypeScript OR JavaScript"
+      ],
       "time_range": "r21600",
       "strict_location": true,
-      "keywords": ["react", "frontend", "front-end", "typescript", "javascript", "web"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto"]
+      "keywords": [
+        "react",
+        "frontend",
+        "front-end",
+        "typescript",
+        "javascript",
+        "web"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto"
+      ]
     },
     {
       "type": "linkedin",
       "description": "LinkedIn — Node.js / Backend Júnior (Janela de cobertura 6h)",
       "keywords_search": "Desenvolvedor Node Junior",
       "enrich_details": true,
-        "detail_enrichment_limit": 8,
-      "query_variants": ["Desenvolvedor Node Junior", "Desenvolvedor Node Pleno", "developer Node", "backend Node"],
+      "detail_enrichment_limit": 8,
+      "query_variants": [
+        "Desenvolvedor Node Junior",
+        "Desenvolvedor Node Pleno",
+        "developer Node",
+        "backend Node"
+      ],
       "time_range": "r21600",
       "strict_location": true,
-      "keywords": ["node", "backend", "back-end", "typescript", "javascript", "api"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto"]
+      "keywords": [
+        "node",
+        "backend",
+        "back-end",
+        "typescript",
+        "javascript",
+        "api"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto"
+      ]
     },
     {
       "type": "linkedin",
       "description": "LinkedIn — Java Júnior (Janela de cobertura 6h)",
       "keywords_search": "Desenvolvedor Java Junior",
       "enrich_details": true,
-        "detail_enrichment_limit": 8,
-      "query_variants": ["Desenvolvedor Java Junior", "Desenvolvedor Java Pleno", "developer Java", "programador Java"],
+      "detail_enrichment_limit": 8,
+      "query_variants": [
+        "Desenvolvedor Java Junior",
+        "Desenvolvedor Java Pleno",
+        "developer Java",
+        "programador Java"
+      ],
       "time_range": "r21600",
       "strict_location": true,
-      "keywords": ["java", "spring"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto"]
+      "keywords": [
+        "java",
+        "spring"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto"
+      ]
     },
     {
       "type": "linkedin",
       "description": "LinkedIn — Python Júnior (Janela de cobertura 6h)",
       "keywords_search": "Desenvolvedor Python Junior",
       "enrich_details": true,
-        "detail_enrichment_limit": 8,
-      "query_variants": ["Desenvolvedor Python Junior", "Desenvolvedor Python Pleno", "developer Python", "programador Python"],
+      "detail_enrichment_limit": 8,
+      "query_variants": [
+        "Desenvolvedor Python Junior",
+        "Desenvolvedor Python Pleno",
+        "developer Python",
+        "programador Python"
+      ],
       "time_range": "r21600",
       "strict_location": true,
-      "keywords": ["python", "django", "fastapi", "flask"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto"]
+      "keywords": [
+        "python",
+        "django",
+        "fastapi",
+        "flask"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto"
+      ]
     },
     {
       "type": "gupy",
       "description": "Gupy — Full Stack Júnior",
       "term": "Full Stack Junior",
-      "query_variants": ["Full Stack Junior", "desenvolvedor full stack", "developer full stack", "fullstack"],
+      "query_variants": [
+        "Full Stack Junior",
+        "desenvolvedor full stack",
+        "developer full stack",
+        "fullstack"
+      ],
       "limit": 20,
       "strict_location": true,
-      "keywords": ["full stack", "fullstack", "desenvolvedor"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
+      "keywords": [
+        "full stack",
+        "fullstack",
+        "desenvolvedor"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "coordenador"
+      ]
     },
     {
       "type": "gupy",
       "description": "Gupy — Java Júnior",
       "term": "Java Junior",
-      "query_variants": ["Java Junior", "desenvolvedor Java", "developer Java", "programador Java"],
+      "query_variants": [
+        "Java Junior",
+        "desenvolvedor Java",
+        "developer Java",
+        "programador Java"
+      ],
       "limit": 20,
       "strict_location": true,
-      "keywords": ["java"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
+      "keywords": [
+        "java"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "coordenador"
+      ]
     },
     {
       "type": "gupy",
       "description": "Gupy — Python Júnior",
       "term": "Python Junior",
-      "query_variants": ["Python Junior", "desenvolvedor Python", "developer Python", "programador Python"],
+      "query_variants": [
+        "Python Junior",
+        "desenvolvedor Python",
+        "developer Python",
+        "programador Python"
+      ],
       "limit": 20,
       "strict_location": true,
-      "keywords": ["python"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "arquiteto", "coordenador"]
+      "keywords": [
+        "python"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "arquiteto",
+        "coordenador"
+      ]
     },
     {
       "type": "trampos",
       "description": "Trampos.co — Oportunidades de Desenvolvimento & TI",
-      "keywords": ["desenvolvedor", "developer", "programador", "front", "back", "fullstack", "react", "node", "typescript", "junior", "estagio", "estágio", "ti"],
-      "exclude_keywords": ["senior", "sênior", "sr", "lead", "especialista", "diretor", "gerente", "coordenador"],
+      "keywords": [
+        "desenvolvedor",
+        "developer",
+        "programador",
+        "front",
+        "back",
+        "fullstack",
+        "react",
+        "node",
+        "typescript",
+        "junior",
+        "estagio",
+        "estágio",
+        "ti"
+      ],
+      "exclude_keywords": [
+        "senior",
+        "sênior",
+        "sr",
+        "lead",
+        "especialista",
+        "diretor",
+        "gerente",
+        "coordenador"
+      ],
       "max_pages": 1
     }
   ]

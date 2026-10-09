@@ -25,6 +25,9 @@ _HEURISTIC_FLOOR = 30  # abaixo disso, nem chama o LLM
 PACING_SECONDS: float = 4.5
 _LAST_CALL_TIMESTAMP: float = 0.0
 _PROVIDER_UNAVAILABLE = set()
+_PROVIDER_UNAVAILABLE_UNTIL = {}
+_PROVIDER_COOLDOWN_SECONDS = 300
+_CYCLE_CALLS = 0
 
 _PROFILE_CACHE = None
 
@@ -120,8 +123,9 @@ def _parse_provider_response(data: Dict[str, Any], provider: str) -> Dict[str, A
 
 def _call_provider(provider: str, api_key: str, model: str, prompt: str) -> Optional[Dict[str, Any]]:
     """Executa uma chamada LLM com retry e parsing comum aos providers."""
-    if provider in _PROVIDER_UNAVAILABLE:
+    if provider in _PROVIDER_UNAVAILABLE and time.time() < _PROVIDER_UNAVAILABLE_UNTIL.get(provider, 0):
         return None
+    _PROVIDER_UNAVAILABLE.discard(provider)
 
     if provider == "gemini":
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
@@ -164,10 +168,14 @@ def _call_provider(provider: str, api_key: str, model: str, prompt: str) -> Opti
                 time.sleep(wait_sec)
                 continue
             logger.warning(f"Provider {provider} retornou status HTTP {resp.status_code}: {resp.text[:100]}")
+            if resp.status_code in {401, 403, 408, 500, 502, 503, 504}:
+                _PROVIDER_UNAVAILABLE.add(provider)
+                _PROVIDER_UNAVAILABLE_UNTIL[provider] = time.time() + _PROVIDER_COOLDOWN_SECONDS
             break
         except (requests.RequestException, TimeoutError) as e:
             logger.warning(f"Erro de conexão com provider {provider} (tentativa {attempt + 1}): {e}")
             _PROVIDER_UNAVAILABLE.add(provider)
+            _PROVIDER_UNAVAILABLE_UNTIL[provider] = time.time() + _PROVIDER_COOLDOWN_SECONDS
             return None
     return None
 
@@ -194,15 +202,48 @@ def _provider_config():
     return provider, api_key, model
 
 
+def _provider_chain():
+    """Resolve a cadeia sem quebrar a configuração legada LLM_PROVIDER/LLM_MODEL."""
+    primary = os.getenv("LLM_PRIMARY_PROVIDER", os.getenv("LLM_PROVIDER", "gemini")).strip().lower()
+    fallback = os.getenv("LLM_FALLBACK_PROVIDER", "openrouter").strip().lower()
+    allowed = {"gemini", "openrouter"}
+    if primary not in allowed:
+        logger.warning("LLM_PRIMARY_PROVIDER inválido: %s", primary)
+        primary = ""
+    if fallback not in allowed or fallback == primary:
+        fallback = ""
+
+    models = {
+        "gemini": os.getenv("LLM_PRIMARY_MODEL", os.getenv("LLM_MODEL", "")).strip() or "gemini-2.5-flash-lite",
+        "openrouter": os.getenv("LLM_FALLBACK_MODEL", "").strip() or "openrouter/free",
+    }
+    keys = {"gemini": os.getenv("GEMINI_API_KEY"), "openrouter": os.getenv("OPENROUTER_API_KEY")}
+    chain = [(p, keys[p], models[p]) for p in (primary, fallback) if p and keys[p]]
+    return chain
+
+
+def reset_cycle_stats():
+    global _CYCLE_CALLS
+    _CYCLE_CALLS = 0
+
+
+def usage_stats():
+    return {"calls": _CYCLE_CALLS}
+
+
 def judge(title: str, company: str, description: str) -> Optional[Dict[str, Any]]:
     """
     Avalia a vaga usando o provider configurado.
     Retorna None em caso de ausência de chaves ou erro, ativando fallback heurístico.
     """
-    configuration = _provider_config()
-    if not configuration:
+    global _CYCLE_CALLS
+    max_calls = max(0, int(os.getenv("LLM_MAX_CALLS_PER_CYCLE", "20")))
+    if _CYCLE_CALLS >= max_calls:
+        logger.warning("Limite de chamadas LLM por ciclo atingido: %s", max_calls)
         return None
-    provider, api_key, model = configuration
+    chain = _provider_chain()
+    if not chain:
+        return None
 
     prompt = JUDGE_PROMPT.format(
         profile_json=json.dumps(get_profile(), ensure_ascii=False),
@@ -211,16 +252,20 @@ def judge(title: str, company: str, description: str) -> Optional[Dict[str, Any]
         description=(description or "")[:3000],
     )
 
-    result = None
-    try:
-        caller = _call_gemini if provider == "gemini" else _call_openrouter
-        result = caller(api_key, model, prompt)
-
-        if result:
-            assert isinstance(result.get("is_real_job_opportunity"), bool)
-            assert isinstance(result.get("cv_compatibility_score"), int)
-            return normalize_result(result)
-    except Exception as e:
-        logger.warning(f"LLM judge falhou ({type(e).__name__}: {e}) — fallback heurístico")
+    for provider, api_key, model in chain:
+        _CYCLE_CALLS += 1
+        try:
+            caller = _call_gemini if provider == "gemini" else _call_openrouter
+            result = caller(api_key, model, prompt)
+            if result:
+                assert isinstance(result.get("is_real_job_opportunity"), bool)
+                assert isinstance(result.get("cv_compatibility_score"), int)
+                normalized = normalize_result(result)
+                normalized["llm_provider"] = provider
+                normalized["llm_model"] = model
+                return normalized
+        except Exception as e:
+            logger.warning("LLM judge falhou no provider %s (%s: %s)", provider, type(e).__name__, e)
+        logger.warning("Tentando próximo provider LLM após falha em %s", provider)
 
     return None

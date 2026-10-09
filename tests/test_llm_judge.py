@@ -100,6 +100,52 @@ class TestLlmJudgeUnits:
                 "openrouter", "fake_openrouter_key", "openai/gpt-oss-20b"
             )
 
+    def test_provider_chain_prefers_primary_and_uses_free_fallback(self):
+        with patch.dict(os.environ, {
+            "LLM_PRIMARY_PROVIDER": "gemini",
+            "LLM_PRIMARY_MODEL": "gemini-test",
+            "LLM_FALLBACK_PROVIDER": "openrouter",
+            "LLM_FALLBACK_MODEL": "openrouter/free",
+            "GEMINI_API_KEY": "gemini-key",
+            "OPENROUTER_API_KEY": "router-key",
+        }, clear=True):
+            assert llm_judge._provider_chain() == [
+                ("gemini", "gemini-key", "gemini-test"),
+                ("openrouter", "router-key", "openrouter/free"),
+            ]
+
+    def test_judge_uses_fallback_provider_after_primary_failure(self):
+        result = {
+            "is_real_job_opportunity": True,
+            "cv_compatibility_score": 70,
+        }
+        with patch.dict(os.environ, {
+            "LLM_PRIMARY_PROVIDER": "gemini",
+            "LLM_FALLBACK_PROVIDER": "openrouter",
+            "GEMINI_API_KEY": "gemini-key",
+            "OPENROUTER_API_KEY": "router-key",
+        }, clear=True):
+            with patch.object(llm_judge, "_call_gemini", return_value=None):
+                with patch.object(llm_judge, "_call_openrouter", return_value=result) as fallback:
+                    llm_judge.reset_cycle_stats()
+                    output = llm_judge.judge("Dev", "Corp", "Desc")
+        assert output["llm_provider"] == "openrouter"
+        assert fallback.called
+        assert llm_judge.usage_stats()["calls"] == 2
+
+    def test_judge_stops_at_cycle_call_limit(self):
+        with patch.dict(os.environ, {
+            "LLM_PRIMARY_PROVIDER": "gemini",
+            "GEMINI_API_KEY": "gemini-key",
+            "LLM_MAX_CALLS_PER_CYCLE": "1",
+        }, clear=True):
+            llm_judge.reset_cycle_stats()
+            with patch.object(llm_judge, "_call_gemini", return_value=None) as caller:
+                assert llm_judge.judge("Dev", "Corp", "Desc") is None
+                assert llm_judge.judge("Dev", "Corp", "Desc") is None
+        assert caller.call_count == 1
+        assert llm_judge.usage_stats()["calls"] == 1
+
     def test_timeout_opens_provider_circuit_breaker(self):
         with patch("core.llm_judge._enforce_pacing"):
             with patch("requests.post", side_effect=TimeoutError("read timeout")) as mock_post:

@@ -124,7 +124,7 @@ For Gemini as primary with OpenRouter free fallback:
 
 ```env
 LLM_PRIMARY_PROVIDER=gemini
-LLM_PRIMARY_MODEL=gemini-3.8-flash
+LLM_PRIMARY_MODEL=gemini-3.5-flash-lite
 LLM_FALLBACK_PROVIDER=openrouter
 LLM_FALLBACK_MODEL=openrouter/free
 LLM_MAX_CALLS_PER_CYCLE=20

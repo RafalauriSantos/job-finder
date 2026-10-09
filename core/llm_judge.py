@@ -214,7 +214,7 @@ def _provider_chain():
         fallback = ""
 
     models = {
-        "gemini": os.getenv("LLM_PRIMARY_MODEL", os.getenv("LLM_MODEL", "")).strip() or "gemini-3.8-flash",
+        "gemini": os.getenv("LLM_PRIMARY_MODEL", os.getenv("LLM_MODEL", "")).strip() or "gemini-3.5-flash-lite",
         "openrouter": os.getenv("LLM_FALLBACK_MODEL", "").strip() or "openrouter/free",
     }
     keys = {"gemini": os.getenv("GEMINI_API_KEY"), "openrouter": os.getenv("OPENROUTER_API_KEY")}

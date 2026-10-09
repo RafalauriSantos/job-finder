@@ -28,5 +28,8 @@ jobs:
       - name: Run test suite
         run: python -m pytest -q
 
+      - name: Scan tracked files for secrets
+        run: python scripts/check_secrets.py
+
       - name: Check whitespace errors
         run: git diff --check

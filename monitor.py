@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import time
+from pathlib import Path
 from datetime import datetime
 import requests
 from requests.adapters import HTTPAdapter
@@ -51,11 +52,19 @@ DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 
 def get_http_session() -> requests.Session:
-    """Retorna sessão requests com retentativas automáticas e backoff exponencial."""
+    """Retorna sessão requests com uma retentativa curta e observável.
+
+    Cada collector já possui timeout e tratamento de erro próprios. Três
+    retries globais com backoff podiam esconder uma falha por dezenas de
+    segundos e empurrar o ciclo para o watchdog.
+    """
     session = requests.Session()
     retries = Retry(
-        total=3,
-        backoff_factor=1.5,
+        total=1,
+        connect=1,
+        read=1,
+        status=1,
+        backoff_factor=0.5,
         status_forcelist=[429, 500, 502, 503, 504],
         raise_on_status=False,
     )
@@ -73,6 +82,35 @@ def load_config() -> dict:
         return {"check_interval_minutes": 60, "monitors": []}
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def write_cycle_progress(cycle_id, phase, sources=None, funnel=None, error=None):
+    """Persist a small, replaceable checkpoint for the current cycle.
+
+    The watchdog may terminate the worker before ``cycle_health.json`` is
+    written. This checkpoint deliberately contains only operational counters,
+    so it is safe to recover into a timeout report without duplicating jobs or
+    decisions.
+    """
+    try:
+        directory = Path(HEALTH_REPORT_FILE).parent / 'cycle-progress'
+        directory.mkdir(parents=True, exist_ok=True)
+        payload = {
+            'cycle_id': cycle_id,
+            'updated_at': datetime.now().isoformat(timespec='seconds'),
+            'phase': phase,
+            'sources': sources or {},
+            'funnel': funnel or {},
+        }
+        if error:
+            payload['error'] = str(error)[:300]
+        temporary = directory / f'{cycle_id}.tmp'
+        target = directory / f'{cycle_id}.json'
+        temporary.write_text(json.dumps(payload, ensure_ascii=False), encoding='utf-8')
+        temporary.replace(target)
+    except OSError as exc:
+        # A diagnostic checkpoint must never make a healthy collection fail.
+        print(f'Checkpoint de ciclo indisponível: {type(exc).__name__}')
 
 
 def check_heartbeat(config: dict, store: StateStore, notifier: TelegramNotifier):
@@ -130,6 +168,7 @@ def run_check():
     start_time = time.time()
     now_str = datetime.now().strftime("%H:%M:%S")
     print(f"[{now_str}] Iniciando patrulha com {len(monitors)} monitor(es)...")
+    write_cycle_progress(cycle_id, 'started')
 
     # 1. Agrupa configurações por tipo de coletor
     gupy_queries = []
@@ -202,6 +241,9 @@ def run_check():
                 store.record_collection_attempt(attempt)
         except Exception as e:
             manual_status = f"FALHA ({e})"
+        write_cycle_progress(cycle_id, 'manual', {'manual': {
+            'status': manual_status, 'discovered': len(discovered_manual)
+        }})
     else:
         manual_status = "NOT_CONFIGURED"
 
@@ -216,6 +258,9 @@ def run_check():
                 attempt['cycle_id'] = cycle_id
                 if durable:
                     store.record_collection_attempt(attempt)
+        write_cycle_progress(cycle_id, 'geekhunter', {'geekhunter': {
+            'status': geekhunter_status, 'discovered': len(discovered_manual)
+        }})
 
     if gupy_queries and not manual_only:
         try:
@@ -235,6 +280,9 @@ def run_check():
                     store.record_collection_attempt(attempt)
         except Exception as e:
             gupy_status = f"FALHA ({e})"
+        write_cycle_progress(cycle_id, 'gupy', {'gupy': {
+            'status': gupy_status, 'discovered': len(discovered_gupy)
+        }} )
 
     if linkedin_searches and not manual_only:
         try:
@@ -263,6 +311,9 @@ def run_check():
                 linkedin_status = f"FALHA ({', '.join(failed_queries)})"
         except Exception as e:
             linkedin_status = f"FALHA ({e})"
+        write_cycle_progress(cycle_id, 'linkedin', {'linkedin': {
+            'status': linkedin_status, 'discovered': len(discovered_linkedin)
+        }} )
 
     if rss_configs and not manual_only:
         try:
@@ -280,6 +331,9 @@ def run_check():
                     store.record_collection_attempt(attempt)
         except Exception as e:
             rss_status = f"FALHA ({e})"
+        write_cycle_progress(cycle_id, 'rss', {'rss': {
+            'status': rss_status, 'discovered': len(discovered_rss)
+        }} )
 
     if github_configs and not manual_only:
         try:
@@ -304,6 +358,9 @@ def run_check():
                         store.record_collection_attempt(attempt)
         except Exception as e:
             github_status = f"FALHA ({e})"
+        write_cycle_progress(cycle_id, 'github', {'github': {
+            'status': github_status, 'discovered': len(discovered_github)
+        }} )
 
     if trampos_configs and not manual_only:
         try:
@@ -324,11 +381,21 @@ def run_check():
                         store.record_collection_attempt(attempt)
         except Exception as e:
             trampos_status = f"FALHA ({e})"
+        write_cycle_progress(cycle_id, 'trampos', {'trampos': {
+            'status': trampos_status, 'discovered': len(discovered_trampos)
+        }} )
 
     discovered_jobs = discovered_manual + discovered_gupy + discovered_linkedin + discovered_rss + discovered_github + discovered_trampos
 
     # 3. Deduplicação e Fusão de Múltiplas Fontes
     unique_jobs = deduplicator.process(discovered_jobs)
+    write_cycle_progress(cycle_id, 'deduplicated', {
+        'gupy': {'status': gupy_status, 'discovered': len(discovered_gupy)},
+        'linkedin': {'status': linkedin_status, 'discovered': len(discovered_linkedin)},
+        'rss': {'status': rss_status, 'discovered': len(discovered_rss)},
+        'github': {'status': github_status, 'discovered': len(discovered_github)},
+        'trampos': {'status': trampos_status, 'discovered': len(discovered_trampos)},
+    }, {'raw': len(discovered_jobs), 'unique': len(unique_jobs)})
 
     # 4. Decisão e Classificação (Scoring + Localidade Estrita + Filtro PCD)
     notified_count = recovered_deliveries
@@ -642,6 +709,10 @@ def run_check():
     }
     with open(HEALTH_REPORT_FILE, "w", encoding="utf-8") as report_file:
         json.dump(health_report, report_file, ensure_ascii=False, indent=2)
+    try:
+        (Path(HEALTH_REPORT_FILE).parent / 'cycle-progress' / f'{cycle_id}.json').unlink(missing_ok=True)
+    except OSError:
+        pass
     print(f"├─ Duplicatas:           {cycle_metrics['duplicate_count']} ({cycle_metrics['duplicate_rate']:.1%})")
     print(f"├─ Precisão/Recall:      N/D ({cycle_metrics['precision_recall_note']})")
     print(f"├─ Falhas de fonte:      {', '.join(cycle_metrics['source_failures']) or 'nenhuma'}")

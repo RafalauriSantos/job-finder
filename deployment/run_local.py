@@ -1,15 +1,73 @@
 """Windowless Task Scheduler entry point; logs stay outside the checkout."""
 import logging
 from logging.handlers import RotatingFileHandler
+import json
 import os
 from pathlib import Path
 import re
+import sqlite3
 import subprocess
 import sys
 import time
+from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+
+def mark_watchdog_timeout(database, timeout_seconds):
+    """Close the child-owned cycle immediately when the watchdog kills it.
+
+    Without this, the cycle remains RUNNING until the next five-minute check
+    notices it as stale. That creates a misleading gap in reports and delays
+    recovery by another scheduler tick.
+    """
+    try:
+        db = sqlite3.connect(database, timeout=5)
+        try:
+            row = db.execute(
+                "SELECT id, started FROM cycles WHERE status='RUNNING' ORDER BY id DESC LIMIT 1"
+            ).fetchone()
+            if not row:
+                return False
+            progress = {}
+            progress_file = Path(database).parent / 'cycle-progress' / f'{row[0]}.json'
+            # The progress filename uses the application cycle id, while the
+            # database row has the numeric id. Find the newest checkpoint as a
+            # best-effort recovery artifact for this still-running cycle.
+            candidates = sorted(
+                (Path(database).parent / 'cycle-progress').glob('*.json'),
+                key=lambda item: item.stat().st_mtime,
+                reverse=True,
+            ) if (Path(database).parent / 'cycle-progress').exists() else []
+            if candidates:
+                try:
+                    progress = json.loads(candidates[0].read_text(encoding='utf-8'))
+                except (OSError, ValueError):
+                    progress = {}
+            report = {
+                "status": "TIMEOUT",
+                "duration_seconds": timeout_seconds,
+                "failure": {"kind": "watchdog_timeout", "timeout_seconds": timeout_seconds},
+                "sources": progress.get('sources', {}),
+                "funnel": progress.get('funnel', {
+                    "raw": 0, "unique": 0, "seen": 0, "discarded": {}, "notified": 0
+                }),
+                "progress": progress,
+            }
+            db.execute(
+                "UPDATE cycles SET status='INTERRUPTED', finished=?, report=? WHERE id=?",
+                (datetime.now(timezone.utc).isoformat(), json.dumps(report), row[0]),
+            )
+            db.commit()
+            return True
+        finally:
+            db.close()
+    except (OSError, sqlite3.Error) as exc:
+        logging.getLogger('local-runner').error(
+            'Could not persist watchdog timeout: %s', type(exc).__name__
+        )
+        return False
 
 
 def main():
@@ -77,6 +135,7 @@ def main():
                     if completed.returncode:
                         logger.error('Cycle process failed: exit=%s', completed.returncode)
                 except subprocess.TimeoutExpired:
+                    mark_watchdog_timeout(directory / 'state.db', timeout_seconds)
                     logger.error('Cycle process timed out after %ss; next check will recover', timeout_seconds)
                 except Exception as exc:
                     # The watchdog must stay alive after one bad cycle; the next

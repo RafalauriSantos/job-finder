@@ -114,12 +114,13 @@ def _short_job_id(value):
 
 
 def build_daily_report(store, now=None):
+    now = now or datetime.now(timezone.utc)
     cycles = _reports_for_day(store, now)
     raw = unique = notified = 0
     discarded = 0
     llm_calls = fallbacks = 0
     durations = []
-    degraded = failed = 0
+    degraded = failed = interrupted = 0
     source_failures = defaultdict(int)
     for cycle in cycles:
         report = cycle['report']
@@ -142,16 +143,21 @@ def build_daily_report(store, now=None):
             degraded += 1
         if cycle['status'] in {'FAILED', 'INTERRUPTED'}:
             failed += 1
+        if cycle['status'] == 'INTERRUPTED':
+            interrupted += 1
         for source, details in (report.get('sources') or {}).items():
             if isinstance(details, dict) and details.get('status') not in {'SUCCESS', 'OK', 'NOT_CONFIGURED'}:
                 source_failures[source] += 1
     average = round(sum(durations) / len(durations), 1) if durations else 0
     return (
         "📊 <b>Relatório do WorkHunter — hoje</b>\n\n"
+        f"🕒 <b>Atualizado em:</b> {now.astimezone(LOCAL_ZONE).strftime('%d/%m às %H:%M')}\n"
+        "<i>Os números abaixo estão acumulados até este horário.</i>\n\n"
         f"⏱ <b>Operação</b>\n"
         f"• Ciclos concluídos: {len(cycles) - failed}\n"
         f"• Ciclos degradados: {degraded}\n"
         f"• Ciclos com falha: {failed}\n"
+        f"• Ciclos interrompidos: {interrupted}\n"
         f"• Duração média: {str(average).replace('.', ',')}s\n\n"
         f"🔎 <b>Vagas</b>\n"
         f"• Encontradas: {raw}\n"
@@ -162,7 +168,8 @@ def build_daily_report(store, now=None):
         f"• Chamadas LLM registradas: {llm_calls}\n"
         f"• Análises com fallback heurístico: {fallbacks}\n\n"
         f"⚠️ <b>Problemas</b>\n"
-        f"• Fontes degradadas: {', '.join(sorted(source_failures)) or 'nenhuma'}"
+        f"• Fontes degradadas: {', '.join(sorted(source_failures)) or 'nenhuma'}\n"
+        f"• Cobertura dos ciclos: {'há ciclos sem relatório final' if interrupted else 'completa'}"
     )
 
 

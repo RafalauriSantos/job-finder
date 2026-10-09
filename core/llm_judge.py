@@ -28,6 +28,8 @@ _PROVIDER_UNAVAILABLE = set()
 _PROVIDER_UNAVAILABLE_UNTIL = {}
 _PROVIDER_COOLDOWN_SECONDS = 300
 _CYCLE_CALLS = 0
+_REQUEST_TIMEOUT_SECONDS = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "12"))
+_MAX_RATE_LIMIT_RETRIES = 1
 
 _PROFILE_CACHE = None
 
@@ -148,19 +150,21 @@ def _call_provider(provider: str, api_key: str, model: str, prompt: str) -> Opti
         }
         headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
 
-    max_retries = 2
+    max_retries = _MAX_RATE_LIMIT_RETRIES
     for attempt in range(max_retries + 1):
         _enforce_pacing()
         try:
-            resp = requests.post(url, headers=headers, json=payload, timeout=20)
+            resp = requests.post(url, headers=headers, json=payload,
+                                 timeout=_REQUEST_TIMEOUT_SECONDS)
             if resp.status_code == 200:
                 return _parse_provider_response(resp.json(), provider)
             if resp.status_code == 429:
                 retry_after = resp.headers.get("Retry-After")
                 try:
-                    wait_sec = float(retry_after) if retry_after else (6.0 * (2 ** attempt))
+                    wait_sec = float(retry_after) if retry_after else 4.0
                 except (ValueError, TypeError):
-                    wait_sec = 6.0 * (2 ** attempt)
+                    wait_sec = 4.0
+                wait_sec = min(max(wait_sec, 0.0), 8.0)
                 logger.warning(
                     f"[LLM RateLimit 429] Limite do provider {provider}. "
                     f"Aguardando {wait_sec:.1f}s (tentativa {attempt + 1}/{max_retries + 1})..."

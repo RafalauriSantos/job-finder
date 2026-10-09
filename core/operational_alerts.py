@@ -36,12 +36,21 @@ def update_source_alerts(store, statuses, sender):
         if status == 'NOT_CONFIGURED':
             continue
         state = states.setdefault(source, {'failures': 0, 'alerted': False})
+        label = {'linkedin': 'LinkedIn'}.get(source, source)
         if status != 'OK':
             state['failures'] += 1
             if state['failures'] >= 2 and not state['alerted']:
-                state['alerted'] = bool(sender(f'Job Finder: source {source} failed in consecutive cycles. Check local diagnostics.'))
+                if status == 'PARTIAL':
+                    message = (
+                        f'Job Finder: {label} degraded in consecutive cycles. '
+                        'Some searches were rate-limited (HTTP 429); collected results were preserved '
+                        'and the remaining searches will rotate in the next cycle. Check local diagnostics.'
+                    )
+                else:
+                    message = f'Job Finder: {label} failed in consecutive cycles. Check local diagnostics.'
+                state['alerted'] = bool(sender(message))
         else:
             state['failures'] = 0
-            if state['alerted'] and sender(f'Job Finder: source {source} recovered.'):
+            if state['alerted'] and sender(f'Job Finder: {label} recovered; collection is back to normal.'):
                 state['alerted'] = False
     store.save()

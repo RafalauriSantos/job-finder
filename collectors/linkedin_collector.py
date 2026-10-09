@@ -16,6 +16,7 @@ class LinkedInCollector(BaseCollector):
         self.searches = searches
         self.query_stats: List[Dict[str, Any]] = []
         self.collection_attempts = []
+        self.rate_limited = False
 
     def _enrich_job(self, job: Job, headers: Dict[str, str]) -> bool:
         """Tenta obter descrição pública; falhas mantêm o cartão original."""
@@ -133,6 +134,8 @@ class LinkedInCollector(BaseCollector):
                 resp = self.http.get(target_url, headers=headers, timeout=15)
                 if resp.status_code != 200:
                     stats["status"] = f"HTTP_{resp.status_code}"
+                    if resp.status_code == 429:
+                        self.rate_limited = True
                     print(f"[ALERTA LinkedInCollector] Requisição falhou para '{keywords}' com status {resp.status_code}.")
                     self.record_attempt('linkedin', 'search', started, query=params, page=page,
                                         http_status=resp.status_code, error_type=f'HTTP_{resp.status_code}',
@@ -214,4 +217,7 @@ class LinkedInCollector(BaseCollector):
         for s in self.searches:
             jobs = self._query_search(s)
             discovered.extend(jobs)
+            if self.rate_limited:
+                print("[LinkedInCollector] HTTP 429 detectado; buscas restantes adiadas para o próximo ciclo.")
+                break
         return discovered

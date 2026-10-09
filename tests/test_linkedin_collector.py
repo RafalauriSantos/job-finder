@@ -95,6 +95,27 @@ def test_linkedin_collector_handles_http_errors_gracefully(monkeypatch):
     assert jobs == []
 
 
+def test_linkedin_collector_defers_remaining_searches_after_rate_limit(monkeypatch):
+    session = requests.Session()
+    calls = []
+
+    def fake_get(url, **kwargs):
+        calls.append(url)
+        return MockResponse("", 429)
+
+    monkeypatch.setattr(session, "get", fake_get)
+    collector = LinkedInCollector(session, [
+        {"keywords": "Desenvolvedor Junior"},
+        {"keywords": "Frontend Junior"},
+    ])
+
+    assert collector.collect() == []
+    assert len(calls) == 1
+    assert collector.rate_limited is True
+    assert len(collector.query_stats) == 1
+    assert collector.query_stats[0]["status"] == "HTTP_429"
+
+
 def test_linkedin_collector_handles_malformed_html(monkeypatch):
     session = requests.Session()
     # HTML corrompido ou inesperado
